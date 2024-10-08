@@ -1,10 +1,10 @@
 
 class_name FollowerStats extends Resource
-
 ## Struct containing the basic stats of a Follower
-## Defined by Attack, Influence, Max Health, and Current Health
+## Defined by Attack, Influence, Max Health, and Health
 
-# Non-negative, automatically clamped
+## How much damage this follower deals
+## Non-negative
 @export var attack: int :
 	set(value):
 		if value < 0:
@@ -13,12 +13,14 @@ class_name FollowerStats extends Resource
 		else:
 			attack = value
 
-# Unlike the others, it can be negative
+## How much influence this follower will gather
+## Unlike the others, it can be negative
 @export var influence: int :
 	set(value):
 		influence = value
 		
-# Non-negative, automatically clamped
+## Max health value of follower
+## Non-negative
 @export var max_health: int :
 	set(value):
 		if value < 0:
@@ -26,11 +28,18 @@ class_name FollowerStats extends Resource
 			max_health = 0
 		else:
 			max_health = value
+		
+		# Update current health
+		health = clamp(health, 0, max_health)
 
-var current_health: int
+## Current health of the create
+## 0 <= health <= max_health
+@export var health: int :
+	set(value):
+		health = clamp(value, 0, max_health)
 
-func _init(p_attack: int = 0, p_influence: int = 0, p_max_health: int = 0):
+func _init(p_attack: int = 0, p_influence: int = 0, p_max_health: int = 0) -> void:
 	attack = p_attack
 	influence = p_influence
 	max_health = p_max_health
-	current_health = max_health
+	health = max_health

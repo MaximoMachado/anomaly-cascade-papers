@@ -1,1 +1,1 @@
-extends Node
+class_name Catalyst extends Card

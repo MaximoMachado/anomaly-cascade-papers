@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Follower" load_steps=6 format=3 uid="uid://cbocvfurwd66b"]
+
+[ext_resource type="Script" path="res://resources/card/follower_stats.gd" id="1_5mews"]
+[ext_resource type="Script" path="res://resources/card/flux.gd" id="1_l3apv"]
+[ext_resource type="Script" path="res://resources/card/follower.gd" id="1_xgvqg"]
+
+[sub_resource type="Resource" id="Resource_67lnv"]
+script = ExtResource("1_l3apv")
+
+[sub_resource type="Resource" id="Resource_b8nl8"]
+script = ExtResource("1_5mews")
+attack = 2
+influence = 2
+max_health = 2
+
+[resource]
+script = ExtResource("1_xgvqg")
+follower_stats = SubResource("Resource_b8nl8")
+card_name = "Scientist"
+card_text = "Do nothing"
+flux = SubResource("Resource_67lnv")

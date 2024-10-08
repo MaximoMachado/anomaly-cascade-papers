@@ -12,9 +12,14 @@ class_name Card extends Resource
 ## Required cost to play this card
 @export var flux: Flux
 
-
-func play() -> void:
+## Plays card for target player onto the board
+func play(player: int, board: int) -> void:
 	push_error("NotImplementedError: Card.play()")
+
+## Returns a copy of the card for modification
+func copy() -> Card:
+	push_error("NotImplementedError: Card.copy()")
+	return Card.new()
 	
-func _init():
+func _init() -> void:
 	push_error("NotImplementedError: Card.new()")

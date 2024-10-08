@@ -1,1 +1,1 @@
-extends Node
+class_name Factory extends Card
