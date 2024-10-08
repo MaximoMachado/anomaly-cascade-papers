@@ -1,7 +1,5 @@
 extends Node2D
 
-var attackers
-var defenders
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
