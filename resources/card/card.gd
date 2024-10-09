@@ -3,6 +3,8 @@ class_name Card extends Resource
 ## Abstract Class that details stats of a card
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 
+@export var card_image: Texture
+
 ## Name of the card presented to players
 @export var card_name: String
 

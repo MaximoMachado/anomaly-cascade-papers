@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Follower" load_steps=6 format=3 uid="uid://cbocvfurwd66b"]
 
-[ext_resource type="Script" path="res://resources/card/follower_stats.gd" id="1_5mews"]
-[ext_resource type="Script" path="res://resources/card/flux.gd" id="1_l3apv"]
+[ext_resource type="Script" path="res://resources/card_components/follower_stats.gd" id="1_5mews"]
+[ext_resource type="Script" path="res://resources/card_components/flux.gd" id="1_l3apv"]
 [ext_resource type="Script" path="res://resources/card/follower.gd" id="1_xgvqg"]
 
 [sub_resource type="Resource" id="Resource_67lnv"]

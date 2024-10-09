@@ -1,3 +1,4 @@
+## class_name Enums <- autoload so commented out
 extends Node
 
 
