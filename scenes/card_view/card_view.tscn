@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=9 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
 [ext_resource type="Resource" uid="uid://cbocvfurwd66b" path="res://resources/created_cards/followers/scientist.tres" id="2_8tlf2"]
@@ -9,7 +9,7 @@ resource_name = "Deselect"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardTemplate:position")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -21,25 +21,13 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_sqp55"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("CardTemplate:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_nbyvp"]
 resource_name = "Select"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardTemplate:position")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -56,6 +44,9 @@ _data = {
 "Select": SubResource("Animation_nbyvp")
 }
 
+[sub_resource type="LabelSettings" id="LabelSettings_oogfg"]
+font_color = Color(0, 0, 0, 1)
+
 [node name="CardView" type="Node2D"]
 script = ExtResource("1_fmmwm")
 card = ExtResource("2_8tlf2")
@@ -65,38 +56,51 @@ libraries = {
 "": SubResource("AnimationLibrary_hxiae")
 }
 
+[node name="DetectMouse" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 128.0
+offset_bottom = 192.0
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0, 0, 128, 0, 128, 192, 0, 192)
+
 [node name="Health" type="Label" parent="."]
-offset_left = 159.0
-offset_top = 121.0
-offset_right = 199.0
-offset_bottom = 144.0
+offset_left = 104.0
+offset_top = 160.0
+offset_right = 120.0
+offset_bottom = 183.0
 text = "0"
+label_settings = SubResource("LabelSettings_oogfg")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Influence" type="Label" parent="."]
-offset_left = 135.0
-offset_top = 120.0
-offset_right = 175.0
-offset_bottom = 143.0
+offset_left = 56.0
+offset_top = 160.0
+offset_right = 72.0
+offset_bottom = 183.0
 text = "0"
+label_settings = SubResource("LabelSettings_oogfg")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Attack" type="Label" parent="."]
-offset_left = 116.0
-offset_top = 118.0
-offset_right = 156.0
-offset_bottom = 141.0
+offset_left = 16.0
+offset_top = 160.0
+offset_right = 32.0
+offset_bottom = 183.0
 text = "0"
+label_settings = SubResource("LabelSettings_oogfg")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="CardTemplate" type="Sprite2D" parent="."]
+[node name="Image" type="Sprite2D" parent="."]
+position = Vector2(16, 0)
 texture = ExtResource("2_fdag5")
 centered = false
 hframes = 15
 vframes = 4
-
-[node name="DetectMouse" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 101.0
-offset_bottom = 142.0
 
 [connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
 [connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]

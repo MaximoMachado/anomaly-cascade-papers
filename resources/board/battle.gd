@@ -26,7 +26,7 @@ func deal_damage(attackers: Array[Follower], defenders: Array[Follower]) -> void
 	
 	# Update health of attackers/defenders
 	for i in range(attackers.size()):
-		attackers[i].recieve_damage(defenders, damage_dealt_to_attackers[i])
+		attackers[i].recieve_battle_damage(defenders, damage_dealt_to_attackers[i])
 
 	for i in range(defenders.size()):
-		defenders[i].recieve_damage(attackers, damage_dealt_to_defenders[i])
+		defenders[i].recieve_battle_damage(attackers, damage_dealt_to_defenders[i])
