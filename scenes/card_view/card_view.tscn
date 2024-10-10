@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
 
-[ext_resource type="Script" path="res://scenes/card_ui/card_ui.gd" id="1_ibb7a"]
+[ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_ibb7a"]
 [ext_resource type="Texture2D" uid="uid://dd0eyr3o7hj6u" path="res://addons/cute_cards/card_front.png" id="2_8xjll"]
 
 [sub_resource type="Animation" id="Animation_4c75r"]
