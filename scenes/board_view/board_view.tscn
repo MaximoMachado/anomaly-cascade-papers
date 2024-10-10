@@ -1,16 +1,18 @@
 [gd_scene load_steps=3 format=3 uid="uid://qkimpx387hw7"]
 
-[ext_resource type="Script" path="res://scenes/board/board_view.gd" id="1_m3p85"]
-[ext_resource type="Script" path="res://scenes/board/card_container.gd" id="2_rtnyh"]
+[ext_resource type="Script" path="res://scenes/board_view/board_view.gd" id="1_m3p85"]
+[ext_resource type="Script" path="res://scenes/board_view/card_container.gd" id="2_rtnyh"]
 
-[node name="Board" type="Node2D"]
+[node name="BoardView" type="Node2D"]
 script = ExtResource("1_m3p85")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="CardContainer" type="HBoxContainer" parent="UI"]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 327.0
+offset_top = 470.0
+offset_right = 787.0
+offset_bottom = 639.0
 script = ExtResource("2_rtnyh")
 
 [node name="CardHolder" type="Node" parent="."]

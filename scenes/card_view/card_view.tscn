@@ -1,14 +1,14 @@
 [gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
 
-[ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_ibb7a"]
-[ext_resource type="Texture2D" uid="uid://dd0eyr3o7hj6u" path="res://addons/cute_cards/card_front.png" id="2_8xjll"]
+[ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
+[ext_resource type="Texture2D" uid="uid://dd0eyr3o7hj6u" path="res://addons/cute_cards/card_front.png" id="2_fdag5"]
 
 [sub_resource type="Animation" id="Animation_4c75r"]
 resource_name = "Deselect"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardFront:position")
+tracks/0/path = NodePath("CardTemplate:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -23,7 +23,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardFront:position")
+tracks/0/path = NodePath("CardTemplate:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -38,7 +38,7 @@ resource_name = "Select"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CardFront:position")
+tracks/0/path = NodePath("CardTemplate:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -55,20 +55,25 @@ _data = {
 "Select": SubResource("Animation_nbyvp")
 }
 
-[node name="CardUi" type="Container"]
-script = ExtResource("1_ibb7a")
+[node name="CardView" type="Node2D"]
+script = ExtResource("1_fmmwm")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_hxiae")
 }
 
-[node name="CardFront" type="Sprite2D" parent="."]
-texture = ExtResource("2_8xjll")
+[node name="CardTemplate" type="Sprite2D" parent="."]
+texture = ExtResource("2_fdag5")
 centered = false
 hframes = 15
 vframes = 4
 
-[connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[node name="Container" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[connection signal="mouse_entered" from="Container" to="." method="_on_container_mouse_entered"]
+[connection signal="mouse_exited" from="Container" to="." method="_on_container_mouse_exited"]
