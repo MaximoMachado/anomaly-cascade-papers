@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=8 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
+[ext_resource type="Resource" uid="uid://cbocvfurwd66b" path="res://resources/created_cards/followers/scientist.tres" id="2_8tlf2"]
 [ext_resource type="Texture2D" uid="uid://dd0eyr3o7hj6u" path="res://addons/cute_cards/card_front.png" id="2_fdag5"]
 
 [sub_resource type="Animation" id="Animation_4c75r"]
@@ -57,11 +58,33 @@ _data = {
 
 [node name="CardView" type="Node2D"]
 script = ExtResource("1_fmmwm")
+card = ExtResource("2_8tlf2")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_hxiae")
 }
+
+[node name="Health" type="Label" parent="."]
+offset_left = 159.0
+offset_top = 121.0
+offset_right = 199.0
+offset_bottom = 144.0
+text = "0"
+
+[node name="Influence" type="Label" parent="."]
+offset_left = 135.0
+offset_top = 120.0
+offset_right = 175.0
+offset_bottom = 143.0
+text = "0"
+
+[node name="Attack" type="Label" parent="."]
+offset_left = 116.0
+offset_top = 118.0
+offset_right = 156.0
+offset_bottom = 141.0
+text = "0"
 
 [node name="CardTemplate" type="Sprite2D" parent="."]
 texture = ExtResource("2_fdag5")
@@ -69,11 +92,11 @@ centered = false
 hframes = 15
 vframes = 4
 
-[node name="Container" type="Control" parent="."]
+[node name="DetectMouse" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 101.0
+offset_bottom = 142.0
 
-[connection signal="mouse_entered" from="Container" to="." method="_on_container_mouse_entered"]
-[connection signal="mouse_exited" from="Container" to="." method="_on_container_mouse_exited"]
+[connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
+[connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
