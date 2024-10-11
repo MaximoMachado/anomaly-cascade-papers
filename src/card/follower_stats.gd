@@ -1,5 +1,6 @@
 
-class_name FollowerStats extends Resource
+class_name FollowerStats 
+extends RefCounted
 ## Struct containing the basic stats of a Follower
 ## Defined by Attack, Influence, Max Health, and Health
 

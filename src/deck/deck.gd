@@ -1,5 +1,5 @@
 class_name Deck 
-extends Resource
+extends RefCounted
 ## Array-wrapper that represents a deck of cards 
 
 

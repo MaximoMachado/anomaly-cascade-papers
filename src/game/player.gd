@@ -1,5 +1,5 @@
 class_name Player
-extends Resource
+extends RefCounted
 
 
 var id: int

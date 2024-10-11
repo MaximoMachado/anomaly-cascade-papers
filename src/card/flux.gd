@@ -1,4 +1,4 @@
-class_name FluxCost
+class_name Flux
 extends RefCounted
 
 var _flux: Dictionary

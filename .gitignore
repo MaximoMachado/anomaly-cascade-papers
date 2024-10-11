@@ -12,6 +12,7 @@ obj/
 
 # VSCode:
 .vs/
+.vscode
 
 # Mac OS:
 .DS_Store

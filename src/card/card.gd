@@ -1,5 +1,6 @@
 
-class_name Card extends Resource
+class_name Card 
+extends RefCounted
 ## Abstract Class that details stats of a card
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 

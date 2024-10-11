@@ -1,1 +1,2 @@
-class_name Factory extends Card
+class_name Factory
+extends Card

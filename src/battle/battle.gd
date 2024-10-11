@@ -1,4 +1,5 @@
-class_name Battle extends Resource
+class_name Battle
+extends RefCounted
 
 ## Mutates attacking and defending followers 
 ##
