@@ -3,19 +3,20 @@ class_name CardView extends Node2D
 @export var card: Card
 var card_highlighted: bool = false
 
+func _init(p_card: Card) -> void:
+	card = p_card
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var container := $DetectMouse
-	var card_front := $Image
-	var card_front_size : Vector2 = card_front.texture.get_size()
-	container.custom_minimum_size = Vector2(card_front_size.x / card_front.hframes, \
-									card_front_size.y / card_front.vframes)
-	print_debug(container.custom_minimum_size)
 	
 	if card is Follower:
 		$Health.text = str(card.stats.health)
 		$Influence.text = str(card.stats.influence)
 		$Attack.text = str(card.stats.attack)
+
+		var card_image := $Image
+		if card.card_image != null:
+			card_image.texture = card.card_image
 	else:
 		print_debug("nono")
 
