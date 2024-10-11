@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=8 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
-[ext_resource type="Resource" uid="uid://cbocvfurwd66b" path="res://resources/created_cards/followers/scientist.tres" id="2_8tlf2"]
 [ext_resource type="Texture2D" uid="uid://dd0eyr3o7hj6u" path="res://addons/cute_cards/card_front.png" id="2_fdag5"]
 
 [sub_resource type="Animation" id="Animation_4c75r"]
@@ -49,7 +48,6 @@ font_color = Color(0, 0, 0, 1)
 
 [node name="CardView" type="Node2D"]
 script = ExtResource("1_fmmwm")
-card = ExtResource("2_8tlf2")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
