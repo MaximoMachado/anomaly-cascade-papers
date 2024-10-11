@@ -9,7 +9,7 @@ class_name Card extends Resource
 @export var card_name: String
 
 ## Explanation of card mechanics presented to players
-@export var card_text: String
+@export_multiline var card_text: String
 
 ## Required cost to play this card
 @export var flux: Flux
