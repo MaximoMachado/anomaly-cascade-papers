@@ -43,8 +43,7 @@ func block(attackers: Array[Follower]) -> Array[int]:
 ##
 ## @returns how much influence to attain
 func influence() -> int:
-	push_error("NotImplementedError: Follower.influence()")
-	return 0
+	return stats.influence
 	
 func is_dead() -> bool:
 	return stats.health <= 0

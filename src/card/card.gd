@@ -12,10 +12,10 @@ class_name Card extends Resource
 @export_multiline var card_text: String
 
 ## Required cost to play this card
-@export var flux: Flux
+var flux: Flux
 
 ## Plays card for target player onto the board
-func play(player: int, board: int) -> void:
+func play(player: Player, board: Board) -> void:
 	push_error("NotImplementedError: Card.play()")
 
 ## Returns a copy of the card for modification
