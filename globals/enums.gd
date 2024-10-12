@@ -2,8 +2,16 @@
 extends Node
 
 
-enum FollowerStatType { Attack, Influence, Health }
+enum CardRarity { COMMON, RARE, MYTHIC }
 
-enum CardType { Factory, Follower, Catalyst }
+enum FluxType { FOUNDATION, WORSHIPPERS, INVESTIGATORS, FEY, ABYSSAL, CLOCKWORK, NEUTRAL }
 
-enum FluxType { Foundation, Worshippers, Investigators, Fey, Abyssal, Clockwork, Neutral }
+enum Faction { FOUNDATION, WORSHIPPERS, INVESTIGATORS, FEY, ABYSSAL, CLOCKWORK, NEUTRAL }
+
+const FactionColors: Dictionary = { Faction.FOUNDATION: "black",
+                                    Faction.WORSHIPPERS: "red", 
+                                    Faction.INVESTIGATORS: "white", 
+                                    Faction.FEY: "green", 
+                                    Faction.ABYSSAL: "purple", 
+                                    Faction.CLOCKWORK: "orange", 
+                                    Faction.NEUTRAL: "grey" }
