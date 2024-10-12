@@ -70,7 +70,7 @@ func test_two_players():
 	# Declare attackers
 	assert_eq(game.game_phase, Enums.GamePhase.DECLARE_ATTACKERS)
 
-	var first_attacker = Follower.new()
+	var first_attacker := Follower.new()
 	assert_true(game.declare_attacker(player_1, first_attacker, player_2))
 
 	assert_false(game.declare_attacker(player_1, Follower.new(), player_2))

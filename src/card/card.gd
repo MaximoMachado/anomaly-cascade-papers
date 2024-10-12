@@ -15,6 +15,11 @@ extends RefCounted
 ## Required cost to play this card
 var flux: Flux
 
+func _init() -> void:
+	push_error("NotImplementedError: Card.new()")
+
+## Mutators
+
 ## Plays card 
 func play(targets: Array[Target]) -> bool:
 	push_error("NotImplementedError: Card.play()")
@@ -24,6 +29,10 @@ func play(targets: Array[Target]) -> bool:
 func copy() -> Card:
 	push_error("NotImplementedError: Card.copy()")
 	return Card.new()
+
+## Public Observers
+
+func is_playable(player: Player, targets: Array[Target]) -> bool:
+	push_error("NotImplementedError: Card.is_playable()")
+	return false
 	
-func _init() -> void:
-	push_error("NotImplementedError: Card.new()")

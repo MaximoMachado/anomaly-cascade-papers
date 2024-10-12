@@ -67,13 +67,31 @@ func end_turn(player_id: int) -> bool:
 
 	return true
 
+## One-time mulligan phase to allow players to choose cards to replace in their starting hand
 func mulligan(player_id: int, cards: Array[Card]) -> bool:
 	# No player turn, everyone does this at the same time
 	# If everyone has mulligan, reset and go to Play
 	if _mulliganed_players.has(player_id):
 		return false
 
-	# Todo: Add mulligan logic here
+	var player : Player = _id_to_player[player_id]
+
+	# First pass just to verify all cards are there before executing mulligan
+	for card in cards:
+		var index : int = player.hand.find(card)
+		if index == -1:
+			return false
+		
+	for card in cards:
+		var index : int = player.hand.find(card)
+		assert(index == -1, "Should be impossible that card is not found")
+		
+		var new_card : Card = player.draw_cards(1)[0]
+		player.add_to_hand([new_card])
+
+		player.discard_from_hand([card])
+		player.add_to_deck([card])
+		
 
 	_mulliganed_players[player_id] = true
 
@@ -91,7 +109,7 @@ func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 	match game_phase:
 		Enums.GamePhase.PLAY:
 			var player : Player = _id_to_player[player_id]
-			var index = player.hand.find(card)
+			var index : int = player.hand.find(card)
 			if index != -1:
 				pass
 			else:
