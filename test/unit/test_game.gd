@@ -6,12 +6,12 @@ func test_two_players_no_cards():
 	const player_2 = 20
 	var game := Game.new().add_player(player_1).add_player(player_2)
 
-	assert_eq(game.players.size(), 2)
+	assert_eq(game._players.size(), 2)
 	game.mulligan(player_1, [])
 	game.mulligan(player_2, [])
 
 	# Play phase
-	assert_eq(game.game_phase, Enums.GamePhase.PLAY)
+	assert_eq(game._game_phase, Enums.GamePhase.PLAY)
 
 	assert_true(game.is_players_turn(player_1))
 	assert_false(game.is_players_turn(player_2))
@@ -20,7 +20,7 @@ func test_two_players_no_cards():
 	assert_true(game.end_turn(player_1))
 
 	# Declare attackers
-	assert_eq(game.game_phase, Enums.GamePhase.DECLARE_ATTACKERS)
+	assert_eq(game._game_phase, Enums.GamePhase.DECLARE_ATTACKERS)
 
 	assert_false(game.end_turn(player_2))
 	assert_true(game.end_turn(player_1))
@@ -33,7 +33,7 @@ func test_two_players_no_cards():
 	assert_true(game.end_turn(player_2))
 
 	# Reaction Phase
-	assert_eq(game.game_phase, Enums.GamePhase.REACTION)
+	assert_eq(game._game_phase, Enums.GamePhase.REACTION)
 
 	assert_true(game.is_players_turn(player_2))
 	assert_false(game.is_players_turn(player_1))
@@ -43,7 +43,7 @@ func test_two_players_no_cards():
 	assert_false(game.end_turn(player_2))
 	assert_true(game.end_turn(player_1))
 
-	assert_eq(game.game_phase, Enums.GamePhase.PLAY)
+	assert_eq(game._game_phase, Enums.GamePhase.PLAY)
 	assert_true(game.is_players_turn(player_2))
 
 ## E2E tests of a game of two players being initialized
@@ -58,12 +58,12 @@ func test_two_players_play_cards():
 					.add_player(player_1, test_deck.duplicate(), test_deck.duplicate()) \
 					.add_player(player_2, test_deck.duplicate(), test_deck.duplicate())
 
-	assert_eq(game.players.size(), 2)
+	assert_eq(game._players.size(), 2)
 	game.mulligan(player_1, [])
 	game.mulligan(player_2, [])
 
 	# Play phase
-	assert_eq(game.game_phase, Enums.GamePhase.PLAY)
+	assert_eq(game._game_phase, Enums.GamePhase.PLAY)
 
 	assert_true(game.is_players_turn(player_1))
 	assert_false(game.is_players_turn(player_2))
@@ -78,7 +78,7 @@ func test_two_players_play_cards():
 	assert_true(game.end_turn(player_1))
 
 	# Declare attackers
-	assert_eq(game.game_phase, Enums.GamePhase.DECLARE_ATTACKERS)
+	assert_eq(game._game_phase, Enums.GamePhase.DECLARE_ATTACKERS)
 
 	assert_true(game.declare_attacker(player_1, player_1_played_card, player_2))
 
@@ -103,7 +103,7 @@ func test_two_players_play_cards():
 	assert_true(game.end_turn(player_2))
 
 	# Reaction Phase
-	assert_eq(game.game_phase, Enums.GamePhase.REACTION)
+	assert_eq(game._game_phase, Enums.GamePhase.REACTION)
 
 	assert_true(game.is_players_turn(player_2))
 	assert_false(game.is_players_turn(player_1))
@@ -118,5 +118,5 @@ func test_two_players_play_cards():
 	assert_false(game.end_turn(player_2))
 	assert_true(game.end_turn(player_1))
 
-	assert_eq(game.game_phase, Enums.GamePhase.PLAY)
+	assert_eq(game._game_phase, Enums.GamePhase.PLAY)
 	assert_true(game.is_players_turn(player_2))

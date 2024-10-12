@@ -2,14 +2,14 @@ class_name Game
 extends RefCounted
 
 
-var game_phase: Enums.GamePhase
+var _game_phase: Enums.GamePhase
 
-## Dictates turn order for players 
-var players: Array[Player] = []
+## Dictates turn order for _players 
+var _players: Array[Player] = []
 var _id_to_player: Dictionary
 
 ## Dictates which player has the ability to take actions
-var current_player_id: int
+var _current_player_id: int
 
 enum PlayerReaction { END_TURN, PLAY_CARD, ACTIVATE_ABILITY }
 var _reaction_history : Array[PlayerReaction]
@@ -18,15 +18,15 @@ var _reaction_history : Array[PlayerReaction]
 var _mulliganed_players : Dictionary
 
 ## Maps initiating attacker to a new battle
-var battles: Dictionary
-var influencing_followers: Array[Follower]
+var _battles: Dictionary
+var _influencing_followers: Array[Follower]
 
 ## Public Mutators
 
 func add_player(player_id: int, main_deck: Deck = Deck.new(), influence_deck: Deck = Deck.new(), team_id: Variant = null) -> Game:
 
 	var player := Player.new(player_id, main_deck, influence_deck)
-	players.append(player)
+	_players.append(player)
 	_id_to_player[player_id] = player
 
 	if team_id != null:
@@ -34,16 +34,16 @@ func add_player(player_id: int, main_deck: Deck = Deck.new(), influence_deck: De
 
 	return self
 
-## Start the game object with previously added players
-## Number of players is equivalent to number of ids
+## Start the game object with previously added _players
+## Number of _players is equivalent to number of ids
 ## Turn order is shuffled by default
 func start_game(shuffle := true) -> bool:
-	assert(players.size() >= 2, "Game must have at least 2 players")
+	assert(_players.size() >= 2, "Game must have at least 2 _players")
 	if shuffle:
-		players.shuffle()
+		_players.shuffle()
 
-	game_phase = Enums.GamePhase.MULLIGAN
-	current_player_id = players[0].id
+	_game_phase = Enums.GamePhase.MULLIGAN
+	_current_player_id = _players[0].id
 	return true
 
 ## Player Actions
@@ -54,35 +54,35 @@ func end_turn(player_id: int) -> bool:
 	if not is_players_turn(player_id):
 		return false
 
-	match game_phase:
+	match _game_phase:
 		Enums.GamePhase.MULLIGAN:
-			game_phase = Enums.GamePhase.PLAY
-			current_player_id = players[0].id
+			_game_phase = Enums.GamePhase.PLAY
+			_current_player_id = _players[0].id
 
 		Enums.GamePhase.PLAY:
-			game_phase = Enums.GamePhase.DECLARE_ATTACKERS
+			_game_phase = Enums.GamePhase.DECLARE_ATTACKERS
 
 		Enums.GamePhase.DECLARE_ATTACKERS:
-			game_phase = Enums.GamePhase.DECLARE_BLOCKERS
-			current_player_id = _next_player().id
+			_game_phase = Enums.GamePhase.DECLARE_BLOCKERS
+			_current_player_id = _next_player().id
 
 		Enums.GamePhase.DECLARE_BLOCKERS:
-			game_phase = Enums.GamePhase.REACTION
+			_game_phase = Enums.GamePhase.REACTION
 
 		Enums.GamePhase.REACTION:
 			_reaction_history.append(PlayerReaction.END_TURN)
 			if _end_reaction_phase():
 				_reaction_history = []
-				game_phase = Enums.GamePhase.PLAY
+				_game_phase = Enums.GamePhase.PLAY
 				_end_of_turn_step()
 
-			current_player_id = _next_player().id
+			_current_player_id = _next_player().id
 		_:
 			push_error("Unhandled GamePhase")
 
 	return true
 
-## One-time mulligan phase to allow players to choose cards to replace in their starting hand
+## One-time mulligan phase to allow _players to choose cards to replace in their starting hand
 func mulligan(player_id: int, cards: Array[Card]) -> bool:
 	# No player turn, everyone does this at the same time
 	# If everyone has mulligan, reset and go to Play
@@ -112,8 +112,8 @@ func mulligan(player_id: int, cards: Array[Card]) -> bool:
 
 	# Start Game if everyone has mulliganed
 	if _mulliganed_players.has_all(_id_to_player.keys()):
-		game_phase = Enums.GamePhase.PLAY
-		current_player_id = players[0].id
+		_game_phase = Enums.GamePhase.PLAY
+		_current_player_id = _players[0].id
 
 	return true
 
@@ -121,7 +121,7 @@ func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 	if not is_players_turn(player_id):
 		return false
 	
-	match game_phase:
+	match _game_phase:
 		Enums.GamePhase.PLAY:
 			var player : Player = _id_to_player[player_id]
 			var index : int = player.hand.find(card)
@@ -131,7 +131,7 @@ func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 				push_error("Player attempted to play card that doesn't exist in their hand")
 				return false
 		Enums.GamePhase.REACTION:
-			current_player_id = _next_player().id
+			_current_player_id = _next_player().id
 
 
 			_reaction_history.append(PlayerReaction.PLAY_CARD)
@@ -145,11 +145,11 @@ func activate_ability(player_id: int, card: Card, targets: Array[Target] = []) -
 	if not is_players_turn(player_id):
 		return false
 
-	match game_phase:
+	match _game_phase:
 		Enums.GamePhase.PLAY:
 			pass
 		Enums.GamePhase.REACTION:
-			current_player_id = _next_player().id
+			_current_player_id = _next_player().id
 
 			_reaction_history.append(PlayerReaction.ACTIVATE_ABILITY)
 		_:
@@ -161,15 +161,15 @@ func declare_attacker(player_id: int, follower: Follower, target_player: int) ->
 	if not is_players_turn(player_id) or player_id == target_player:
 		return false
 
-	match game_phase:
+	match _game_phase:
 		Enums.GamePhase.DECLARE_ATTACKERS:
 			if follower not in _id_to_player[player_id].followers_in_play:
 				return false
 
-			if battles.has(follower):
-				battles.erase(follower)
+			if _battles.has(follower):
+				_battles.erase(follower)
 			else:
-				battles[follower] = Battle.new().add_attacker(follower)
+				_battles[follower] = Battle.new().add_attacker(follower)
 		_:
 			return false
 
@@ -179,15 +179,15 @@ func declare_influencer(player_id: int, follower: Follower) -> bool:
 	if not is_players_turn(player_id):
 		return false
 
-	match game_phase:
+	match _game_phase:
 		Enums.GamePhase.DECLARE_ATTACKERS:
 			if follower not in _id_to_player[player_id].followers_in_play:
 				return false
 
-			if influencing_followers.has(follower):
-				influencing_followers.erase(follower)
+			if _influencing_followers.has(follower):
+				_influencing_followers.erase(follower)
 			else:
-				influencing_followers.append(follower)
+				_influencing_followers.append(follower)
 		_:
 			return false
 
@@ -197,16 +197,16 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 	if not is_players_turn(player_id):
 		return false
 
-	match game_phase:
+	match _game_phase:
 		Enums.GamePhase.DECLARE_BLOCKERS:
 			if follower not in _id_to_player[player_id].followers_in_play:
 				return false
 
-			if battles.has(attacking_follower):
-				if battles[attacking_follower].find(follower):
-					battles[attacking_follower].remove_blocker(follower)
+			if _battles.has(attacking_follower):
+				if _battles[attacking_follower].find(follower):
+					_battles[attacking_follower].remove_blocker(follower)
 				else:
-					battles[attacking_follower].add_blocker(follower)
+					_battles[attacking_follower].add_blocker(follower)
 			else:
 				return false
 		_:
@@ -217,7 +217,7 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 ## Public Observer methods
 
 func is_players_turn(player_id: int) -> bool:
-	return current_player_id == player_id
+	return _current_player_id == player_id
 
 func player(player_id: int) -> Player:
 	return _id_to_player[player_id]
@@ -227,12 +227,12 @@ func player(player_id: int) -> Player:
 ## Orchestrates all of the end of turn steps, deal combat damage, gain influence, etc.
 func _end_of_turn_step() -> void:
 
-	for attacker in battles.keys():
-		var battle : Battle = battles[attacker]
+	for attacker in _battles.keys():
+		var battle : Battle = _battles[attacker]
 		battle.damage_step()
 
-	for key in battles.keys():
-		var battle : Battle = battles[key]
+	for key in _battles.keys():
+		var battle : Battle = _battles[key]
 		for attacker in battle.attackers:
 			if attacker.is_dead():
 				## Remove attacker from player zone
@@ -244,23 +244,23 @@ func _end_of_turn_step() -> void:
 				pass
 
 	# Influence step
-	for influencer in influencing_followers:
+	for influencer in _influencing_followers:
 		var influence := influencer.influence()
-		_id_to_player[current_player_id].influence += influence
+		_id_to_player[_current_player_id].influence += influence
 
 func _next_player() -> Player:
-	var current_player_index : int = players.find(_id_to_player[current_player_id])
-	var next_player_index : int = (current_player_index + 1) % players.size()
-	return players[next_player_index]
+	var current_player_index : int = _players.find(_id_to_player[_current_player_id])
+	var next_player_index : int = (current_player_index + 1) % _players.size()
+	return _players[next_player_index]
 
 func _previous_player() -> Player:
-	var current_player_index : int = players.find(_id_to_player[current_player_id])
+	var current_player_index : int = _players.find(_id_to_player[_current_player_id])
 	# Rolls over automatically thanks to negative Array indexing
 	var next_player_index : int = current_player_index - 1
-	return players[next_player_index]
+	return _players[next_player_index]
 
 ## Returns whether the reaction phase should end
 func _end_reaction_phase() -> bool:
-	var all_players_have_reacted := _reaction_history.size() == players.size() 
+	var all_players_have_reacted := _reaction_history.size() == _players.size() 
 	return all_players_have_reacted \
 				and _reaction_history.all(func(reaction: PlayerReaction) -> bool: return reaction == PlayerReaction.END_TURN)
