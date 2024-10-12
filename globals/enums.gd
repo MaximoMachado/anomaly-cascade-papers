@@ -1,6 +1,7 @@
 ## class_name Enums <- autoload so commented out
 extends Node
 
+enum GamePhase { MULLIGAN, PLAY, DECLARE_ATTACKERS, DECLARE_BLOCKERS, REACTION }
 
 enum CardRarity { COMMON, RARE, MYTHIC }
 
