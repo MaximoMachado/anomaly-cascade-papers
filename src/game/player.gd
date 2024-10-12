@@ -35,25 +35,29 @@ func _init(p_id: int, p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = D
 	graveyard = Deck.new()
 
 	if p_hand.size() == 0:
-		hand = deck.get_starting_hand()
+		hand = deck.starting_hand()
 
 ## Mutators
 
-func shuffle() -> void:
+func shuffle() -> Player:
 	deck.shuffle()
 	influence_deck.shuffle()
 	graveyard.shuffle()
+	return self
 
 ## Adds card to hands
-func add_to_hand(cards: Array[Card]) -> void:
+func add_to_hand(cards: Array[Card]) -> Player:
 	hand.append_array(cards)
+	return self
 
 ## Removes card from hand
-func discard_from_hand(cards: Array[Card]) -> void:
+func discard_from_hand(cards: Array[Card]) -> Plyaer:
 	for card in cards:
 		var index : int = hand.find(card)
 		if index != -1:
 			hand.remove_at(index)
+
+	return self
 
 ## Removes top N cards from deck
 func draw_cards(num_cards: = 1) -> Array[Card]:
@@ -67,14 +71,14 @@ func draw_influence_cards(num_cards: = 1) -> Array[Card]:
 func draw_graveyard_cards(num_cards: = 1) -> Array[Card]:
 	return _draw_cards_from_deck(num_cards, graveyard)
 
-func add_to_deck(cards: Array[Card]) -> void:
-	_add_to_deck(cards, deck)
+func add_to_deck(cards: Array[Card]) -> Player:
+	return _add_to_deck(cards, deck)
 
-func add_to_influence_deck(cards: Array[Card]) -> void:
-	_add_to_deck(cards, influence_deck)
+func add_to_influence_deck(cards: Array[Card]) -> Player:
+	return _add_to_deck(cards, influence_deck)
 
-func add_to_graveyard(cards: Array[Card]) -> void:
-	_add_to_deck(cards, graveyard)
+func add_to_graveyard(cards: Array[Card]) -> Player:
+	return _add_to_deck(cards, graveyard)
 
 ## Public Observers
 
@@ -97,8 +101,10 @@ func _draw_cards_from_deck(num_cards: int, p_deck: Deck) -> Array[Card]:
 		cards.append(card)
 	return cards
 
-func _add_to_deck(cards: Array[Card], p_deck: Deck) -> void:
+func _add_to_deck(cards: Array[Card], p_deck: Deck) -> Player:
 	for i in range(cards.size()):
 		var card = cards[i]
 		var random_index = randi() % p_deck.size()
 		deck.insert(random_index, card)
+
+	return self

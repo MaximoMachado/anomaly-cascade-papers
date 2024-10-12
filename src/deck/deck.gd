@@ -18,7 +18,7 @@ func shuffle() -> void:
 
 ## Removes num_cards cards from the deck and returns them
 ## The first num_factories cards will be Factories
-func get_starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card]:
+func starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card]:
 	var hand : Array[Card] = []
 
 	if _cards.size() < 7:
@@ -28,7 +28,8 @@ func get_starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card
 	
 	var factories : Array[Card] = _cards.filter(func(card: Card) -> bool: return card is Factory)
 	factories.shuffle()
-	var guaranteed_factories = min(num_factories, factories.size())
+
+	var guaranteed_factories : int = min(num_factories, factories.size())
 	for i in range(0, guaranteed_factories):
 		var factory := factories[i]
 		hand.append(factory)
@@ -65,7 +66,7 @@ func _iter_get() -> Card:
 
 # Useful Array methods to use as-is
 
-func duplicate(deep=false) -> Deck:
+func duplicate(deep := false) -> Deck:
 	return Deck.new(_cards.duplicate(deep))
 
 func append(card: Card) -> void:
