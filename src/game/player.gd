@@ -38,28 +38,46 @@ func _init(p_id: int, p_hand: Array[Card] = [], p_main_deck: Deck = Deck.new(), 
 ## Mutators
 
 func add_to_hand(cards: Array[Card]) -> void:
-	pass
+	hand.append_array(cards)
 
 func discard_from_hand(cards: Array[Card]) -> void:
-	pass
+	for card in cards:
+		var index : int = hand.find(card)
+		if index != -1:
+			hand.remove_at(index)
 
 func draw_cards(num_cards: = 1) -> Array[Card]:
-	pass
+	for i in range(num_cards):
+		var card := deck.pop_front()
+		hand.append(card)
 
 func draw_influence_cards(num_cards: = 1) -> Array[Card]:
-	pass
+	for i in range(num_cards):
+		var card := influence_deck.pop_front()
+		hand.append(card)
 
 func draw_graveyard_cards(num_cards: = 1) -> Array[Card]:
-	pass
+	for i in range(num_cards):
+		var card := graveyard.pop_front()
+		hand.append(card)
 
 func add_to_deck(cards: Array[Card]) -> void:
-	pass
+	for i in range(cards.size()):
+		var card = cards[i]
+		var random_index = randi() % deck.size()
+		deck.insert(random_index, card)
 
 func add_to_influence_deck(cards: Array[Card]) -> void:
-	pass
+	for i in range(cards.size()):
+		var card = cards[i]
+		var random_index = randi() % influence_deck.size()
+		influence_deck.insert(random_index, card)
 
 func add_to_graveyard(cards: Array[Card]) -> void:
-	pass
+	for i in range(cards.size()):
+		var card = cards[i]
+		var random_index = randi() % graveyard.size()
+		graveyard.insert(random_index, card)
 
 
 

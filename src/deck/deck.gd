@@ -64,6 +64,9 @@ func _iter_get() -> Card:
 
 # Useful Array methods to use as-is
 
+func insert(position: int, value: Card) -> int:
+	return _cards.insert(position, value)
+
 func find(what: Card, from: int = 0) -> int:
 	return _cards.find(what, from)
 
