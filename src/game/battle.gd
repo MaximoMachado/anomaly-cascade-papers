@@ -1,45 +1,58 @@
 class_name Battle extends RefCounted
 
 var attackers: Array[Follower] = []
-var blocker: Array[Follower] = []
+var blockers: Array[Follower] = []
 
 
 func _init() -> void:
     attackers = []
-    blocker = []
+    blockers = []
 
-func attacker(follower: Follower):
-    attacker.append(follower)
+func add_attacker(follower: Follower) -> Battle:
+    attackers.append(follower)
+    return self
 
-func blocker(follower: Follower):
-    blocker.append(follower)
+func add_blocker(follower: Follower) -> Battle:
+    blockers.append(follower)
+    return self
 
-## Mutates attacking and defending followers 
-func resolve_damage() -> void:
-    var damage_dealt_to_defenders: Array[int] = []
-    damage_dealt_to_defenders.resize(blocker.size())
-    damage_dealt_to_defenders.fill(0)
+func remove_attacker(follower: Follower) -> Battle:
+    var index := attackers.find(follower)
+    attackers.remove_at(index)
+    return self
 
+func remove_blocker(follower: Follower) -> Battle:
+    var index := blockers.find(follower)
+    blockers.remove_at(index)
+    return self
+
+## Mutates attacking and defending followers to deal damage to each other
+func damage_step() -> Battle:
+
+    var damage_dealt_to_blockers: Array[int] = _calculate_damage(attackers, blockers)
+
+    var damage_dealt_to_attackers: Array[int] = _calculate_damage(blockers, attackers)
+
+    # Update health of attackers/blockers
     for i in range(attackers.size()):
-        var attacker := attackers[i]
-        var damage_dealt := attacker.attack(blocker)
+        attackers[i].recieve_battle_damage(blockers, damage_dealt_to_attackers[i])
+
+    for i in range(blockers.size()):
+        blockers[i].recieve_battle_damage(attackers, damage_dealt_to_blockers[i])
+
+    return self
+
+func _calculate_damage(damage_dealers: Array[Follower], damage_takers: Array[Follower]) -> Array[int]:
+    var total_damage: Array[int] = []
+    total_damage.resize(damage_takers.size())
+    total_damage.fill(0)
+
+    for i in range(damage_dealers.size()):
+        var attacker := damage_dealers[i]
+        var damage_dealt := attacker.attack(damage_takers)
         for j in range(damage_dealt.size()):
-            damage_dealt_to_defenders[j] += damage_dealt[j]
-        
+            damage_dealt[j] += damage_dealt[j]
 
-    var damage_dealt_to_attackers: Array[int] = []
-    damage_dealt_to_attackers.resize(attackers.size())
-    damage_dealt_to_attackers.fill(0)
+    return total_damage
 
-    for i in range(blocker.size()):
-        var defender := blocker[i]
-        var damage_dealt := defender.block(attackers)
-        for j in range(damage_dealt.size()):
-            damage_dealt_to_attackers[j] += damage_dealt[j]
-
-    # Update health of attackers/blocker
-    for i in range(attackers.size()):
-        attackers[i].recieve_battle_damage(blocker, damage_dealt_to_attackers[i])
-
-    for i in range(blocker.size()):
-        blocker[i].recieve_battle_damage(attackers, damage_dealt_to_defenders[i])
+    
