@@ -40,6 +40,7 @@ func start_game(shuffle := true) -> bool:
 
 	game_phase = Enums.GamePhase.MULLIGAN
 	current_player_id = players[0].id
+	return true
 
 ## Player Actions
 
@@ -156,7 +157,8 @@ func declare_attacker(player_id: int, follower: Follower, target_player: int) ->
 
 	match game_phase:
 		Enums.GamePhase.DECLARE_ATTACKERS:
-			pass
+			if follower not in _id_to_player[player_id].followers_in_play:
+				return false
 		_:
 			return false
 

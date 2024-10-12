@@ -1,10 +1,11 @@
 extends GutTest
 
-## Tests a game of two players being initialized
+## Tests a game of two players with no played cards and just ending turn
 func test_two_players_no_cards():
 	const player_1 = 0
 	const player_2 = 20
-	var game := Game.new([player_1, player_2], false)
+	var game := Game.new().add_player(player_1).add_player(player_2)
+
 	assert_eq(game.players.size(), 2)
 	game.mulligan(player_1, [])
 	game.mulligan(player_2, [])
@@ -45,7 +46,7 @@ func test_two_players_no_cards():
 	assert_eq(game.game_phase, Enums.GamePhase.PLAY)
 	assert_true(game.is_players_turn(player_2))
 
-## Tests a game of two players being initialized
+## E2E tests of a game of two players being initialized
 func test_two_players_play_cards():
 
 	var test_deck : Deck = Deck.new()
