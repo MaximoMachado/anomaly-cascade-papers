@@ -191,6 +191,9 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 func is_players_turn(player_id: int) -> bool:
 	return current_player_id == player_id
 
+func player(player_id: int) -> Player:
+	return _id_to_player[player_id]
+
 ## Private methods
 
 func _next_player() -> Player:

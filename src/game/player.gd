@@ -78,6 +78,9 @@ func add_to_graveyard(cards: Array[Card]) -> void:
 
 ## Public Observers
 
+func get_playable_cards() -> Array[Card]:
+	return hand.filter(func(card: Card) -> bool: return card.is_playable(self))
+
 func followers(deep_copy := false) -> Array[Follower]:
 	return followers_in_play.duplicate(deep_copy)
 

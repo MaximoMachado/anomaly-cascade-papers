@@ -32,7 +32,7 @@ func copy() -> Card:
 
 ## Public Observers
 
-func is_playable(player: Player, targets: Array[Target]) -> bool:
+func is_playable(player: Player) -> bool:
 	push_error("NotImplementedError: Card.is_playable()")
 	return false
 	
