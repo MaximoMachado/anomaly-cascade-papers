@@ -12,6 +12,8 @@ var current_player_id: int
 enum PlayerReaction { END_TURN, PLAY_CARD, ACTIVATE_ABILITY }
 var reaction_history : Array[PlayerReaction]
 
+var mulliganed_players : Dictionary
+
 ## Create a game object with requested player ids
 ## Number of players is equivalent to number of ids
 ## Turn order is shuffled by default
@@ -30,7 +32,7 @@ func _init(player_ids: Array[int]) -> void:
 ## Ends the current turn and goes to the next phase
 ## Returns whether this is a valid action that can be taken by player
 func end_turn(player_id: int) -> bool:
-	if not _is_players_turn(player_id):
+	if not is_players_turn(player_id):
 		return false
 
 	match game_phase:
@@ -61,9 +63,23 @@ func end_turn(player_id: int) -> bool:
 
 	return true
 
+func mulligan(player_id: int, cards: Array[Card]) -> bool:
+	# No player turn, everyone does this at the same time
+	# If everyone has mulligan, reset and go to Play
+	if mulliganed_players.has(player_id):
+		return false
+
+	# Todo: Add mulligan logic here
+
+	mulliganed_players[player_id] = true
+	if mulliganed_players.has_all(_id_to_player.keys()):
+		game_phase = Enums.GamePhase.PLAY
+		current_player_id = _next_player().id
+
+	return true
 
 func play_card(player_id: int, card: Card, targets: Array[Card]) -> bool:
-	if _is_players_turn(player_id):
+	if not is_players_turn(player_id):
 		return false
 	
 	match game_phase:
@@ -79,7 +95,7 @@ func play_card(player_id: int, card: Card, targets: Array[Card]) -> bool:
 
 
 func activate_ability(player_id: int, card: Card, targets: Array[Card]) -> bool:
-	if _is_players_turn(player_id):
+	if not is_players_turn(player_id):
 		return false
 
 	match game_phase:
@@ -93,7 +109,7 @@ func activate_ability(player_id: int, card: Card, targets: Array[Card]) -> bool:
 	return true
 
 func declare_attacker(player_id: int, follower: Follower, target_player: int) -> bool:
-	if _is_players_turn(player_id):
+	if not is_players_turn(player_id):
 		return false
 
 	match game_phase:
@@ -105,7 +121,7 @@ func declare_attacker(player_id: int, follower: Follower, target_player: int) ->
 	return true
 
 func declare_influencer(player_id: int, follower: Follower) -> bool:
-	if _is_players_turn(player_id):
+	if not is_players_turn(player_id):
 		return false
 
 	match game_phase:
@@ -117,7 +133,7 @@ func declare_influencer(player_id: int, follower: Follower) -> bool:
 	return true
 
 func declare_blocker(player_id: int, follower: Follower, attacking_follower: Follower) -> bool:
-	if _is_players_turn(player_id):
+	if not is_players_turn(player_id):
 		return false
 
 	match game_phase:
@@ -130,10 +146,10 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 
 ## Public Observer methods
 
-## Private methods
-
-func _is_players_turn(player_id: int) -> bool:
+func is_players_turn(player_id: int) -> bool:
 	return current_player_id == player_id
+
+## Private methods
 
 func _next_player() -> Player:
 	var current_player_index : int = players.find(_id_to_player[current_player_id])
