@@ -9,7 +9,7 @@ var players: Array[Player]
 var _id_to_player: Dictionary
 
 ## Dictates which player has the ability to take actions
-var _current_player_id: int
+var current_player_id: int
 
 enum PlayerReaction { END_TURN, PLAY_CARD, ACTIVATE_ABILITY }
 var _reaction_history : Array[PlayerReaction]
@@ -20,15 +20,18 @@ var _mulliganed_players : Dictionary
 ## Create a game object with requested player ids
 ## Number of players is equivalent to number of ids
 ## Turn order is shuffled by default
-func _init(player_ids: Array[int]) -> void:
+func _init(player_ids: Array[int], shuffle: bool = true) -> void:
+	assert(player_ids.size() >= 2, "Game must have at least 2 players")
+
 	game_phase = Enums.GamePhase.MULLIGAN
 	for i in player_ids:
 		var player := Player.new(i)
 		players.append(player)
 		_id_to_player[i] = player
 
-	Algorithms.shuffle(players)
-	_current_player_id = players[0].id
+	if shuffle:
+		Algorithms.shuffle(players)
+	current_player_id = players[0].id
 
 ## Player Actions
 
@@ -41,23 +44,23 @@ func end_turn(player_id: int) -> bool:
 	match game_phase:
 		Enums.GamePhase.MULLIGAN:
 			game_phase = Enums.GamePhase.PLAY
-			_current_player_id = players[0].id
+			current_player_id = players[0].id
 
 		Enums.GamePhase.PLAY:
 			game_phase = Enums.GamePhase.DECLARE_ATTACKERS
 
 		Enums.GamePhase.DECLARE_ATTACKERS:
 			game_phase = Enums.GamePhase.DECLARE_BLOCKERS
-			_current_player_id = _next_player().id
+			current_player_id = _next_player().id
 
 		Enums.GamePhase.DECLARE_BLOCKERS:
 			game_phase = Enums.GamePhase.REACTION
 			# Attacking player gets the first reaction
-			_current_player_id = _previous_player().id 
+			current_player_id = _previous_player().id 
 
 		Enums.GamePhase.REACTION:
 			_reaction_history.append(PlayerReaction.END_TURN)
-			_current_player_id = _next_player().id
+			current_player_id = _next_player().id
 			if _end_reaction_phase():
 				_reaction_history = []
 				game_phase = Enums.GamePhase.PLAY
@@ -79,11 +82,11 @@ func mulligan(player_id: int, cards: Array[Card]) -> bool:
 	# Start Game if everyone has mulliganed
 	if _mulliganed_players.has_all(_id_to_player.keys()):
 		game_phase = Enums.GamePhase.PLAY
-		_current_player_id = players[0].id
+		current_player_id = players[0].id
 
 	return true
 
-func play_card(player_id: int, card: Card, targets: Array[Target]) -> bool:
+func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 	if not is_players_turn(player_id):
 		return false
 	
@@ -97,7 +100,7 @@ func play_card(player_id: int, card: Card, targets: Array[Target]) -> bool:
 				push_error("Player attempted to play card that doesn't exist in their hand")
 				return false
 		Enums.GamePhase.REACTION:
-			_current_player_id = _next_player().id
+			current_player_id = _next_player().id
 
 
 			_reaction_history.append(PlayerReaction.PLAY_CARD)
@@ -107,7 +110,7 @@ func play_card(player_id: int, card: Card, targets: Array[Target]) -> bool:
 	return true
 
 
-func activate_ability(player_id: int, card: Card, targets: Array[Target]) -> bool:
+func activate_ability(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 	if not is_players_turn(player_id):
 		return false
 
@@ -115,7 +118,7 @@ func activate_ability(player_id: int, card: Card, targets: Array[Target]) -> boo
 		Enums.GamePhase.PLAY:
 			pass
 		Enums.GamePhase.REACTION:
-			_current_player_id = _next_player().id
+			current_player_id = _next_player().id
 
 			_reaction_history.append(PlayerReaction.ACTIVATE_ABILITY)
 		_:
@@ -124,7 +127,7 @@ func activate_ability(player_id: int, card: Card, targets: Array[Target]) -> boo
 	return true
 
 func declare_attacker(player_id: int, follower: Follower, target_player: int) -> bool:
-	if not is_players_turn(player_id):
+	if not is_players_turn(player_id) or player_id == target_player:
 		return false
 
 	match game_phase:
@@ -162,17 +165,17 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 ## Public Observer methods
 
 func is_players_turn(player_id: int) -> bool:
-	return _current_player_id == player_id
+	return current_player_id == player_id
 
 ## Private methods
 
 func _next_player() -> Player:
-	var current_player_index : int = players.find(_id_to_player[_current_player_id])
+	var current_player_index : int = players.find(_id_to_player[current_player_id])
 	var next_player_index : int = (current_player_index + 1) % players.size()
 	return players[next_player_index]
 
 func _previous_player() -> Player:
-	var current_player_index : int = players.find(_id_to_player[_current_player_id])
+	var current_player_index : int = players.find(_id_to_player[current_player_id])
 	# Rolls over automatically thanks to negative Array indexing
 	var next_player_index : int = current_player_index - 1
 	return players[next_player_index]
