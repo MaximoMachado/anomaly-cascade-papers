@@ -17,6 +17,10 @@ var _reaction_history : Array[PlayerReaction]
 ## Used solely for the start of the game to determine when it is safe to move to the first turn
 var _mulliganed_players : Dictionary
 
+## Maps initiating attacker to a new battle
+var battles: Dictionary
+var influencing_followers: Array[Follower]
+
 ## Public Mutators
 
 func add_player(player_id: int, main_deck: Deck = Deck.new(), influence_deck: Deck = Deck.new(), team_id: Variant = null) -> Game:
@@ -67,10 +71,12 @@ func end_turn(player_id: int) -> bool:
 
 		Enums.GamePhase.REACTION:
 			_reaction_history.append(PlayerReaction.END_TURN)
-			current_player_id = _next_player().id
 			if _end_reaction_phase():
 				_reaction_history = []
 				game_phase = Enums.GamePhase.PLAY
+				_end_of_turn_step()
+
+			current_player_id = _next_player().id
 		_:
 			push_error("Unhandled GamePhase")
 
@@ -159,6 +165,11 @@ func declare_attacker(player_id: int, follower: Follower, target_player: int) ->
 		Enums.GamePhase.DECLARE_ATTACKERS:
 			if follower not in _id_to_player[player_id].followers_in_play:
 				return false
+
+			if battles.has(follower):
+				battles.erase(follower)
+			else:
+				battles[follower] = Battle.new().add_attacker(follower)
 		_:
 			return false
 
@@ -170,7 +181,13 @@ func declare_influencer(player_id: int, follower: Follower) -> bool:
 
 	match game_phase:
 		Enums.GamePhase.DECLARE_ATTACKERS:
-			pass
+			if follower not in _id_to_player[player_id].followers_in_play:
+				return false
+
+			if influencing_followers.has(follower):
+				influencing_followers.erase(follower)
+			else:
+				influencing_followers.append(follower)
 		_:
 			return false
 
@@ -182,7 +199,16 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 
 	match game_phase:
 		Enums.GamePhase.DECLARE_BLOCKERS:
-			pass
+			if follower not in _id_to_player[player_id].followers_in_play:
+				return false
+
+			if battles.has(attacking_follower):
+				if battles[attacking_follower].find(follower):
+					battles[attacking_follower].remove_blocker(follower)
+				else:
+					battles[attacking_follower].add_blocker(follower)
+			else:
+				return false
 		_:
 			return false
 
@@ -197,6 +223,30 @@ func player(player_id: int) -> Player:
 	return _id_to_player[player_id]
 
 ## Private methods
+
+## Orchestrates all of the end of turn steps, deal combat damage, gain influence, etc.
+func _end_of_turn_step() -> void:
+
+	for attacker in battles.keys():
+		var battle : Battle = battles[attacker]
+		battle.damage_step()
+
+	for key in battles.keys():
+		var battle : Battle = battles[key]
+		for attacker in battle.attackers:
+			if attacker.is_dead():
+				## Remove attacker from player zone
+				pass
+
+		for blocker in battle.blockers:
+			if blocker.is_dead():
+				## Remove blocker from player zone
+				pass
+
+	# Influence step
+	for influencer in influencing_followers:
+		var influence := influencer.influence()
+		_id_to_player[current_player_id].influence += influence
 
 func _next_player() -> Player:
 	var current_player_index : int = players.find(_id_to_player[current_player_id])
