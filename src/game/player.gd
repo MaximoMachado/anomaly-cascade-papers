@@ -32,6 +32,38 @@ func _init(p_id: int, p_hand: Array[Card] = [], p_main_deck: Deck = Deck.new(), 
 	influence_deck = p_influence_deck
 	graveyard = Deck.new()
 
+	if p_hand.size() == 0:
+		hand = deck.get_starting_hand()
+
+## Mutators
+
+func add_to_hand(cards: Array[Card]) -> void:
+	pass
+
+func discard_from_hand(cards: Array[Card]) -> void:
+	pass
+
+func draw_cards(num_cards: = 1) -> Array[Card]:
+	pass
+
+func draw_influence_cards(num_cards: = 1) -> Array[Card]:
+	pass
+
+func draw_graveyard_cards(num_cards: = 1) -> Array[Card]:
+	pass
+
+func add_to_deck(cards: Array[Card]) -> void:
+	pass
+
+func add_to_influence_deck(cards: Array[Card]) -> void:
+	pass
+
+func add_to_graveyard(cards: Array[Card]) -> void:
+	pass
+
+
+
+
 
 ## Public Observers
 
