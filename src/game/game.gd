@@ -30,7 +30,7 @@ func _init(player_ids: Array[int], shuffle: bool = true) -> void:
 		_id_to_player[i] = player
 
 	if shuffle:
-		Algorithms.shuffle(players)
+		players.shuffle()
 	current_player_id = players[0].id
 
 ## Player Actions

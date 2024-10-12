@@ -7,20 +7,47 @@ var _cards : Array[Card]
 
 var _curr_index: int
 
-func _init(p_cards: Array[Card] = []) -> void:
+func _init(p_cards: Array[Card] = [], shuffle := true) -> void:
 	_cards = p_cards.duplicate(true)
+	if shuffle:
+		shuffle()
 
 
-## Fisher-yates in-place shuffle
 func shuffle() -> void:
-	var rng := RandomNumberGenerator.new()
-	var n := _cards.size()
-	for i in range(n-1, 1, -1):
-		var j := rng.randi_range(0, i)
+	_cards.shuffle()
 
-		var tmp_card := _cards[i]
-		_cards[i] = _cards[j]
-		_cards[j] = tmp_card
+## Removes 7 cards from the deck and returns them
+## The first two cards of the 7 will be Factories
+func get_starting_hand(num_cards: int = 5, num_factories: int = 2) -> Array[Card]:
+	var hand : Array[Card] = []
+
+	if _cards.size() < 7:
+		hand = _cards
+		_cards = []
+		return hand
+	
+	var factories : Array[Factory] = _cards.filter(func(card: Card) -> bool: return card is Factory)
+	factories.shuffle()
+	for i in range(0, num_factories):
+		var factory := factories[i]
+		hand.append(factory)
+		var index := _cards.find(factory)
+		_cards.remove_at(index)
+
+	for i in range(0, num_cards):
+		var card : Card = _cards.pop_front()
+		hand.append(card)
+
+	return hand
+
+func draw_cards(num_cards: int, starting_index: int = 0) -> Array[Card]:
+	var top_cards := _cards.slice(starting_index, num_cards)
+
+	# Delete cards from deck
+	for i in range(num_cards):
+		_cards.pop_front()
+
+	return top_cards
 	
 # To implement iterating over the Deck
 
