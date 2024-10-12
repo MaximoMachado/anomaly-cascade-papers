@@ -7,27 +7,36 @@ var _cards : Array[Card]
 
 var _curr_index: int
 
-func _init(p_cards: Array[Card] = [], shuffle := true) -> void:
+var _automatically_shuffle: bool
+
+func _init(p_cards: Array[Card] = [], p_shuffle := true) -> void:
 	_cards = p_cards.duplicate(true)
-	if shuffle:
-		shuffle()
+	_automatically_shuffle = p_shuffle
+	shuffle()
 
 
 func shuffle() -> void:
-	_cards.shuffle()
+	if _automatically_shuffle:
+		_cards.shuffle()
 
-## Removes num_cards cards from the deck and returns them
-## The first num_factories cards will be Factories
+## Draws a starting hand and removes these cards from the deck
+## 
+## @param num_cards: If deck has cards, will draw a maximum of that many cards
+## @param num_factories: If deck has factories, will draw up to that many first
+##
+## @return 0 <= array.size() <= num_cards
 func starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card]:
 	var hand : Array[Card] = []
 
-	if _cards.size() < 7:
+	# If requested cards is less than needed, simply return those cards
+	if _cards.size() < num_cards:
 		hand = _cards
 		_cards = []
 		return hand
 	
 	var factories : Array[Card] = _cards.filter(func(card: Card) -> bool: return card is Factory)
-	factories.shuffle()
+	if _automatically_shuffle:
+		factories.shuffle()
 
 	var guaranteed_factories : int = min(num_factories, factories.size())
 	for i in range(0, guaranteed_factories):
@@ -36,7 +45,8 @@ func starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card]:
 		var index := _cards.find(factory)
 		_cards.remove_at(index)
 
-	for i in range(0, num_cards - guaranteed_factories):
+	var cards_to_draw : int = max(0, num_cards - guaranteed_factories)
+	for i in range(cards_to_draw):
 		var card : Card = _cards.pop_front()
 		hand.append(card)
 
@@ -50,6 +60,13 @@ func draw_cards(num_cards: int, starting_index: int = 0) -> Array[Card]:
 		_cards.pop_front()
 
 	return top_cards
+
+## Public Observers
+
+## Immutable snapshot of cards of a deck
+var cards : Array[Card]:
+	get: return _cards.duplicate()
+	set(value): pass
 	
 # To implement iterating over the Deck
 

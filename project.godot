@@ -21,6 +21,8 @@ Enums="*res://globals/enums.gd"
 Signals="*res://globals/signal_bus.gd"
 Logs="*res://globals/logs.gd"
 Algorithms="*res://globals/algorithms.gd"
+Types="*res://globals/types.gd"
+CardCollection="*res://globals/card_collection.gd"
 
 [debug]
 
