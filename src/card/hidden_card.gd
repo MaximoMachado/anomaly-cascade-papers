@@ -6,4 +6,4 @@ extends Card
 
 ## Overrides init so it does not error
 func _init() -> void:
-    pass
+	pass

@@ -4,7 +4,7 @@ class_name Follower extends Card
 
 signal follower_died(follower: Follower)
 
-@export var stats: FollowerStats
+var stats: FollowerStats
 
 ## Handles recieving damage from any card
 ## @emit If follower dies from this attack

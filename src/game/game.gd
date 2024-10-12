@@ -55,8 +55,6 @@ func end_turn(player_id: int) -> bool:
 
 		Enums.GamePhase.DECLARE_BLOCKERS:
 			game_phase = Enums.GamePhase.REACTION
-			# Attacking player gets the first reaction
-			current_player_id = _previous_player().id 
 
 		Enums.GamePhase.REACTION:
 			_reaction_history.append(PlayerReaction.END_TURN)
