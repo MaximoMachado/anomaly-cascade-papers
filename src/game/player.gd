@@ -42,60 +42,58 @@ func shuffle() -> void:
 	influence_deck.shuffle()
 	graveyard.shuffle()
 
+## Adds card to hands
 func add_to_hand(cards: Array[Card]) -> void:
 	hand.append_array(cards)
 
+## Removes card from hand
 func discard_from_hand(cards: Array[Card]) -> void:
 	for card in cards:
 		var index : int = hand.find(card)
 		if index != -1:
 			hand.remove_at(index)
 
-## Adds main deck cards to your hand
-func draw_cards(num_cards: = 1) -> void:
-	for i in range(num_cards):
-		var card := deck.pop_front()
-		hand.append(card)
+## Removes top N cards from deck
+func draw_cards(num_cards: = 1) -> Array[Card]:
+	return _draw_cards_from_deck(num_cards, deck)
 
-## Adds influence deck cards to your hand
-func draw_influence_cards(num_cards: = 1) -> void:
-	for i in range(num_cards):
-		var card := influence_deck.pop_front()
-		hand.append(card)
+## Removes top N cards from deck
+func draw_influence_cards(num_cards: = 1) -> Array[Card]:
+	return _draw_cards_from_deck(num_cards, influence_deck)
 
-## Adds graveyard deck cards to your hand
-func draw_graveyard_cards(num_cards: = 1) -> void:
-	for i in range(num_cards):
-		var card := graveyard.pop_front()
-		hand.append(card)
+## Removes top N cards from deck
+func draw_graveyard_cards(num_cards: = 1) -> Array[Card]:
+	return _draw_cards_from_deck(num_cards, graveyard)
 
 func add_to_deck(cards: Array[Card]) -> void:
-	for i in range(cards.size()):
-		var card = cards[i]
-		var random_index = randi() % deck.size()
-		deck.insert(random_index, card)
+	_add_to_deck(cards, deck)
 
 func add_to_influence_deck(cards: Array[Card]) -> void:
-	for i in range(cards.size()):
-		var card = cards[i]
-		var random_index = randi() % influence_deck.size()
-		influence_deck.insert(random_index, card)
+	_add_to_deck(cards, influence_deck)
 
 func add_to_graveyard(cards: Array[Card]) -> void:
-	for i in range(cards.size()):
-		var card = cards[i]
-		var random_index = randi() % graveyard.size()
-		graveyard.insert(random_index, card)
-
-
+	_add_to_deck(cards, graveyard)
 
 ## Public Observers
 
-func followers(deep_copy=false) -> Array[Follower]:
+func followers(deep_copy := false) -> Array[Follower]:
 	return followers_in_play.duplicate(deep_copy)
 
-func factories(deep_copy=false) -> Array[Factory]:
+func factories(deep_copy := false) -> Array[Factory]:
 	return factories_in_play.duplicate(deep_copy)
 
 
 ## Private Methods
+
+func _draw_cards_from_deck(num_cards: int, p_deck: Deck) -> Array[Card]:
+	var cards : Array[Card] = []
+	for i in range(num_cards):
+		var card := p_deck.pop_front()
+		cards.append(card)
+	return cards
+
+func _add_to_deck(cards: Array[Card], p_deck: Deck) -> void:
+	for i in range(cards.size()):
+		var card = cards[i]
+		var random_index = randi() % p_deck.size()
+		deck.insert(random_index, card)
