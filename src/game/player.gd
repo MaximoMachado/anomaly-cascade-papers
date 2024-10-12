@@ -3,13 +3,14 @@ extends RefCounted
 
 
 var id: int
+var team_id: int
 var hand: Array[Card]
 var deck: Deck
 var influence_deck: Deck
 var graveyard: Deck
 
-var followers_in_play: Zone
-var factories_in_play: Zone
+var followers_in_play: CardZone
+var factories_in_play: CardZone
 
 var health : int:
 	set(value):
@@ -25,8 +26,9 @@ var influence : int:
 		else:
 			influence = value
 
-func _init(p_id: int, p_hand: Array[Card] = [], p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = Deck.new()) -> void:
+func _init(p_id: int, p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = Deck.new(), p_hand: Array[Card] = [],) -> void:
 	id = p_id
+	team_id = p_id
 	hand = p_hand
 	deck = p_main_deck
 	influence_deck = p_influence_deck

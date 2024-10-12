@@ -5,7 +5,7 @@ extends RefCounted
 var game_phase: Enums.GamePhase
 
 ## Dictates turn order for players 
-var players: Array[Player]
+var players: Array[Player] = []
 var _id_to_player: Dictionary
 
 ## Dictates which player has the ability to take actions
@@ -17,20 +17,28 @@ var _reaction_history : Array[PlayerReaction]
 ## Used solely for the start of the game to determine when it is safe to move to the first turn
 var _mulliganed_players : Dictionary
 
-## Create a game object with requested player ids
+## Public Mutators
+
+func add_player(player_id: int, main_deck: Deck = Deck.new(), influence_deck: Deck = Deck.new(), team_id: Variant = null) -> Game:
+
+	var player := Player.new(player_id, main_deck, influence_deck)
+	players.append(player)
+	_id_to_player[player_id] = player
+
+	if team_id != null:
+		player.team_id = team_id
+
+	return self
+
+## Start the game object with previously added players
 ## Number of players is equivalent to number of ids
 ## Turn order is shuffled by default
-func _init(player_ids: Array[int], shuffle: bool = true) -> void:
-	assert(player_ids.size() >= 2, "Game must have at least 2 players")
-
-	game_phase = Enums.GamePhase.MULLIGAN
-	for i in player_ids:
-		var player := Player.new(i)
-		players.append(player)
-		_id_to_player[i] = player
-
+func start_game(shuffle := true) -> bool:
+	assert(players.size() >= 2, "Game must have at least 2 players")
 	if shuffle:
 		players.shuffle()
+
+	game_phase = Enums.GamePhase.MULLIGAN
 	current_player_id = players[0].id
 
 ## Player Actions

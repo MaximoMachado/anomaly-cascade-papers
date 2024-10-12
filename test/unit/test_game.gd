@@ -46,7 +46,7 @@ func test_two_players_no_cards():
 	assert_true(game.is_players_turn(player_2))
 
 ## Tests a game of two players being initialized
-func test_two_players():
+func test_two_players_play_cards():
 
 	const player_1 = 0
 	const player_2 = 20

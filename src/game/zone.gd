@@ -1,1 +1,1 @@
-class_name Zone extends RefCounted
+class_name CardZone extends RefCounted
