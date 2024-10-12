@@ -4,15 +4,18 @@ extends RefCounted
 
 var game_phase: Enums.GamePhase
 
-var players: Array[Player] ## Dictates turn order for players 
+## Dictates turn order for players 
+var players: Array[Player]
 var _id_to_player: Dictionary
 
-var current_player_id: int
+## Dictates which player has the ability to take actions
+var _current_player_id: int
 
 enum PlayerReaction { END_TURN, PLAY_CARD, ACTIVATE_ABILITY }
-var reaction_history : Array[PlayerReaction]
+var _reaction_history : Array[PlayerReaction]
 
-var mulliganed_players : Dictionary
+## Used solely for the start of the game to determine when it is safe to move to the first turn
+var _mulliganed_players : Dictionary
 
 ## Create a game object with requested player ids
 ## Number of players is equivalent to number of ids
@@ -25,7 +28,7 @@ func _init(player_ids: Array[int]) -> void:
 		_id_to_player[i] = player
 
 	Algorithms.shuffle(players)
-	current_player_id = players[0].id
+	_current_player_id = players[0].id
 
 ## Player Actions
 
@@ -38,25 +41,25 @@ func end_turn(player_id: int) -> bool:
 	match game_phase:
 		Enums.GamePhase.MULLIGAN:
 			game_phase = Enums.GamePhase.PLAY
-			current_player_id = players[0].id
+			_current_player_id = players[0].id
 
 		Enums.GamePhase.PLAY:
 			game_phase = Enums.GamePhase.DECLARE_ATTACKERS
 
 		Enums.GamePhase.DECLARE_ATTACKERS:
 			game_phase = Enums.GamePhase.DECLARE_BLOCKERS
-			current_player_id = _next_player().id
+			_current_player_id = _next_player().id
 
 		Enums.GamePhase.DECLARE_BLOCKERS:
 			game_phase = Enums.GamePhase.REACTION
 			# Attacking player gets the first reaction
-			current_player_id = _previous_player().id 
+			_current_player_id = _previous_player().id 
 
 		Enums.GamePhase.REACTION:
-			reaction_history.append(PlayerReaction.END_TURN)
-			current_player_id = _next_player().id
+			_reaction_history.append(PlayerReaction.END_TURN)
+			_current_player_id = _next_player().id
 			if _end_reaction_phase():
-				reaction_history = []
+				_reaction_history = []
 				game_phase = Enums.GamePhase.PLAY
 		_:
 			push_error("Unhandled GamePhase")
@@ -66,35 +69,45 @@ func end_turn(player_id: int) -> bool:
 func mulligan(player_id: int, cards: Array[Card]) -> bool:
 	# No player turn, everyone does this at the same time
 	# If everyone has mulligan, reset and go to Play
-	if mulliganed_players.has(player_id):
+	if _mulliganed_players.has(player_id):
 		return false
 
 	# Todo: Add mulligan logic here
 
-	mulliganed_players[player_id] = true
-	if mulliganed_players.has_all(_id_to_player.keys()):
+	_mulliganed_players[player_id] = true
+
+	# Start Game if everyone has mulliganed
+	if _mulliganed_players.has_all(_id_to_player.keys()):
 		game_phase = Enums.GamePhase.PLAY
-		current_player_id = _next_player().id
+		_current_player_id = players[0].id
 
 	return true
 
-func play_card(player_id: int, card: Card, targets: Array[Card]) -> bool:
+func play_card(player_id: int, card: Card, targets: Array[Target]) -> bool:
 	if not is_players_turn(player_id):
 		return false
 	
 	match game_phase:
 		Enums.GamePhase.PLAY:
 			var player : Player = _id_to_player[player_id]
-			player.hand.find(card)
+			var index = player.hand.find(card)
+			if index != -1:
+				pass
+			else:
+				push_error("Player attempted to play card that doesn't exist in their hand")
+				return false
 		Enums.GamePhase.REACTION:
-			current_player_id = _next_player().id
+			_current_player_id = _next_player().id
+
+
+			_reaction_history.append(PlayerReaction.PLAY_CARD)
 		_:
 			return false
 
 	return true
 
 
-func activate_ability(player_id: int, card: Card, targets: Array[Card]) -> bool:
+func activate_ability(player_id: int, card: Card, targets: Array[Target]) -> bool:
 	if not is_players_turn(player_id):
 		return false
 
@@ -102,7 +115,9 @@ func activate_ability(player_id: int, card: Card, targets: Array[Card]) -> bool:
 		Enums.GamePhase.PLAY:
 			pass
 		Enums.GamePhase.REACTION:
-			current_player_id = _next_player().id
+			_current_player_id = _next_player().id
+
+			_reaction_history.append(PlayerReaction.ACTIVATE_ABILITY)
 		_:
 			return false
 
@@ -147,53 +162,23 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 ## Public Observer methods
 
 func is_players_turn(player_id: int) -> bool:
-	return current_player_id == player_id
+	return _current_player_id == player_id
 
 ## Private methods
 
 func _next_player() -> Player:
-	var current_player_index : int = players.find(_id_to_player[current_player_id])
+	var current_player_index : int = players.find(_id_to_player[_current_player_id])
 	var next_player_index : int = (current_player_index + 1) % players.size()
 	return players[next_player_index]
 
 func _previous_player() -> Player:
-	var current_player_index : int = players.find(_id_to_player[current_player_id])
+	var current_player_index : int = players.find(_id_to_player[_current_player_id])
 	# Rolls over automatically thanks to negative Array indexing
 	var next_player_index : int = current_player_index - 1
 	return players[next_player_index]
 
 ## Returns whether the reaction phase should end
 func _end_reaction_phase() -> bool:
-	var all_players_have_reacted := reaction_history.size() == players.size() 
+	var all_players_have_reacted := _reaction_history.size() == players.size() 
 	return all_players_have_reacted \
-				and reaction_history.all(func(reaction: PlayerReaction) -> bool: return reaction == PlayerReaction.END_TURN)
-
-## Mutates attacking and defending followers 
-func _deal_damage(attackers: Array[Follower], defenders: Array[Follower]) -> void:
-	var damage_dealt_to_defenders: Array[int] = []
-	damage_dealt_to_defenders.resize(defenders.size())
-	damage_dealt_to_defenders.fill(0)
-	
-	for i in range(attackers.size()):
-		var attacker := attackers[i]
-		var damage_dealt := attacker.attack(defenders)
-		for j in range(damage_dealt.size()):
-			damage_dealt_to_defenders[j] += damage_dealt[j]
-		
-	
-	var damage_dealt_to_attackers: Array[int] = []
-	damage_dealt_to_attackers.resize(attackers.size())
-	damage_dealt_to_attackers.fill(0)
-	
-	for i in range(defenders.size()):
-		var defender := defenders[i]
-		var damage_dealt := defender.block(attackers)
-		for j in range(damage_dealt.size()):
-			damage_dealt_to_attackers[j] += damage_dealt[j]
-	
-	# Update health of attackers/defenders
-	for i in range(attackers.size()):
-		attackers[i].recieve_battle_damage(defenders, damage_dealt_to_attackers[i])
-
-	for i in range(defenders.size()):
-		defenders[i].recieve_battle_damage(attackers, damage_dealt_to_defenders[i])
+				and _reaction_history.all(func(reaction: PlayerReaction) -> bool: return reaction == PlayerReaction.END_TURN)

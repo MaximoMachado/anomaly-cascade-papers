@@ -8,8 +8,8 @@ var deck: Deck
 var influence_deck: Deck
 var graveyard: Deck
 
-var followers_in_play: Array[Follower]
-var factories_in_play: Array[Factory]
+var followers_in_play: Zone
+var factories_in_play: Zone
 
 var health : int:
 	set(value):
@@ -31,3 +31,6 @@ func _init(p_id: int, p_hand: Array[Card] = [], p_main_deck: Deck = Deck.new(), 
 	deck = p_main_deck
 	influence_deck = p_influence_deck
 	graveyard = Deck.new()
+
+
+## Public Observers

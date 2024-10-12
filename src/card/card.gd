@@ -15,9 +15,10 @@ extends RefCounted
 ## Required cost to play this card
 var flux: Flux
 
-## Plays card for target player onto the board
-func play(player: Player, board: Board) -> void:
+## Plays card 
+func play(targets: Array[Target]) -> bool:
 	push_error("NotImplementedError: Card.play()")
+	return false
 
 ## Returns a copy of the card for modification
 func copy() -> Card:
