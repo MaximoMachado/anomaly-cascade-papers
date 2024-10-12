@@ -37,6 +37,11 @@ func _init(p_id: int, p_hand: Array[Card] = [], p_main_deck: Deck = Deck.new(), 
 
 ## Mutators
 
+func shuffle() -> void:
+	deck.shuffle()
+	influence_deck.shuffle()
+	graveyard.shuffle()
+
 func add_to_hand(cards: Array[Card]) -> void:
 	hand.append_array(cards)
 
@@ -46,17 +51,20 @@ func discard_from_hand(cards: Array[Card]) -> void:
 		if index != -1:
 			hand.remove_at(index)
 
-func draw_cards(num_cards: = 1) -> Array[Card]:
+## Adds main deck cards to your hand
+func draw_cards(num_cards: = 1) -> void:
 	for i in range(num_cards):
 		var card := deck.pop_front()
 		hand.append(card)
 
-func draw_influence_cards(num_cards: = 1) -> Array[Card]:
+## Adds influence deck cards to your hand
+func draw_influence_cards(num_cards: = 1) -> void:
 	for i in range(num_cards):
 		var card := influence_deck.pop_front()
 		hand.append(card)
 
-func draw_graveyard_cards(num_cards: = 1) -> Array[Card]:
+## Adds graveyard deck cards to your hand
+func draw_graveyard_cards(num_cards: = 1) -> void:
 	for i in range(num_cards):
 		var card := graveyard.pop_front()
 		hand.append(card)
@@ -81,9 +89,13 @@ func add_to_graveyard(cards: Array[Card]) -> void:
 
 
 
-
-
 ## Public Observers
+
+func followers(deep_copy=false) -> Array[Follower]:
+	return followers_in_play.duplicate(deep_copy)
+
+func factories(deep_copy=false) -> Array[Factory]:
+	return factories_in_play.duplicate(deep_copy)
 
 
 ## Private Methods
