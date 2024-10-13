@@ -24,13 +24,16 @@ func _ready() -> void:
 	%Name.text = card.card_name
 	%Description.text = card.card_text
 	if card is Follower:
+		%CardType.text = "Follower"
 		%FollowerStats.show()
 		%Health.text = str(card.stats.health)
 		%Influence.text = str(card.stats.influence)
 		%Attack.text = str(card.stats.attack)
 	elif card is Factory:
+		%CardType.text = "Factory"
 		%FollowerStats.hide()
 	elif card is Catalyst:
+		%CardType.text = "Catalyst"
 		%FollowerStats.hide()
 		pass
 	else:

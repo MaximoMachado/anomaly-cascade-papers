@@ -3,18 +3,12 @@
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
 [ext_resource type="Script" path="res://scenes/card_view/detect_mouse.gd" id="2_gw6n2"]
 [ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="2_icdem"]
+[ext_resource type="LabelSettings" uid="uid://brgfkli8cxud8" path="res://scenes/card_view/card_name_label_settings.tres" id="4_ei4ui"]
+[ext_resource type="LabelSettings" uid="uid://bhygh1yiw0ovp" path="res://scenes/card_view/card_description_label_settings.tres" id="5_7lox0"]
+[ext_resource type="LabelSettings" uid="uid://fh0m2sqo2l8g" path="res://scenes/card_view/stat_label_settings.tres" id="6_3gngh"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_dedjj"]
-font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_r70ab"]
-font_size = 12
-font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_oogfg"]
-font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_hjfi1"]
+[sub_resource type="LabelSettings" id="LabelSettings_uy467"]
+font_size = 14
 font_color = Color(0, 0, 0, 1)
 
 [node name="CardView" type="Node2D"]
@@ -25,23 +19,29 @@ metadata/_edit_group_ = true
 [node name="DetectMouse" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 125.0
-offset_bottom = 200.0
+offset_right = 250.0
+offset_bottom = 400.0
 script = ExtResource("2_gw6n2")
 
 [node name="Background" type="ColorRect" parent="DetectMouse"]
 layout_mode = 0
-offset_right = 125.0
-offset_bottom = 200.0
+offset_right = 250.0
+offset_bottom = 400.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DetectMouse"]
 layout_mode = 0
-offset_right = 125.0
-offset_bottom = 200.0
+offset_right = 250.0
+offset_bottom = 400.0
 
 [node name="Header" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
+
+[node name="CardType" type="Label" parent="DetectMouse/VBoxContainer/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "<Card Type>"
+label_settings = SubResource("LabelSettings_uy467")
 
 [node name="Flux" type="HBoxContainer" parent="DetectMouse/VBoxContainer/Header"]
 custom_minimum_size = Vector2(25, 0)
@@ -49,7 +49,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 
 [node name="ArtContainer" type="AspectRatioContainer" parent="DetectMouse/VBoxContainer"]
-custom_minimum_size = Vector2(25, 50)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 
 [node name="Art" type="TextureRect" parent="DetectMouse/VBoxContainer/ArtContainer"]
@@ -63,7 +63,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "<Name>"
-label_settings = SubResource("LabelSettings_dedjj")
+label_settings = ExtResource("4_ei4ui")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -72,14 +72,14 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
 text = "<Description>"
-label_settings = SubResource("LabelSettings_r70ab")
+label_settings = ExtResource("5_7lox0")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="FollowerStats" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 alignment = 1
 
 [node name="AttackMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
@@ -91,7 +91,7 @@ size_flags_horizontal = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
-label_settings = SubResource("LabelSettings_oogfg")
+label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -104,7 +104,7 @@ size_flags_horizontal = 6
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
-label_settings = SubResource("LabelSettings_oogfg")
+label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -117,7 +117,7 @@ size_flags_horizontal = 10
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
-label_settings = SubResource("LabelSettings_hjfi1")
+label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
