@@ -21,7 +21,7 @@ func _init() -> void:
 ## Mutators
 
 ## Plays card 
-func play(targets: Array[Target]) -> bool:
+func play(targets: Array) -> bool:
 	push_error("NotImplementedError: Card.play()")
 	return false
 
@@ -43,3 +43,7 @@ func valid_targets(targets: Array) -> Array:
 			valid_targets.append(target)
 
 	return valid_targets
+
+## Calls query on card and returns true if it matches query conditions
+# func query(card_query: CardQuery) -> bool:
+# 	pass

@@ -5,10 +5,10 @@ extends RefCounted
 ## Errors out if it is assigned to
 func read_only(old_value: Variant, new_value: Variant) -> Variant:
 	if !old_value:
-	  return new_value
+		return new_value
 	else:
-	  push_error("read_only: invalid assignment on {old_value}")
-	  return null
+		push_error("read_only: invalid assignment on {old_value}")
+		return null
 
 ## Returns whether object is a type that can be a target
 func is_target(object: Variant) -> bool:
