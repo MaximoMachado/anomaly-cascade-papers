@@ -1,6 +1,9 @@
 class_name Deck 
 extends RefCounted
-## Array-wrapper that represents a deck of cards 
+## A deck of cards
+## Representation: An array of cards
+## Abstraction Function: card i in deck = _cards[i]
+## Invariants: 0 <= _curr_index < _cards.size()
 
 
 var _cards : Array[Card]
