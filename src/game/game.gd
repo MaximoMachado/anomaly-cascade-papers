@@ -6,10 +6,15 @@ var _game_phase: Enums.GamePhase
 
 ## Dictates turn order for _players 
 var _players: Array[Player] = []
+var players: Array[Player]: 
+	set(value): _players = Types.read_only(_players, value)
+
 var _id_to_player: Dictionary
 
 ## Dictates which player has the ability to take actions
 var _current_player_id: int
+var current_player_id: int
+	set(value): _players = Types.read_only(_players, value)
 
 enum PlayerReaction { END_TURN, PLAY_CARD, ACTIVATE_ABILITY }
 var _reaction_history : Array[PlayerReaction]

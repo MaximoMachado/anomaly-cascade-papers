@@ -5,39 +5,33 @@ extends RefCounted
 ## Defined by Attack, Influence, Max Health, and Health
 
 ## How much damage this follower deals
-## Non-negative
+## attack >= 0
 @export var attack: int :
-	set(value):
-		if value < 0:
-			push_warning("ValueWarning: Attack cannot be less than 0")
-			attack = 0
-		else:
-			attack = value
+	set(value): attack = maxi(0, value)
 
 ## How much influence this follower will gather
-## Unlike the others, it can be negative
+## influence = any integer
 @export var influence: int :
-	set(value):
-		influence = value
+	set(value): influence = value
 		
 ## Max health value of follower
-## Non-negative
+## max_health >= 0
 @export var max_health: int :
 	set(value):
-		if value < 0:
-			push_warning("ValueWarning: Maximum health cannot be less than 0")
-			max_health = 0
-		else:
-			max_health = value
-		
+		max_health = maxi(0, value)
 		# Update current health
-		health = clamp(health, 0, max_health)
+		_health = clamp(_health, 0, max_health)
 
-## Current health of the create
+
+## Private variable to prevent infinite loop with max_health setter
+var _health: int
+
+## Current health of the follower
 ## 0 <= health <= max_health
 @export var health: int :
+	get: return _health
 	set(value):
-		health = clamp(value, 0, max_health)
+		_health = clamp(value, 0, max_health)
 
 func _init(p_attack: int = 0, p_influence: int = 0, p_max_health: int = 0) -> void:
 	attack = p_attack
