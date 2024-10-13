@@ -6,20 +6,23 @@ var _game_phase: Enums.GamePhase
 
 ## Dictates turn order for _players 
 var _players: Array[Player] = []
+
+## Gets a view into the players of the game. Players are mutable but array is not
 var players: Array[Player]: 
 	get(): return _players.duplicate()
 	set(value): _players = Types.read_only(_players, value)
 
 var _id_to_player: Dictionary
 
-## Dictates which player has the ability to take actions
 var _current_player_id: int
+
+## Dictates which player has the ability to take actions
 var current_player_id: int:
 	get: return _current_player_id
 	set(value): _current_player_id = Types.read_only(_current_player_id, value)
 
-enum PlayerReaction { END_TURN, PLAY_CARD, ACTIVATE_ABILITY }
-var _reaction_history : Array[PlayerReaction]
+## Used during the Reaction phase to dictate when to end the phase
+var _reaction_phase_end_turns_in_a_row: int = 0
 
 ## Used solely for the start of the game to determine when it is safe to move to the first turn
 ## Basically just a set, keys are player ids, values are null
@@ -84,9 +87,9 @@ func end_turn(player_id: int) -> bool:
 			_game_phase = Enums.GamePhase.REACTION
 
 		Enums.GamePhase.REACTION:
-			_reaction_history.append(PlayerReaction.END_TURN)
+			_reaction_phase_end_turns_in_a_row += 1
 			if _end_reaction_phase():
-				_reaction_history = []
+				_reaction_phase_end_turns_in_a_row = 0
 				_game_phase = Enums.GamePhase.PLAY
 				_end_of_turn_step()
 
@@ -148,10 +151,10 @@ func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 			_current_player_id = _next_player().id
 
 
-			_reaction_history.append(PlayerReaction.PLAY_CARD)
 		_:
 			return false
 
+	_reaction_phase_end_turns_in_a_row = 0
 	return true
 
 
@@ -165,10 +168,10 @@ func activate_ability(player_id: int, card: Card, targets: Array[Target] = []) -
 		Enums.GamePhase.REACTION:
 			_current_player_id = _next_player().id
 
-			_reaction_history.append(PlayerReaction.ACTIVATE_ABILITY)
 		_:
 			return false
 
+	_reaction_phase_end_turns_in_a_row = 0
 	return true
 
 func declare_attacker(player_id: int, follower: Follower, target_player: int) -> bool:
@@ -230,9 +233,11 @@ func declare_blocker(player_id: int, follower: Follower, attacking_follower: Fol
 
 ## Public Observer methods
 
+## Returns whether it is player's turn to play a card
 func is_players_turn(player_id: int) -> bool:
 	return _current_player_id == player_id
 
+## Gets reference to player by its ID
 func player(player_id: int) -> Player:
 	return _id_to_player[player_id]
 
@@ -273,8 +278,6 @@ func _previous_player() -> Player:
 	var next_player_index : int = current_player_index - 1
 	return _players[next_player_index]
 
-## Returns whether the reaction phase should end
+## If all players have passed in a row, then phase ends
 func _end_reaction_phase() -> bool:
-	var all_players_have_reacted := _reaction_history.size() == _players.size() 
-	return all_players_have_reacted \
-				and _reaction_history.all(func(reaction: PlayerReaction) -> bool: return reaction == PlayerReaction.END_TURN)
+	return _reaction_phase_end_turns_in_a_row == _players.size()
