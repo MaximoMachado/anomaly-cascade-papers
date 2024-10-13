@@ -1,5 +1,5 @@
 ## class_name Enums <- autoload so commented out
-extends RefCounted
+extends Node
 
 enum GamePhase { MULLIGAN, PLAY, DECLARE_ATTACKERS, DECLARE_BLOCKERS, REACTION }
 

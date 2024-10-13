@@ -1,5 +1,5 @@
 ## class_name Types <- autoload so commented out
-extends RefCounted
+extends Node
 
 ## Used for variable setters to signify that this is a read_only variable
 ## Errors out if it is assigned to
