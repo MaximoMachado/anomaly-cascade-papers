@@ -35,4 +35,11 @@ func copy() -> Card:
 func is_playable(player: Player) -> bool:
 	push_error("NotImplementedError: Card.is_playable()")
 	return false
-	
+
+func valid_targets(targets: Array) -> Array:
+	var valid_targets := []
+	for target in targets:
+		if Types.is_target(target):
+			valid_targets.append(target)
+
+	return valid_targets

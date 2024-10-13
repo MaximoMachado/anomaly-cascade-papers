@@ -18,9 +18,13 @@ extends RefCounted
 ## max_health >= 0
 @export var max_health: int :
 	set(value):
+		var health_change = max_health - value
 		max_health = maxi(0, value)
-		# Update current health
-		_health = clamp(_health, 0, max_health)
+		# Current health increases with positive change but clamps with negative change
+		if health_change > 0:
+			_health += health_change
+		else:
+			_health = clamp(_health, 0, max_health)
 
 
 ## Private variable to prevent infinite loop with max_health setter

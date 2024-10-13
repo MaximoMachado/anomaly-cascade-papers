@@ -130,8 +130,8 @@ func mulligan(player_id: int, cards: Array[Card]) -> bool:
 
 	return true
 
-func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
-	if not is_players_turn(player_id):
+func play_card(player_id: int, card: Card, targets: Array = []) -> bool:
+	if not is_players_turn(player_id) or not targets.all(Types.is_target):
 		return false
 	
 	match _game_phase:
@@ -154,8 +154,8 @@ func play_card(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
 	return true
 
 
-func activate_ability(player_id: int, card: Card, targets: Array[Target] = []) -> bool:
-	if not is_players_turn(player_id):
+func activate_ability(player_id: int, card: Card, targets: Array = []) -> bool:
+	if not is_players_turn(player_id) or not targets.all(Types.is_target):
 		return false
 
 	match _game_phase:

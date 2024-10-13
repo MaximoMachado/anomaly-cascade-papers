@@ -9,3 +9,7 @@ func read_only(old_value: Variant, new_value: Variant) -> Variant:
 	else:
 	  push_error("read_only: invalid assignment on {old_value}")
 	  return null
+
+## Returns whether object is a type that can be a target
+func is_target(object: Variant) -> bool:
+	return object is Player or object is Card

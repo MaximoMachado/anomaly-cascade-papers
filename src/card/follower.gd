@@ -25,6 +25,18 @@ func recieve_battle_damage(damage_dealers: Array[Follower], damage: int) -> bool
 	if is_dead:
 		follower_died.emit(self)
 	return has_died
+
+##
+## @return Whether this follower dies from this stat change
+func add_stats(attack: int, influence: int, health: int) -> bool:
+	stats.attack += attack
+	stats.influence += influence
+	stats.max_health += health
+
+	var has_died := is_dead()
+	if is_dead:
+		follower_died.emit(self)
+	return has_died
 	
 
 ## @param defenders: Must be sorted from lowest health to highest health
