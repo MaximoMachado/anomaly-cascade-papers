@@ -68,8 +68,8 @@ func test_two_players_play_cards():
 	assert_true(game.is_players_turn(player_1))
 	assert_false(game.is_players_turn(player_2))
 
-	var player_1_played_card = game.player(player_1).hand.pick_random()
-	var player_2_played_card = game.player(player_2).hand.pick_random()
+	var player_1_played_card := game.player(player_1).hand.pick_random()
+	var player_2_played_card := game.player(player_2).hand.pick_random()
 
 	assert_false(game.play_card(player_2, player_2_played_card, []), "Expected player 2 to not be able to play a card")
 	assert_true(game.play_card(player_1, player_1_played_card, []), "Expected player 1 to play a card")

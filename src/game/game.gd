@@ -38,18 +38,13 @@ var battles: Array[Battle]:
 
 var _influencing_followers: Array[Follower] = []
 
+func _init(lobby: Lobby) -> void:
+	for player: PlayerInfo in lobby.players:
+		var game_player = Player.create_players_with_starting_hand(player.id)
+		_players.append(game_player)
+	
+
 ## Public Mutators
-
-func add_player(player_id: int, main_deck: Deck = Deck.new(), influence_deck: Deck = Deck.new(), team_id: Variant = null) -> Game:
-
-	var player := Player.new(player_id, main_deck, influence_deck)
-	_players.append(player)
-	_id_to_player[player_id] = player
-
-	if team_id != null:
-		player.team_id = team_id
-
-	return self
 
 ## Start the game object with previously added _players
 ## Number of _players is equivalent to number of ids
@@ -61,6 +56,7 @@ func start_game(shuffle := true) -> bool:
 
 	_game_phase = Enums.GamePhase.MULLIGAN
 	_current_player_id = _players[0].id
+
 	return true
 
 ## Player Actions
@@ -239,7 +235,12 @@ func is_players_turn(player_id: int) -> bool:
 
 ## Gets reference to player by its ID
 func player(player_id: int) -> Player:
-	return _id_to_player[player_id]
+	return _id_to_player[player_id].duplicate()
+
+## Producer methods
+func duplicate() -> Game:
+	pass
+	return null
 
 ## Private methods
 

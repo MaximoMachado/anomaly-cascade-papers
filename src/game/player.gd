@@ -26,16 +26,28 @@ var influence : int:
 		else:
 			influence = value
 
-func _init(p_id: int, p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = Deck.new(), p_hand: Array[Card] = [],) -> void:
+func _init(p_id:int, p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = Deck.new(), p_hand: Array[Card] = []) -> void:
 	id = p_id
-	team_id = p_id
-	hand = p_hand
-	deck = p_main_deck
-	influence_deck = p_influence_deck
+	team_id = p_id # TODO: Implement teams
+	hand = p_hand.duplicate()
+	deck = p_main_deck.duplicate()
+	influence_deck = p_influence_deck.duplicate()
 	graveyard = Deck.new()
 
-	if p_hand.size() == 0:
-		hand = deck.starting_hand()
+## Producers
+
+## Constructs a player who has been given a starting hand
+static func create_player_with_starting_hand(p_id, num_cards := 7, num_factories := 2) -> Player:
+	var player = Player.new(p_id)
+	player.hand = player.deck.starting_hand(num_cards, num_factories)
+
+	return player
+
+## TODO: Implement duplicate
+func duplicate() -> Player:
+	var new_player = Player.new(id, deck, influence_deck, hand)
+
+	return new_player
 
 ## Mutators
 
@@ -51,7 +63,7 @@ func add_to_hand(cards: Array[Card]) -> Player:
 	return self
 
 ## Removes card from hand
-func discard_from_hand(cards: Array[Card]) -> Plyaer:
+func discard_from_hand(cards: Array[Card]) -> Player:
 	for card in cards:
 		var index : int = hand.find(card)
 		if index != -1:
