@@ -3,11 +3,6 @@ class_name Battle extends RefCounted
 var attackers: Array[Follower] = []
 var blockers: Array[Follower] = []
 
-
-func _init() -> void:
-    attackers = []
-    blockers = []
-
 func add_attacker(follower: Follower) -> Battle:
     attackers.append(follower)
     return self
