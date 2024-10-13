@@ -18,22 +18,23 @@ func _ready() -> void:
 	card = Follower.new()
 	starting_position = position
 	
-	$Art.texture = card.card_image
+	var card_texture = ImageTexture.create_from_image(card.card_image)
+	card_texture.set_size_override(%Art.scale)
+	%Art.texture = card_texture
 	%Name.text = card.card_name
 	%Description.text = card.card_text
 	if card is Follower:
+		%FollowerStats.show()
 		%Health.text = str(card.stats.health)
 		%Influence.text = str(card.stats.influence)
 		%Attack.text = str(card.stats.attack)
-
-		var card_image := $Image
-		if card.card_image != null:
-			card_image.texture = card.card_image
 	elif card is Factory:
-		pass
+		%FollowerStats.hide()
 	elif card is Catalyst:
+		%FollowerStats.hide()
 		pass
 	else:
+		%FollowerStats.hide()
 		push_error("Unhandled card type in CardView")
 
 
@@ -42,6 +43,7 @@ func _process(_delta: float) -> void:
 	pass
 
 func _on_container_mouse_entered() -> void:
+	print_debug("enter")
 	var scaled_duration = ANIMATION_DURATION
 	
 	var tween = get_tree().create_tween()
@@ -50,6 +52,7 @@ func _on_container_mouse_entered() -> void:
 
 
 func _on_container_mouse_exited() -> void:
+	print_debug("exit")
 	var scaled_duration = ANIMATION_DURATION
 	
 	var tween = get_tree().create_tween() 

@@ -1,14 +1,13 @@
 [gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
+[ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="2_icdem"]
 
-[sub_resource type="ImageTexture" id="ImageTexture_bmn21"]
+[sub_resource type="LabelSettings" id="LabelSettings_dedjj"]
+font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_r70ab"]
 font_size = 12
-font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_dedjj"]
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_oogfg"]
@@ -18,62 +17,75 @@ font_color = Color(0, 0, 0, 1)
 font_color = Color(0, 0, 0, 1)
 
 [node name="CardView" type="Node2D"]
+position = Vector2(192, 128)
 script = ExtResource("1_fmmwm")
 metadata/_edit_group_ = true
-
-[node name="Art" type="Sprite2D" parent="."]
-position = Vector2(120, 16)
-scale = Vector2(-104, 80.5)
-texture = SubResource("ImageTexture_bmn21")
-centered = false
-
-[node name="Background" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(0, 0, 128, 0, 128, 192, 0, 192)
 
 [node name="DetectMouse" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 128.0
-offset_bottom = 192.0
+offset_bottom = 191.0
 
-[node name="Description" type="Label" parent="DetectMouse"]
-unique_name_in_owner = true
-offset_left = 8.0
-offset_top = 119.0
-offset_right = 120.0
-offset_bottom = 159.0
-text = "<Description>"
-label_settings = SubResource("LabelSettings_r70ab")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Name" type="Label" parent="DetectMouse"]
-unique_name_in_owner = true
+[node name="Background" type="ColorRect" parent="DetectMouse"]
 layout_mode = 0
-offset_left = 8.0
-offset_top = 96.0
-offset_right = 120.0
-offset_bottom = 119.0
+offset_right = 128.0
+offset_bottom = 191.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DetectMouse"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 191.0
+
+[node name="Header" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Flux" type="HBoxContainer" parent="DetectMouse/VBoxContainer/Header"]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="ArtContainer" type="AspectRatioContainer" parent="DetectMouse/VBoxContainer"]
+custom_minimum_size = Vector2(25, 50)
+layout_mode = 2
+
+[node name="Art" type="TextureRect" parent="DetectMouse/VBoxContainer/ArtContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("2_icdem")
+expand_mode = 1
+
+[node name="Name" type="Label" parent="DetectMouse/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
 text = "<Name>"
 label_settings = SubResource("LabelSettings_dedjj")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Follower" type="Control" parent="DetectMouse"]
-layout_mode = 3
-anchors_preset = 0
+[node name="Description" type="Label" parent="DetectMouse/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+text = "<Description>"
+label_settings = SubResource("LabelSettings_r70ab")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="FollowerStats" type="HBoxContainer" parent="DetectMouse/Follower"]
-layout_mode = 0
-offset_top = 168.0
-offset_right = 128.0
-offset_bottom = 191.0
+[node name="FollowerStats" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
 alignment = 1
 
-[node name="AttackMargin" type="MarginContainer" parent="DetectMouse/Follower/FollowerStats"]
+[node name="AttackMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
+size_flags_horizontal = 2
 
-[node name="Attack" type="Label" parent="DetectMouse/Follower/FollowerStats/AttackMargin"]
+[node name="Attack" type="Label" parent="DetectMouse/VBoxContainer/FollowerStats/AttackMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
@@ -81,10 +93,12 @@ label_settings = SubResource("LabelSettings_oogfg")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InfluenceMargin" type="MarginContainer" parent="DetectMouse/Follower/FollowerStats"]
+[node name="InfluenceMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
+size_flags_horizontal = 6
 
-[node name="Influence" type="Label" parent="DetectMouse/Follower/FollowerStats/InfluenceMargin"]
+[node name="Influence" type="Label" parent="DetectMouse/VBoxContainer/FollowerStats/InfluenceMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
@@ -92,22 +106,18 @@ label_settings = SubResource("LabelSettings_oogfg")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HealthMargin" type="MarginContainer" parent="DetectMouse/Follower/FollowerStats"]
+[node name="HealthMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
+size_flags_horizontal = 10
 
-[node name="Health" type="Label" parent="DetectMouse/Follower/FollowerStats/HealthMargin"]
+[node name="Health" type="Label" parent="DetectMouse/VBoxContainer/FollowerStats/HealthMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_hjfi1")
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Catalyst" type="Control" parent="DetectMouse"]
-anchors_preset = 0
-
-[node name="Factory" type="Control" parent="DetectMouse"]
-anchors_preset = 0
 
 [connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
 [connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
