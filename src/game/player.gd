@@ -109,7 +109,7 @@ func factories(deep_copy := false) -> Array[Factory]:
 func _draw_cards_from_deck(num_cards: int, p_deck: Deck) -> Array[Card]:
 	var cards : Array[Card] = []
 	for i in range(num_cards):
-		var card := p_deck.pop_front()
+		var card : Card = p_deck._cards.pop_front()
 		cards.append(card)
 	return cards
 

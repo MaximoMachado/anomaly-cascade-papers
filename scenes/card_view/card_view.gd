@@ -18,6 +18,9 @@ func _ready() -> void:
 	card = Follower.new()
 	starting_position = position
 	
+	$Art.texture = card.card_image
+	%Name.text = card.card_name
+	%Description.text = card.card_text
 	if card is Follower:
 		%Health.text = str(card.stats.health)
 		%Influence.text = str(card.stats.influence)
