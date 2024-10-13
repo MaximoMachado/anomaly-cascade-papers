@@ -86,23 +86,11 @@ func _iter_get() -> Card:
 func duplicate(deep := false) -> Deck:
 	return Deck.new(_cards.duplicate(deep))
 
-func append(card: Card) -> void:
-	_cards.append(card)
-
-func insert(position: int, card: Card) -> int:
-	return _cards.insert(position, card)
-
 func find(what: Card, from: int = 0) -> int:
 	return _cards.find(what, from)
 
 func has(value: Card) -> bool:
 	return _cards.has(value)
-
-func pop_front() -> Card:
-	return _cards.pop_front()
-
-func pop_back() -> Card:
-	return _cards.pop_back()
 
 func size() -> int:
 	return _cards.size()
