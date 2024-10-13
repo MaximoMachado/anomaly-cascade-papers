@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=8 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
+[ext_resource type="Script" path="res://scenes/card_view/detect_mouse.gd" id="2_gw6n2"]
 [ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="2_icdem"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_dedjj"]
@@ -17,25 +18,26 @@ font_color = Color(0, 0, 0, 1)
 font_color = Color(0, 0, 0, 1)
 
 [node name="CardView" type="Node2D"]
-position = Vector2(192, 128)
+position = Vector2(184, 136)
 script = ExtResource("1_fmmwm")
 metadata/_edit_group_ = true
 
 [node name="DetectMouse" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 128.0
-offset_bottom = 191.0
+offset_right = 125.0
+offset_bottom = 200.0
+script = ExtResource("2_gw6n2")
 
 [node name="Background" type="ColorRect" parent="DetectMouse"]
 layout_mode = 0
-offset_right = 128.0
-offset_bottom = 191.0
+offset_right = 125.0
+offset_bottom = 200.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DetectMouse"]
 layout_mode = 0
-offset_right = 128.0
-offset_bottom = 191.0
+offset_right = 125.0
+offset_bottom = 200.0
 
 [node name="Header" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -121,3 +123,4 @@ vertical_alignment = 1
 
 [connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
 [connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
+[connection signal="resized" from="DetectMouse" to="DetectMouse" method="_on_resized"]
