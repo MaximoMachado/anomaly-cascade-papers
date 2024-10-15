@@ -2,15 +2,15 @@ class_name Player
 extends RefCounted
 
 
-var id: int
-var team_id: int
-var hand: Array[Card]
-var deck: Deck
-var influence_deck: Deck
-var graveyard: Deck
+var id: int = 0
+var team_id: int = 0
+var hand: Array[Card] = []
+var deck: Deck = Deck.new()
+var influence_deck: Deck = Deck.new()
+var graveyard: Deck = Deck.new()
 
-var followers_in_play: CardZone
-var factories_in_play: CardZone
+var followers_in_play: CardZone = CardZone.new()
+var factories_in_play: CardZone = CardZone.new()
 
 var health : int:
 	set(value):
@@ -26,26 +26,28 @@ var influence : int:
 		else:
 			influence = value
 
-func _init(p_id:int, p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = Deck.new(), p_hand: Array[Card] = []) -> void:
+func _init(p_id:int, p_main_deck: Deck = Deck.new(), p_influence_deck: Deck = Deck.new(), p_hand: Array[Card] = [], p_graveyard := Deck.new()) -> void:
 	id = p_id
 	team_id = p_id # TODO: Implement teams
 	hand = p_hand.duplicate()
 	deck = p_main_deck.duplicate()
 	influence_deck = p_influence_deck.duplicate()
-	graveyard = Deck.new()
+	graveyard = p_graveyard.duplicate()
+	health = 20
+	influence = 0
 
 ## Producers
 
 ## Constructs a player who has been given a starting hand
-static func create_player_with_starting_hand(p_id, num_cards := 7, num_factories := 2) -> Player:
-	var player = Player.new(p_id)
+static func create_player_with_starting_hand(player_info: PlayerInfo, num_cards := 7, num_factories := 2) -> Player:
+	var player = Player.new(player_info.id, player_info.deck, player_info.influence_deck)
 	player.hand = player.deck.starting_hand(num_cards, num_factories)
 
 	return player
 
 ## TODO: Implement duplicate
 func duplicate() -> Player:
-	var new_player = Player.new(id, deck, influence_deck, hand)
+	var new_player := Player.new(id, deck, influence_deck, hand, graveyard)
 
 	return new_player
 

@@ -1,126 +1,165 @@
-[gd_scene load_steps=8 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
-[ext_resource type="Script" path="res://scenes/card_view/detect_mouse.gd" id="2_gw6n2"]
+[ext_resource type="Theme" uid="uid://t7na42rm0yn8" path="res://assets/themes/main_theme.tres" id="2_ak66j"]
 [ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="2_icdem"]
 [ext_resource type="LabelSettings" uid="uid://brgfkli8cxud8" path="res://scenes/card_view/card_name_label_settings.tres" id="4_ei4ui"]
 [ext_resource type="LabelSettings" uid="uid://bhygh1yiw0ovp" path="res://scenes/card_view/card_description_label_settings.tres" id="5_7lox0"]
 [ext_resource type="LabelSettings" uid="uid://fh0m2sqo2l8g" path="res://scenes/card_view/stat_label_settings.tres" id="6_3gngh"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_uy467"]
-font_size = 14
-font_color = Color(0, 0, 0, 1)
-
 [node name="CardView" type="Node2D"]
-position = Vector2(184, 136)
 script = ExtResource("1_fmmwm")
-metadata/_edit_group_ = true
+dragging_speed = 25.0
+
+[node name="Background" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_right = 250.0
+offset_bottom = 400.0
+mouse_filter = 2
+mouse_force_pass_scroll_events = false
+theme = ExtResource("2_ak66j")
+color = Color(0.325383, 0.139865, 0.317465, 1)
+
+[node name="CardContainer" type="Control" parent="Background"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 250.0
+offset_bottom = 400.0
+theme = ExtResource("2_ak66j")
+
+[node name="Header" type="Control" parent="Background/CardContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+anchors_preset = 0
+offset_right = 250.0
+offset_bottom = 35.0
+size_flags_vertical = 2
+theme = ExtResource("2_ak66j")
+
+[node name="CardType" type="Label" parent="Background/CardContainer/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_right = 137.0
+offset_bottom = 32.0
+theme = ExtResource("2_ak66j")
+text = "Type"
+label_settings = ExtResource("5_7lox0")
+vertical_alignment = 1
+
+[node name="Flux" type="HBoxContainer" parent="Background/CardContainer/Header"]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+offset_left = 208.0
+offset_right = 250.0
+offset_bottom = 32.0
+size_flags_horizontal = 10
+theme = ExtResource("2_ak66j")
+
+[node name="ArtContainer" type="AspectRatioContainer" parent="Background/CardContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+offset_top = 35.0
+offset_right = 250.0
+offset_bottom = 185.0
+theme = ExtResource("2_ak66j")
+
+[node name="Art" type="TextureRect" parent="Background/CardContainer/ArtContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_ak66j")
+texture = ExtResource("2_icdem")
+expand_mode = 1
+
+[node name="Name" type="Label" parent="Background/CardContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 192.0
+offset_right = 250.0
+offset_bottom = 232.0
+size_flags_horizontal = 4
+theme = ExtResource("2_ak66j")
+text = "<Name>"
+label_settings = ExtResource("4_ei4ui")
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Description" type="Label" parent="Background/CardContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 232.0
+offset_right = 250.0
+offset_bottom = 352.0
+size_flags_vertical = 6
+theme = ExtResource("2_ak66j")
+text = "<Description>"
+label_settings = ExtResource("5_7lox0")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FollowerStats" type="HBoxContainer" parent="Background/CardContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 10.0
+offset_top = 344.0
+offset_right = 240.0
+offset_bottom = 400.0
+size_flags_vertical = 8
+theme = ExtResource("2_ak66j")
+alignment = 1
+
+[node name="AttackMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme = ExtResource("2_ak66j")
+
+[node name="Attack" type="Label" parent="Background/CardContainer/FollowerStats/AttackMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_ak66j")
+text = "0"
+label_settings = ExtResource("6_3gngh")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InfluenceMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+theme = ExtResource("2_ak66j")
+
+[node name="Influence" type="Label" parent="Background/CardContainer/FollowerStats/InfluenceMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_ak66j")
+text = "0"
+label_settings = ExtResource("6_3gngh")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("2_ak66j")
+
+[node name="Health" type="Label" parent="Background/CardContainer/FollowerStats/HealthMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_ak66j")
+text = "0"
+label_settings = ExtResource("6_3gngh")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="DetectMouse" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 250.0
 offset_bottom = 400.0
-script = ExtResource("2_gw6n2")
-
-[node name="Background" type="ColorRect" parent="DetectMouse"]
-layout_mode = 0
-offset_right = 250.0
-offset_bottom = 400.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="DetectMouse"]
-layout_mode = 0
-offset_right = 250.0
-offset_bottom = 400.0
-
-[node name="Header" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
-custom_minimum_size = Vector2(0, 35)
-layout_mode = 2
-
-[node name="CardType" type="Label" parent="DetectMouse/VBoxContainer/Header"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "<Card Type>"
-label_settings = SubResource("LabelSettings_uy467")
-
-[node name="Flux" type="HBoxContainer" parent="DetectMouse/VBoxContainer/Header"]
-custom_minimum_size = Vector2(25, 0)
-layout_mode = 2
-size_flags_horizontal = 10
-
-[node name="ArtContainer" type="AspectRatioContainer" parent="DetectMouse/VBoxContainer"]
-custom_minimum_size = Vector2(0, 150)
-layout_mode = 2
-
-[node name="Art" type="TextureRect" parent="DetectMouse/VBoxContainer/ArtContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-texture = ExtResource("2_icdem")
-expand_mode = 1
-
-[node name="Name" type="Label" parent="DetectMouse/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-text = "<Name>"
-label_settings = ExtResource("4_ei4ui")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Description" type="Label" parent="DetectMouse/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 6
-text = "<Description>"
-label_settings = ExtResource("5_7lox0")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="FollowerStats" type="HBoxContainer" parent="DetectMouse/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 8
-alignment = 1
-
-[node name="AttackMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-size_flags_horizontal = 2
-
-[node name="Attack" type="Label" parent="DetectMouse/VBoxContainer/FollowerStats/AttackMargin"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "0"
-label_settings = ExtResource("6_3gngh")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="InfluenceMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-size_flags_horizontal = 6
-
-[node name="Influence" type="Label" parent="DetectMouse/VBoxContainer/FollowerStats/InfluenceMargin"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "0"
-label_settings = ExtResource("6_3gngh")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HealthMargin" type="MarginContainer" parent="DetectMouse/VBoxContainer/FollowerStats"]
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-size_flags_horizontal = 10
-
-[node name="Health" type="Label" parent="DetectMouse/VBoxContainer/FollowerStats/HealthMargin"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "0"
-label_settings = ExtResource("6_3gngh")
-horizontal_alignment = 1
-vertical_alignment = 1
+theme = ExtResource("2_ak66j")
 
 [connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
 [connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
-[connection signal="resized" from="DetectMouse" to="DetectMouse" method="_on_resized"]

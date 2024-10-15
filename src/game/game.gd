@@ -31,8 +31,8 @@ var _mulliganed_players : Dictionary = {}
 ## Maps initiating attacker (Follower) to a new battle (Battle)
 var _battles: Dictionary = {}
 
-## Array of battles that exist
-var battles: Array[Battle]:
+## Type is Array[Battle] but gdscript complains
+var battles: Array:
 	get: return _battles.values()
 	set(value): _battles = Types.read_only(_battles, value)
 
@@ -40,8 +40,9 @@ var _influencing_followers: Array[Follower] = []
 
 func _init(lobby: Lobby) -> void:
 	for player: PlayerInfo in lobby.players:
-		var game_player = Player.create_players_with_starting_hand(player.id)
+		var game_player = Player.create_player_with_starting_hand(player)
 		_players.append(game_player)
+		_id_to_player[player.id] = player
 	
 
 ## Public Mutators
@@ -235,7 +236,7 @@ func is_players_turn(player_id: int) -> bool:
 
 ## Gets reference to player by its ID
 func player(player_id: int) -> Player:
-	return _id_to_player[player_id].duplicate()
+	return (_id_to_player[player_id].duplicate() as Player)
 
 ## Producer methods
 func duplicate() -> Game:

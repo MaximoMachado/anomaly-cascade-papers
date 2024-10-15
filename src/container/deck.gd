@@ -64,6 +64,14 @@ func draw_cards(num_cards: int, starting_index: int = 0) -> Array[Card]:
 
 	return top_cards
 
+func shuffle_in_card(card: Card, position := -1) -> void:
+
+	if position == -1:
+		position = randi_range(0, _cards.size())
+
+	print_debug(_cards.insert(position, card))
+
+
 ## Public Observers
 
 ## Immutable snapshot of cards of a deck

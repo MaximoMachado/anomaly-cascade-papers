@@ -1,0 +1,15 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://t7na42rm0yn8"]
+
+[ext_resource type="FontFile" uid="uid://svmjyuljs35v" path="res://assets/fonts/Recia_Complete/Fonts/OTF/Recia-Bold.otf" id="1_ftrk5"]
+[ext_resource type="FontFile" uid="uid://drtjxlobsa00u" path="res://assets/fonts/Recia_Complete/Fonts/OTF/Recia-BoldItalic.otf" id="2_fr4eb"]
+[ext_resource type="FontFile" uid="uid://cjdii8c1hiyw0" path="res://assets/fonts/Recia_Complete/Fonts/OTF/Recia-MediumItalic.otf" id="3_8f3n0"]
+[ext_resource type="FontFile" uid="uid://c81eysqkjm8wk" path="res://assets/fonts/Recia_Complete/Fonts/OTF/Recia-Medium.otf" id="4_p1v1o"]
+
+[resource]
+default_font = ExtResource("4_p1v1o")
+default_font_size = 24
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/fonts/bold_font = ExtResource("1_ftrk5")
+RichTextLabel/fonts/bold_italics_font = ExtResource("2_fr4eb")
+RichTextLabel/fonts/italics_font = ExtResource("3_8f3n0")
+RichTextLabel/fonts/normal_font = ExtResource("4_p1v1o")

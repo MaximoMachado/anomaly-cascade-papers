@@ -5,6 +5,7 @@ var _players: Array[PlayerInfo] = []
 var players: Array[PlayerInfo] :
 	get: return _players.duplicate()
 	set(value): _players = Types.read_only(_players, value)
+var game_config: GameConfig = GameConfig.new()
 
 ## TODO: Add way to configure Game Settings
 #var game_config: GameConfig
@@ -14,10 +15,10 @@ var players: Array[PlayerInfo] :
 #var _team_to_players: Dictionary
 
 func add_player(p_player: PlayerInfo):
-    _players.append(p_player)
-    return true
+	_players.append(p_player)
+	return true
 
 func has(p_player: PlayerInfo) -> bool:
-    var ids : int = _players.map(func(player: PlayerInfo) -> int: return player.id)
+	var ids : Array[int] = _players.map(func(player: PlayerInfo) -> int: return player.id)
 
-    return ids.has(p_player.id)
+	return ids.has(p_player.id)
