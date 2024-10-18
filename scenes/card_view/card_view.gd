@@ -1,5 +1,15 @@
 class_name CardView extends Node2D
 
+signal on_hovered(hovered_card: CardView)
+signal on_selected(selected_card: CardView)
+signal on_deselected(deselected_card: CardView)
+
+var input_active: bool:
+	set(value):
+		if value:
+			%StateChart.send_event("set_active")
+		else:
+			%StateChart.send_event("set_inactive")
 
 var card: Card
 var starting_position: Vector2:
@@ -58,23 +68,36 @@ func _on_container_mouse_entered() -> void:
 func _on_container_mouse_exited() -> void:
 	%StateChart.send_event("mouse_exited")
 
+func _on_dragging_state_processing(delta: float) -> void:
+	var mouse_position = get_global_mouse_position()
+	position = lerp(position, mouse_position - (size / 2), dragging_speed * delta)
+	
+	
 func _on_transition_from_dragging_to_static() -> void:
+
+	print_debug("deselected")
+	on_deselected.emit(self)
+	
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "position", starting_position, ANIMATION_DURATION)
 
 
-func _on_dragging_state_processing(delta: float) -> void:
-	var mouse_position = get_global_mouse_position()
-	position = lerp(position, mouse_position - (size / 2), dragging_speed * delta)
-
-
-func _on_transition_from_static_to_hovered() -> void:	
+func _on_transition_from_static_to_hovered() -> void:
+	print_debug("hovered")
+	on_hovered.emit(self)
+	
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "position", hovered_position, ANIMATION_DURATION)
 	card_highlighted = true
 
 
 func _on_transition_from_hovered_to_static() -> void:
+
+	
 	var tween = get_tree().create_tween() 
 	tween.tween_property(self, "position", starting_position, ANIMATION_DURATION)
 	card_highlighted = false
+
+func _on_transition_from_hovered_to_dragging() -> void:
+	print_debug("selected")
+	on_selected.emit(self)

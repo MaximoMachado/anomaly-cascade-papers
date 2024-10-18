@@ -171,36 +171,55 @@ script = ExtResource("7_mqqq5")
 
 [node name="Root" type="Node" parent="StateChart"]
 script = ExtResource("8_iqunv")
-initial_state = NodePath("Static")
+initial_state = NodePath("Active")
 
-[node name="Static" type="Node" parent="StateChart/Root"]
+[node name="Inactive" type="Node" parent="StateChart/Root"]
 script = ExtResource("9_mxbqa")
 
-[node name="ToHovered" type="Node" parent="StateChart/Root/Static"]
+[node name="ToStatic" type="Node" parent="StateChart/Root/Inactive"]
+script = ExtResource("10_gt6nx")
+to = NodePath("../../Active/Static")
+event = &"set_active"
+delay_in_seconds = "0.0"
+
+[node name="Active" type="Node" parent="StateChart/Root"]
+script = ExtResource("8_iqunv")
+initial_state = NodePath("Static")
+
+[node name="ToInactive" type="Node" parent="StateChart/Root/Active"]
+script = ExtResource("10_gt6nx")
+to = NodePath("../../Inactive")
+event = &"set_inactive"
+delay_in_seconds = "0.0"
+
+[node name="Static" type="Node" parent="StateChart/Root/Active"]
+script = ExtResource("9_mxbqa")
+
+[node name="ToHovered" type="Node" parent="StateChart/Root/Active/Static"]
 script = ExtResource("10_gt6nx")
 to = NodePath("../../Hovered")
 event = &"mouse_entered"
 delay_in_seconds = "0.0"
 
-[node name="Hovered" type="Node" parent="StateChart/Root"]
+[node name="Hovered" type="Node" parent="StateChart/Root/Active"]
 script = ExtResource("9_mxbqa")
 
-[node name="ToStatic" type="Node" parent="StateChart/Root/Hovered"]
+[node name="ToStatic" type="Node" parent="StateChart/Root/Active/Hovered"]
 script = ExtResource("10_gt6nx")
 to = NodePath("../../Static")
 event = &"mouse_exited"
 delay_in_seconds = "0.0"
 
-[node name="ToDragging" type="Node" parent="StateChart/Root/Hovered"]
+[node name="ToDragging" type="Node" parent="StateChart/Root/Active/Hovered"]
 script = ExtResource("10_gt6nx")
 to = NodePath("../../Dragging")
 event = &"selected"
 delay_in_seconds = "0.0"
 
-[node name="Dragging" type="Node" parent="StateChart/Root"]
+[node name="Dragging" type="Node" parent="StateChart/Root/Active"]
 script = ExtResource("9_mxbqa")
 
-[node name="ToStatic" type="Node" parent="StateChart/Root/Dragging"]
+[node name="ToStatic" type="Node" parent="StateChart/Root/Active/Dragging"]
 script = ExtResource("10_gt6nx")
 to = NodePath("../../Static")
 event = &"deselected"
@@ -208,7 +227,8 @@ delay_in_seconds = "0.0"
 
 [connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
 [connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
-[connection signal="taken" from="StateChart/Root/Static/ToHovered" to="." method="_on_transition_from_static_to_hovered"]
-[connection signal="taken" from="StateChart/Root/Hovered/ToStatic" to="." method="_on_transition_from_hovered_to_static"]
-[connection signal="state_processing" from="StateChart/Root/Dragging" to="." method="_on_dragging_state_processing"]
-[connection signal="taken" from="StateChart/Root/Dragging/ToStatic" to="." method="_on_transition_from_dragging_to_static"]
+[connection signal="taken" from="StateChart/Root/Active/Static/ToHovered" to="." method="_on_transition_from_static_to_hovered"]
+[connection signal="taken" from="StateChart/Root/Active/Hovered/ToStatic" to="." method="_on_transition_from_hovered_to_static"]
+[connection signal="taken" from="StateChart/Root/Active/Hovered/ToDragging" to="." method="_on_transition_from_hovered_to_dragging"]
+[connection signal="state_processing" from="StateChart/Root/Active/Dragging" to="." method="_on_dragging_state_processing"]
+[connection signal="taken" from="StateChart/Root/Active/Dragging/ToStatic" to="." method="_on_transition_from_dragging_to_static"]

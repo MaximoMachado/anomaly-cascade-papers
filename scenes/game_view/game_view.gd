@@ -20,7 +20,6 @@ func _ready() -> void:
 	for card in game._players[0].hand:
 		var card_view := card_view_scene.instantiate()
 		card_view.card = card
-		$"%CardContainer".add_child(card_view)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

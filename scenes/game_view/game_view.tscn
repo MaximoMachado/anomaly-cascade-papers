@@ -1,44 +1,58 @@
-[gd_scene load_steps=4 format=3 uid="uid://qkimpx387hw7"]
+[gd_scene load_steps=6 format=3 uid="uid://qkimpx387hw7"]
 
 [ext_resource type="Script" path="res://scenes/game_view/game_view.gd" id="1_3s6ic"]
-[ext_resource type="Script" path="res://scenes/game_view/card_container.gd" id="2_v8gp8"]
+[ext_resource type="Script" path="res://scenes/game_view/hand_view.gd" id="2_3vasq"]
 [ext_resource type="PackedScene" uid="uid://cangte1ff4xt1" path="res://scenes/card_view/card_view.tscn" id="3_eq2g8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_me8d4"]
+size = Vector2(1386, 426)
+
+[sub_resource type="GDScript" id="GDScript_6udw2"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_mouse_entered() -> void:
+	pass # Replace with function body.
+
+
+func _on_mouse_exited() -> void:
+	pass # Replace with function body.
+"
 
 [node name="GameView" type="Node2D"]
 script = ExtResource("1_3s6ic")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="CardContainer" type="HBoxContainer" parent="UI"]
-unique_name_in_owner = true
-anchors_preset = -1
-anchor_left = 0.175
-anchor_top = 0.437
-anchor_right = 0.175
-anchor_bottom = 0.437
-offset_left = -3.05176e-05
-offset_top = 0.039978
-offset_right = 1140.0
-offset_bottom = 456.04
-alignment = 1
-script = ExtResource("2_v8gp8")
-
-[node name="Control" type="Control" parent="UI/CardContainer"]
-layout_mode = 2
-
-[node name="CardView" parent="UI/CardContainer/Control" instance=ExtResource("3_eq2g8")]
-position = Vector2(-320, 0)
-
-[node name="Control" type="Control" parent="UI/CardContainer/Control"]
-layout_mode = 3
-anchors_preset = 0
-
-[node name="CardView" parent="UI/CardContainer/Control/Control" instance=ExtResource("3_eq2g8")]
-position = Vector2(-594, 0)
-
 [node name="EndTurn" type="Button" parent="UI"]
 offset_right = 8.0
 offset_bottom = 8.0
 
-[connection signal="mouse_entered" from="UI/CardContainer" to="UI/CardContainer" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="UI/CardContainer" to="UI/CardContainer" method="_on_mouse_exited"]
+[node name="HandView" type="Area2D" parent="."]
+position = Vector2(304, 472)
+script = ExtResource("2_3vasq")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="HandView"]
+unique_name_in_owner = true
+position = Vector2(683, 203)
+shape = SubResource("RectangleShape2D_me8d4")
+script = SubResource("GDScript_6udw2")
+
+[node name="CardView" parent="HandView" instance=ExtResource("3_eq2g8")]
+position = Vector2(282, 0)
+
+[node name="CardView2" parent="HandView" instance=ExtResource("3_eq2g8")]
+position = Vector2(8, 0)
+
+[connection signal="on_hovered" from="HandView/CardView" to="HandView" method="_on_card_hovered"]
+[connection signal="on_selected" from="HandView/CardView" to="HandView" method="_on_card_selected"]
