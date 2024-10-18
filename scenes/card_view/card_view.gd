@@ -1,9 +1,11 @@
 class_name CardView extends Node2D
 
 signal on_hovered(hovered_card: CardView)
+signal on_unhovered(hovered_card: CardView)
 signal on_selected(selected_card: CardView)
 signal on_deselected(deselected_card: CardView)
 
+## Allows you to set whether or not the card accepts hovering/dragging inputs
 var input_active: bool:
 	set(value):
 		if value:
@@ -74,8 +76,6 @@ func _on_dragging_state_processing(delta: float) -> void:
 	
 	
 func _on_transition_from_dragging_to_static() -> void:
-
-	print_debug("deselected")
 	on_deselected.emit(self)
 	
 	var tween = get_tree().create_tween()
@@ -83,7 +83,6 @@ func _on_transition_from_dragging_to_static() -> void:
 
 
 func _on_transition_from_static_to_hovered() -> void:
-	print_debug("hovered")
 	on_hovered.emit(self)
 	
 	var tween = get_tree().create_tween()
@@ -92,12 +91,12 @@ func _on_transition_from_static_to_hovered() -> void:
 
 
 func _on_transition_from_hovered_to_static() -> void:
-
+	on_unhovered.emit(self)
 	
 	var tween = get_tree().create_tween() 
 	tween.tween_property(self, "position", starting_position, ANIMATION_DURATION)
 	card_highlighted = false
 
 func _on_transition_from_hovered_to_dragging() -> void:
-	print_debug("selected")
+
 	on_selected.emit(self)
