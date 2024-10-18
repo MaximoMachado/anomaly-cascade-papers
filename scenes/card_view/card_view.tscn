@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=11 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
 [ext_resource type="Theme" uid="uid://t7na42rm0yn8" path="res://assets/themes/main_theme.tres" id="2_ak66j"]
@@ -6,6 +6,10 @@
 [ext_resource type="LabelSettings" uid="uid://brgfkli8cxud8" path="res://scenes/card_view/card_name_label_settings.tres" id="4_ei4ui"]
 [ext_resource type="LabelSettings" uid="uid://bhygh1yiw0ovp" path="res://scenes/card_view/card_description_label_settings.tres" id="5_7lox0"]
 [ext_resource type="LabelSettings" uid="uid://fh0m2sqo2l8g" path="res://scenes/card_view/stat_label_settings.tres" id="6_3gngh"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="7_mqqq5"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="8_iqunv"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="9_mxbqa"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="10_gt6nx"]
 
 [node name="CardView" type="Node2D"]
 script = ExtResource("1_fmmwm")
@@ -161,5 +165,50 @@ offset_right = 250.0
 offset_bottom = 400.0
 theme = ExtResource("2_ak66j")
 
+[node name="StateChart" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("7_mqqq5")
+
+[node name="Root" type="Node" parent="StateChart"]
+script = ExtResource("8_iqunv")
+initial_state = NodePath("Static")
+
+[node name="Static" type="Node" parent="StateChart/Root"]
+script = ExtResource("9_mxbqa")
+
+[node name="ToHovered" type="Node" parent="StateChart/Root/Static"]
+script = ExtResource("10_gt6nx")
+to = NodePath("../../Hovered")
+event = &"mouse_entered"
+delay_in_seconds = "0.0"
+
+[node name="Hovered" type="Node" parent="StateChart/Root"]
+script = ExtResource("9_mxbqa")
+
+[node name="ToStatic" type="Node" parent="StateChart/Root/Hovered"]
+script = ExtResource("10_gt6nx")
+to = NodePath("../../Static")
+event = &"mouse_exited"
+delay_in_seconds = "0.0"
+
+[node name="ToDragging" type="Node" parent="StateChart/Root/Hovered"]
+script = ExtResource("10_gt6nx")
+to = NodePath("../../Dragging")
+event = &"selected"
+delay_in_seconds = "0.0"
+
+[node name="Dragging" type="Node" parent="StateChart/Root"]
+script = ExtResource("9_mxbqa")
+
+[node name="ToStatic" type="Node" parent="StateChart/Root/Dragging"]
+script = ExtResource("10_gt6nx")
+to = NodePath("../../Static")
+event = &"deselected"
+delay_in_seconds = "0.0"
+
 [connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
 [connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
+[connection signal="taken" from="StateChart/Root/Static/ToHovered" to="." method="_on_transition_from_static_to_hovered"]
+[connection signal="taken" from="StateChart/Root/Hovered/ToStatic" to="." method="_on_transition_from_hovered_to_static"]
+[connection signal="state_processing" from="StateChart/Root/Dragging" to="." method="_on_dragging_state_processing"]
+[connection signal="taken" from="StateChart/Root/Dragging/ToStatic" to="." method="_on_transition_from_dragging_to_static"]
