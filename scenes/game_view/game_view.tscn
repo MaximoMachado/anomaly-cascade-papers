@@ -1,11 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://qkimpx387hw7"]
+[gd_scene load_steps=5 format=3 uid="uid://qkimpx387hw7"]
 
 [ext_resource type="Script" path="res://scenes/game_view/game_view.gd" id="1_3s6ic"]
 [ext_resource type="Script" path="res://scenes/game_view/hand_view.gd" id="2_3vasq"]
-[ext_resource type="PackedScene" uid="uid://cangte1ff4xt1" path="res://scenes/card_view/card_view.tscn" id="3_eq2g8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_me8d4"]
-size = Vector2(1386, 426)
+size = Vector2(1386, 421)
 
 [sub_resource type="GDScript" id="GDScript_6udw2"]
 script/source = "extends CollisionShape2D
@@ -31,28 +30,26 @@ func _on_mouse_exited() -> void:
 
 [node name="GameView" type="Node2D"]
 script = ExtResource("1_3s6ic")
+metadata/_edit_lock_ = true
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="EndTurn" type="Button" parent="UI"]
-offset_right = 8.0
-offset_bottom = 8.0
+offset_left = 1664.0
+offset_top = 456.0
+offset_right = 1856.0
+offset_bottom = 512.0
+text = "End Turn"
 
 [node name="HandView" type="Area2D" parent="."]
-position = Vector2(304, 472)
+position = Vector2(272, 672)
 script = ExtResource("2_3vasq")
+metadata/_edit_group_ = true
 
 [node name="CollisionShape" type="CollisionShape2D" parent="HandView"]
-unique_name_in_owner = true
-position = Vector2(683, 203)
+position = Vector2(680, 197.5)
 shape = SubResource("RectangleShape2D_me8d4")
 script = SubResource("GDScript_6udw2")
 
-[node name="CardView" parent="HandView" instance=ExtResource("3_eq2g8")]
-position = Vector2(282, 0)
-
-[node name="CardView2" parent="HandView" instance=ExtResource("3_eq2g8")]
-position = Vector2(8, 0)
-
-[connection signal="on_hovered" from="HandView/CardView" to="HandView" method="_on_card_hovered"]
-[connection signal="on_selected" from="HandView/CardView" to="HandView" method="_on_card_selected"]
+[connection signal="child_entered_tree" from="HandView" to="HandView" method="_on_child_entered_tree"]
+[connection signal="child_exiting_tree" from="HandView" to="HandView" method="_on_child_exiting_tree"]

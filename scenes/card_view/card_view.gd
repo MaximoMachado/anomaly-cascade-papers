@@ -1,41 +1,36 @@
-class_name CardView extends Node2D
+class_name CardView extends Area2D
 
-signal on_hovered(hovered_card: CardView)
-signal on_unhovered(hovered_card: CardView)
-signal on_selected(selected_card: CardView)
-signal on_deselected(deselected_card: CardView)
+## When this card is clicked while deselected
+signal select_requested(card_view: CardView)
+## When this card is clicked while selected
+signal deselect_requested(card_view: CardView)
 
-## Allows you to set whether or not the card accepts hovering/dragging inputs
-var input_active: bool:
-	set(value):
-		if value:
-			%StateChart.send_event("set_active")
-		else:
-			%StateChart.send_event("set_inactive")
+var card: Card = Follower.new()
 
-var card: Card
-var starting_position: Vector2:
-	set(value):
-		starting_position = value
-		position = value
-		
-var hovered_position: Vector2:
-	get: return starting_position + MAXIMUM_HOVER_MOVEMENT
 
+@export_subgroup("Hover Properties")
+## Whether or not card moves on mouse hover
+@export var hoverable := false
+## Distance from starting_postion to move to on hover
+@export var HOVER_DISTANCE := Vector2(0, -50)
+## Dictates position to return to when hover ends
+var starting_position: = Vector2(0, 0)
+
+## Returns visible size, not collider size
 var size: Vector2:
 	get: return $Background.size
-
-@export var ANIMATION_DURATION := 0.2
-@export var MAXIMUM_HOVER_MOVEMENT := Vector2(0, -50)
-@export var card_highlighted: bool = false
-@export var dragging_speed = 1.0
-
-
-# Initialize UI information based on card
-func _ready() -> void:
-	card = Follower.new()
-	starting_position = position
 	
+var _hovered := false
+@onready var _hover_timer := get_tree().create_timer(0)
+func _ready() -> void:
+	starting_position = position
+	draw()
+	
+func _process(delta: float) -> void:
+	pass
+
+## Whenever card is updated, draw will need to be called as well
+func draw() -> void:
 	var card_texture = ImageTexture.create_from_image(card.card_image)
 	card_texture.set_size_override(%Art.scale)
 	%Art.texture = card_texture
@@ -58,45 +53,44 @@ func _ready() -> void:
 		%FollowerStats.hide()
 		push_error("Unhandled card type in CardView")
 
-func _input(event: InputEvent):
-	if Input.is_action_pressed("select"):
-		%StateChart.send_event("selected")
-	elif Input.is_action_just_released("select"):
-		%StateChart.send_event("deselected")
 
-func _on_container_mouse_entered() -> void:
-	%StateChart.send_event("mouse_entered")
+## Hover logic
+func _on_mouse_entered() -> void:
+	if hoverable:
+		_hovered = true
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "position", starting_position + HOVER_DISTANCE, 0.2)
 
-func _on_container_mouse_exited() -> void:
-	%StateChart.send_event("mouse_exited")
+## Hover logic
+func _on_mouse_exited() -> void:
+	if hoverable:
+		_hovered = false
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "position", starting_position, 0.2)
 
-func _on_dragging_state_processing(delta: float) -> void:
-	var mouse_position = get_global_mouse_position()
-	position = lerp(position, mouse_position - (size / 2), dragging_speed * delta)
-	
-	
-func _on_transition_from_dragging_to_static() -> void:
-	on_deselected.emit(self)
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "position", starting_position, ANIMATION_DURATION)
+## Select Logic
+func select():
+	$StateChart.send_event("select")
+
+## Select Logic
+func deselect():
+	$StateChart.send_event("deselect")
+
+## Select Logic
+func _on_selected_state_entered() -> void:
+	$Highlight.show()
+
+## Select Logic
+func _on_deselected_state_entered() -> void:
+	$Highlight.hide()
+
+## Select Logic
+func _on_selected_state_input(event: InputEvent) -> void:
+	if _hovered and Input.is_action_just_pressed("select")  or Input.is_action_just_pressed("deselect"):
+		deselect_requested.emit(self)
 
 
-func _on_transition_from_static_to_hovered() -> void:
-	on_hovered.emit(self)
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "position", hovered_position, ANIMATION_DURATION)
-	card_highlighted = true
-
-
-func _on_transition_from_hovered_to_static() -> void:
-	on_unhovered.emit(self)
-	
-	var tween = get_tree().create_tween() 
-	tween.tween_property(self, "position", starting_position, ANIMATION_DURATION)
-	card_highlighted = false
-
-func _on_transition_from_hovered_to_dragging() -> void:
-
-	on_selected.emit(self)
+## Select Logic
+func _on_deselected_state_input(event: InputEvent) -> void:
+	if _hovered and Input.is_action_just_pressed("select"):
+		select_requested.emit(self)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=12 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
 [ext_resource type="Theme" uid="uid://t7na42rm0yn8" path="res://assets/themes/main_theme.tres" id="2_ak66j"]
@@ -11,14 +11,30 @@
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="9_mxbqa"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="10_gt6nx"]
 
-[node name="CardView" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4vihb"]
+size = Vector2(250, 400)
+
+[node name="CardView" type="Area2D"]
+position = Vector2(200, 300)
+collision_mask = 2
+monitorable = false
 script = ExtResource("1_fmmwm")
-dragging_speed = 25.0
+hoverable = true
+
+[node name="Highlight" type="ColorRect" parent="."]
+visible = false
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 251.0
+offset_bottom = 401.0
+mouse_filter = 2
 
 [node name="Background" type="ColorRect" parent="."]
 unique_name_in_owner = true
 offset_right = 250.0
 offset_bottom = 400.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 mouse_filter = 2
 mouse_force_pass_scroll_events = false
 theme = ExtResource("2_ak66j")
@@ -29,6 +45,7 @@ unique_name_in_owner = true
 anchors_preset = 0
 offset_right = 250.0
 offset_bottom = 400.0
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
 [node name="Header" type="Control" parent="Background/CardContainer"]
@@ -38,6 +55,7 @@ anchors_preset = 0
 offset_right = 250.0
 offset_bottom = 35.0
 size_flags_vertical = 2
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
 [node name="CardType" type="Label" parent="Background/CardContainer/Header"]
@@ -65,6 +83,7 @@ layout_mode = 2
 offset_top = 35.0
 offset_right = 250.0
 offset_bottom = 185.0
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
 [node name="Art" type="TextureRect" parent="Background/CardContainer/ArtContainer"]
@@ -110,6 +129,7 @@ offset_top = 344.0
 offset_right = 240.0
 offset_bottom = 400.0
 size_flags_vertical = 8
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 alignment = 1
 
@@ -117,6 +137,7 @@ alignment = 1
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
 [node name="Attack" type="Label" parent="Background/CardContainer/FollowerStats/AttackMargin"]
@@ -132,6 +153,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 6
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
 [node name="Influence" type="Label" parent="Background/CardContainer/FollowerStats/InfluenceMargin"]
@@ -147,6 +169,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 10
+mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
 [node name="Health" type="Label" parent="Background/CardContainer/FollowerStats/HealthMargin"]
@@ -158,77 +181,38 @@ label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DetectMouse" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 250.0
-offset_bottom = 400.0
-theme = ExtResource("2_ak66j")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(125, 200)
+shape = SubResource("RectangleShape2D_4vihb")
 
 [node name="StateChart" type="Node" parent="."]
-unique_name_in_owner = true
 script = ExtResource("7_mqqq5")
 
-[node name="Root" type="Node" parent="StateChart"]
+[node name="CompoundState" type="Node" parent="StateChart"]
 script = ExtResource("8_iqunv")
-initial_state = NodePath("Active")
+initial_state = NodePath("Deselected")
 
-[node name="Inactive" type="Node" parent="StateChart/Root"]
+[node name="Selected" type="Node" parent="StateChart/CompoundState"]
 script = ExtResource("9_mxbqa")
 
-[node name="ToStatic" type="Node" parent="StateChart/Root/Inactive"]
+[node name="OnDeselect" type="Node" parent="StateChart/CompoundState/Selected"]
 script = ExtResource("10_gt6nx")
-to = NodePath("../../Active/Static")
-event = &"set_active"
+to = NodePath("../../Deselected")
+event = &"deselect"
 delay_in_seconds = "0.0"
 
-[node name="Active" type="Node" parent="StateChart/Root"]
-script = ExtResource("8_iqunv")
-initial_state = NodePath("Static")
-
-[node name="ToInactive" type="Node" parent="StateChart/Root/Active"]
-script = ExtResource("10_gt6nx")
-to = NodePath("../../Inactive")
-event = &"set_inactive"
-delay_in_seconds = "0.0"
-
-[node name="Static" type="Node" parent="StateChart/Root/Active"]
+[node name="Deselected" type="Node" parent="StateChart/CompoundState"]
 script = ExtResource("9_mxbqa")
 
-[node name="ToHovered" type="Node" parent="StateChart/Root/Active/Static"]
+[node name="OnSelect" type="Node" parent="StateChart/CompoundState/Deselected"]
 script = ExtResource("10_gt6nx")
-to = NodePath("../../Hovered")
-event = &"mouse_entered"
+to = NodePath("../../Selected")
+event = &"select"
 delay_in_seconds = "0.0"
 
-[node name="Hovered" type="Node" parent="StateChart/Root/Active"]
-script = ExtResource("9_mxbqa")
-
-[node name="ToStatic" type="Node" parent="StateChart/Root/Active/Hovered"]
-script = ExtResource("10_gt6nx")
-to = NodePath("../../Static")
-event = &"mouse_exited"
-delay_in_seconds = "0.0"
-
-[node name="ToDragging" type="Node" parent="StateChart/Root/Active/Hovered"]
-script = ExtResource("10_gt6nx")
-to = NodePath("../../Dragging")
-event = &"selected"
-delay_in_seconds = "0.0"
-
-[node name="Dragging" type="Node" parent="StateChart/Root/Active"]
-script = ExtResource("9_mxbqa")
-
-[node name="ToStatic" type="Node" parent="StateChart/Root/Active/Dragging"]
-script = ExtResource("10_gt6nx")
-to = NodePath("../../Static")
-event = &"deselected"
-delay_in_seconds = "0.0"
-
-[connection signal="mouse_entered" from="DetectMouse" to="." method="_on_container_mouse_entered"]
-[connection signal="mouse_exited" from="DetectMouse" to="." method="_on_container_mouse_exited"]
-[connection signal="taken" from="StateChart/Root/Active/Static/ToHovered" to="." method="_on_transition_from_static_to_hovered"]
-[connection signal="taken" from="StateChart/Root/Active/Hovered/ToStatic" to="." method="_on_transition_from_hovered_to_static"]
-[connection signal="taken" from="StateChart/Root/Active/Hovered/ToDragging" to="." method="_on_transition_from_hovered_to_dragging"]
-[connection signal="state_processing" from="StateChart/Root/Active/Dragging" to="." method="_on_dragging_state_processing"]
-[connection signal="taken" from="StateChart/Root/Active/Dragging/ToStatic" to="." method="_on_transition_from_dragging_to_static"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="state_entered" from="StateChart/CompoundState/Selected" to="." method="_on_selected_state_entered"]
+[connection signal="state_input" from="StateChart/CompoundState/Selected" to="." method="_on_selected_state_input"]
+[connection signal="state_entered" from="StateChart/CompoundState/Deselected" to="." method="_on_deselected_state_entered"]
+[connection signal="state_input" from="StateChart/CompoundState/Deselected" to="." method="_on_deselected_state_input"]
