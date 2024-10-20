@@ -1,32 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://qkimpx387hw7"]
+[gd_scene load_steps=3 format=3 uid="uid://qkimpx387hw7"]
 
 [ext_resource type="Script" path="res://scenes/game_view/game_view.gd" id="1_3s6ic"]
-[ext_resource type="Script" path="res://scenes/game_view/hand_view.gd" id="2_3vasq"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_me8d4"]
-size = Vector2(1386, 421)
-
-[sub_resource type="GDScript" id="GDScript_6udw2"]
-script/source = "extends CollisionShape2D
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-func _on_mouse_entered() -> void:
-	pass # Replace with function body.
-
-
-func _on_mouse_exited() -> void:
-	pass # Replace with function body.
-"
+[ext_resource type="PackedScene" uid="uid://b3vf51h200v2d" path="res://scenes/game_view/hand_view.tscn" id="2_dr152"]
 
 [node name="GameView" type="Node2D"]
 script = ExtResource("1_3s6ic")
@@ -41,15 +16,4 @@ offset_right = 1856.0
 offset_bottom = 512.0
 text = "End Turn"
 
-[node name="HandView" type="Area2D" parent="."]
-position = Vector2(272, 672)
-script = ExtResource("2_3vasq")
-metadata/_edit_group_ = true
-
-[node name="CollisionShape" type="CollisionShape2D" parent="HandView"]
-position = Vector2(680, 197.5)
-shape = SubResource("RectangleShape2D_me8d4")
-script = SubResource("GDScript_6udw2")
-
-[connection signal="child_entered_tree" from="HandView" to="HandView" method="_on_child_entered_tree"]
-[connection signal="child_exiting_tree" from="HandView" to="HandView" method="_on_child_exiting_tree"]
+[node name="HandView" parent="." instance=ExtResource("2_dr152")]
