@@ -69,7 +69,8 @@ func shuffle_in_card(card: Card, position := -1) -> void:
 	if position == -1:
 		position = randi_range(0, _cards.size())
 
-	print_debug(_cards.insert(position, card))
+	var status := _cards.insert(position, card)
+	assert(not status)
 
 
 ## Public Observers

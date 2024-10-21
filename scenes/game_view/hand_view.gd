@@ -1,5 +1,9 @@
 extends Area2D
 
+@export var size := Vector2(1000, 400) :
+	get: return $CollisionShape.shape.size
+	set(value): $CollisionShape.shape.size = value
+
 @export var CARD_MARGIN := Vector2(0, 0)
 var selected_card: CardView = null
 
@@ -13,6 +17,12 @@ func draw():
 		card.starting_position = Vector2(card.size.x * i, 0) + CARD_MARGIN
 		card.position = card.starting_position
 		card.draw()
+		
+func remove_card(card: CardView):
+	if card == selected_card:
+		selected_card = null
+	remove_child(card)
+
 
 func _on_child_entered_tree(node: Node) -> void:
 	if node is CardView:

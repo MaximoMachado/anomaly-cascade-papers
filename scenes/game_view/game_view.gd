@@ -3,6 +3,7 @@ extends Node2D
 const card_view_scene := preload("res://scenes/card_view/card_view.tscn")
 var lobby := Lobby.new()
 var game: Game
+var player_id = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,7 +22,33 @@ func _ready() -> void:
 		card_view.card = card
 		$HandView.add_child(card_view)
 
+	var status := game.start_game()
+	assert(status)
+	assert(game.mulligan(0, []))
+	assert(game.mulligan(1, []))
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
+func _on_play_card_pressed() -> void:
+	var selected_card : CardView = $HandView.selected_card
+	if selected_card != null:
+		var status : bool = game.play_card(0, selected_card.card, [])
+		if status:
+			print_debug("Play card")
+			$HandView.remove_card(selected_card)
+			
+		else:
+			# TODO: Add error message that card can't be played
+			print_debug("Can't play card")
+
+
+func _on_end_turn_pressed() -> void:
+	var status := game.end_turn(0)
+	if status:
+		print_debug("End turn")
+	else:
+		print_debug("Can't end turn")

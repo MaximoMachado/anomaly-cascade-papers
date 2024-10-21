@@ -16,4 +16,15 @@ offset_right = 1856.0
 offset_bottom = 512.0
 text = "End Turn"
 
+[node name="PlayCard" type="Button" parent="UI"]
+offset_left = 1664.0
+offset_top = 384.0
+offset_right = 1856.0
+offset_bottom = 432.0
+text = "Play Selected Card"
+
 [node name="HandView" parent="." instance=ExtResource("2_dr152")]
+position = Vector2(72, 664)
+
+[connection signal="pressed" from="UI/EndTurn" to="." method="_on_end_turn_pressed"]
+[connection signal="pressed" from="UI/PlayCard" to="." method="_on_play_card_pressed"]

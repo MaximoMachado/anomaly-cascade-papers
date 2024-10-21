@@ -42,7 +42,7 @@ func _init(lobby: Lobby) -> void:
 	for player: PlayerInfo in lobby.players:
 		var game_player = Player.create_player_with_starting_hand(player)
 		_players.append(game_player)
-		_id_to_player[player.id] = player
+		_id_to_player[game_player.id] = game_player
 	
 
 ## Public Mutators
@@ -272,6 +272,7 @@ func _end_of_turn_step() -> void:
 func _next_player() -> Player:
 	var current_player_index : int = _players.find(_id_to_player[_current_player_id])
 	var next_player_index : int = (current_player_index + 1) % _players.size()
+	print_debug(next_player_index)
 	return _players[next_player_index]
 
 func _previous_player() -> Player:
