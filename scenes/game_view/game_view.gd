@@ -1,6 +1,7 @@
 extends Node2D
 
 const card_view_scene := preload("res://scenes/card_view/card_view.tscn")
+const follower_view_scene := preload("res://scenes/follower_view/follower_view.tscn")
 var lobby := Lobby.new()
 var game: Game
 var player_id = 0
@@ -39,9 +40,12 @@ func _on_play_card_pressed() -> void:
 		var status : bool = game.play_card(0, selected_card.card, [])
 		if status:
 			print_debug("Play card")
-			$HandView.remove_child(selected_card)
 			if selected_card.card is Follower:
-				$FollowerZone.add_child(selected_card)
+				var follower_view := follower_view_scene.instantiate()
+				follower_view.follower = selected_card.card
+				$FollowerZone.add_child(follower_view)
+			
+			$HandView.remove_child(selected_card)
 		else:
 			# TODO: Add error message that card can't be played
 			print_debug("Can't play card")

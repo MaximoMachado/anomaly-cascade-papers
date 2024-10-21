@@ -1,0 +1,174 @@
+[gd_scene load_steps=11 format=3 uid="uid://dxpj6vqyjy2q4"]
+
+[ext_resource type="Script" path="res://scenes/follower_view/follower_view.gd" id="1_ftnhn"]
+[ext_resource type="Theme" uid="uid://t7na42rm0yn8" path="res://assets/themes/main_theme.tres" id="2_8jrsh"]
+[ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="4_0dvf4"]
+[ext_resource type="LabelSettings" uid="uid://dty3bce6077jw" path="res://scenes/follower_view/follower_stats_label_settings.tres" id="5_ssc4j"]
+[ext_resource type="LabelSettings" uid="uid://brgfkli8cxud8" path="res://scenes/card_view/card_name_label_settings.tres" id="5_y4hi1"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="7_vk0iy"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="8_hnf2c"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="9_qoh7k"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="10_sbigj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4vihb"]
+size = Vector2(250, 400)
+
+[node name="FollowerView" type="Area2D"]
+position = Vector2(125, 201)
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_ftnhn")
+hoverable = true
+metadata/_edit_group_ = true
+
+[node name="Highlight" type="ColorRect" parent="."]
+visible = false
+offset_left = -126.0
+offset_top = -201.0
+offset_right = 126.0
+offset_bottom = 201.0
+
+[node name="Background" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -125.0
+offset_top = -200.0
+offset_right = 125.0
+offset_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+mouse_force_pass_scroll_events = false
+theme = ExtResource("2_8jrsh")
+color = Color(0.325383, 0.139865, 0.317465, 1)
+
+[node name="CardContainer" type="Control" parent="Background"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 250.0
+offset_bottom = 400.0
+mouse_filter = 2
+theme = ExtResource("2_8jrsh")
+
+[node name="ArtContainer" type="AspectRatioContainer" parent="Background/CardContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+offset_right = 250.0
+offset_bottom = 251.0
+mouse_filter = 2
+theme = ExtResource("2_8jrsh")
+
+[node name="Art" type="TextureRect" parent="Background/CardContainer/ArtContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_8jrsh")
+texture = ExtResource("4_0dvf4")
+expand_mode = 1
+
+[node name="Name" type="Label" parent="Background/CardContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 264.0
+offset_right = 250.0
+offset_bottom = 304.0
+size_flags_horizontal = 4
+theme = ExtResource("2_8jrsh")
+text = "<Name>"
+label_settings = ExtResource("5_y4hi1")
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="FollowerStats" type="HBoxContainer" parent="Background/CardContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 10.0
+offset_top = 304.0
+offset_right = 240.0
+offset_bottom = 400.0
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("2_8jrsh")
+alignment = 1
+
+[node name="AttackMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+mouse_filter = 2
+theme = ExtResource("2_8jrsh")
+
+[node name="Attack" type="Label" parent="Background/CardContainer/FollowerStats/AttackMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_8jrsh")
+text = "0"
+label_settings = ExtResource("5_ssc4j")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InfluenceMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_filter = 2
+theme = ExtResource("2_8jrsh")
+
+[node name="Influence" type="Label" parent="Background/CardContainer/FollowerStats/InfluenceMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_8jrsh")
+text = "0"
+label_settings = ExtResource("5_ssc4j")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+mouse_filter = 2
+theme = ExtResource("2_8jrsh")
+
+[node name="Health" type="Label" parent="Background/CardContainer/FollowerStats/HealthMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_8jrsh")
+text = "0"
+label_settings = ExtResource("5_ssc4j")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_4vihb")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("7_vk0iy")
+
+[node name="CompoundState" type="Node" parent="StateChart"]
+script = ExtResource("8_hnf2c")
+initial_state = NodePath("Deselected")
+
+[node name="Selected" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("9_qoh7k")
+
+[node name="OnDeselect" type="Node" parent="StateChart/CompoundState/Selected"]
+script = ExtResource("10_sbigj")
+to = NodePath("../../Deselected")
+event = &"deselect"
+delay_in_seconds = "0.0"
+
+[node name="Deselected" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("9_qoh7k")
+
+[node name="OnSelect" type="Node" parent="StateChart/CompoundState/Deselected"]
+script = ExtResource("10_sbigj")
+to = NodePath("../../Selected")
+event = &"select"
+delay_in_seconds = "0.0"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="state_entered" from="StateChart/CompoundState/Selected" to="." method="_on_selected_state_entered"]
+[connection signal="state_input" from="StateChart/CompoundState/Selected" to="." method="_on_selected_state_input"]
+[connection signal="state_entered" from="StateChart/CompoundState/Deselected" to="." method="_on_deselected_state_entered"]
+[connection signal="state_input" from="StateChart/CompoundState/Deselected" to="." method="_on_deselected_state_input"]
