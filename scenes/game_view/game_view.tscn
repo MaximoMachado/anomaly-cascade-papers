@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://qkimpx387hw7"]
+[gd_scene load_steps=5 format=3 uid="uid://qkimpx387hw7"]
 
 [ext_resource type="Script" path="res://scenes/game_view/game_view.gd" id="1_3s6ic"]
 [ext_resource type="PackedScene" uid="uid://b3vf51h200v2d" path="res://scenes/game_view/hand_view.tscn" id="2_dr152"]
+[ext_resource type="Script" path="res://scenes/game_view/follower_zone.gd" id="3_thup6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xuq8h"]
 
 [node name="GameView" type="Node2D"]
 script = ExtResource("1_3s6ic")
@@ -25,6 +28,12 @@ text = "Play Selected Card"
 
 [node name="HandView" parent="." instance=ExtResource("2_dr152")]
 position = Vector2(72, 664)
+
+[node name="FollowerZone" type="Area2D" parent="."]
+script = ExtResource("3_thup6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FollowerZone"]
+shape = SubResource("RectangleShape2D_xuq8h")
 
 [connection signal="pressed" from="UI/EndTurn" to="." method="_on_end_turn_pressed"]
 [connection signal="pressed" from="UI/PlayCard" to="." method="_on_play_card_pressed"]

@@ -39,8 +39,9 @@ func _on_play_card_pressed() -> void:
 		var status : bool = game.play_card(0, selected_card.card, [])
 		if status:
 			print_debug("Play card")
-			$HandView.remove_card(selected_card)
-			
+			$HandView.remove_child(selected_card)
+			if selected_card.card is Follower:
+				$FollowerZone.add_child(selected_card)
 		else:
 			# TODO: Add error message that card can't be played
 			print_debug("Can't play card")

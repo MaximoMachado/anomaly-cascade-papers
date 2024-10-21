@@ -17,6 +17,11 @@ func draw():
 		card.starting_position = Vector2(card.size.x * i, 0) + CARD_MARGIN
 		card.position = card.starting_position
 		card.draw()
+		
+func remove_card(card: CardView):
+	if card == selected_card:
+		selected_card = null
+	remove_child(card)
 
 
 func _on_child_entered_tree(node: Node) -> void:
@@ -29,8 +34,6 @@ func _on_child_entered_tree(node: Node) -> void:
 
 func _on_child_exiting_tree(node: Node) -> void:
 	if node is CardView:
-		if node == selected_card:
-			selected_card = null
 		node.select_requested.disconnect(_on_card_select_requested)
 		node.deselect_requested.disconnect(_on_card_deselect_requested)
 		draw()
