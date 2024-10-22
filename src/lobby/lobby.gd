@@ -1,6 +1,7 @@
 
 class_name Lobby extends RefCounted
 
+var lobby_id := 0
 var _players: Array[PlayerInfo] = []
 var players: Array[PlayerInfo] :
 	get: return _players.duplicate()
@@ -14,11 +15,15 @@ var game_config: GameConfig = GameConfig.new()
 ## Maps player_id to team_id
 #var _team_to_players: Dictionary
 
-func add_player(p_player: PlayerInfo):
+func add_player(p_player: PlayerInfo) -> bool:
 	_players.append(p_player)
 	return true
 
-func has(p_player: PlayerInfo) -> bool:
+func remove_player(player_id: int) -> bool:
+	_players = _players.filter(func(player: PlayerInfo) -> bool: return player.id != player_id)
+	return true
+
+func has(player_id: int) -> bool:
 	var ids : Array[int] = _players.map(func(player: PlayerInfo) -> int: return player.id)
 
-	return ids.has(p_player.id)
+	return ids.has(player_id)

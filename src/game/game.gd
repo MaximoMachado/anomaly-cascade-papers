@@ -243,6 +243,11 @@ func duplicate() -> Game:
 	pass
 	return null
 
+## Duplicates the game but with only the information that this specific player is allowed to see
+func duplicate_for_player(player_id: int) -> Game:
+	pass
+	return null
+
 ## Private methods
 
 ## Orchestrates all of the end of turn steps, deal combat damage, gain influence, etc.

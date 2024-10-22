@@ -48,7 +48,9 @@ func draw() -> void:
 	elif card is Catalyst:
 		%CardType.text = "Catalyst"
 		%FollowerStats.hide()
-		pass
+	elif card is HiddenCard:
+		for child in $Background.get_children():
+			child.hide()
 	else:
 		%FollowerStats.hide()
 		push_error("Unhandled card type in CardView")
