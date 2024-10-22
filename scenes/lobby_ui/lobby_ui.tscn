@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqpbh40dwih32"]
+
+[ext_resource type="Script" path="res://scenes/lobby_ui/lobby_ui.gd" id="1_5pqrn"]
+
+[node name="LobbyUi" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5pqrn")
+
+[node name="LobbyButtons" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="Host" type="Button" parent="LobbyButtons"]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="LobbyButtons"]
+layout_mode = 2
+text = "Join"
+
+[node name="Disconnect" type="Button" parent="LobbyButtons"]
+layout_mode = 2
+text = "Disconnect"
+
+[connection signal="pressed" from="LobbyButtons/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="LobbyButtons/Join" to="." method="_on_join_pressed"]
