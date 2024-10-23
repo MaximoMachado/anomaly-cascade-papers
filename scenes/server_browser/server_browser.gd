@@ -5,6 +5,8 @@ func _ready() -> void:
 	MultiplayerManager.lobbies_refreshed.connect(draw)
 
 func draw(lobbies: Array[Lobby]) -> void:
+	for lobby in lobbies:
+		print_debug(lobby.to_dict())
 	for child in %Lobbies.get_children():
 		if child is PanelContainer:
 			child.queue_free()
@@ -15,7 +17,7 @@ func draw(lobbies: Array[Lobby]) -> void:
 func _on_host_pressed() -> void:
 	MultiplayerManager.create_lobby.rpc_id(MultiplayerManager.SERVER)
 
-func _on_join_pressed() -> void:
+func _on_join_pressed(lobby_id: int) -> void:
 	MultiplayerManager.join_lobby.rpc_id(MultiplayerManager.SERVER, 0)
 
 func _on_refresh_pressed() -> void:

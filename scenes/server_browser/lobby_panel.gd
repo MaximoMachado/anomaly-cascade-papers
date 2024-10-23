@@ -10,7 +10,7 @@ var lobby: Lobby:
 		%Players.text = "Players: %d / %d" % [lobby.players.size(), 8]
 
 
-static func create(lobby: Lobby) -> LobbyPanel:
+static func create(p_lobby: Lobby) -> LobbyPanel:
 	var scene : LobbyPanel = load("res://scenes/server_browser/lobby_panel.tscn").instantiate()
-	scene.lobby = lobby
+	scene.lobby = p_lobby
 	return scene

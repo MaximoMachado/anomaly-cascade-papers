@@ -84,6 +84,7 @@ func start_client() -> Error:
 
 	return Error.OK
 
+## Basic listeners provided by ENetMultiplayerPeer
 
 func _player_connected_to_server(id: int) -> void:
 	print("Player connected! Id: %d" % id)
@@ -111,7 +112,10 @@ func _print_debug_rpc_call() -> void:
 		print("\tSender: %d" % multiplayer.get_remote_sender_id())
 		print("\tReciever: %d\n" % multiplayer.get_unique_id())
 
+## Lobby RPC Requests
+
 ## Client -> Server
+## Stateless Request
 @rpc("any_peer", "reliable")
 func request_lobbies(num_lobbies: int = 50) -> void:
 	_print_debug_rpc_call()
@@ -122,11 +126,15 @@ func request_lobbies(num_lobbies: int = 50) -> void:
 	recieve_lobbies.rpc_id(client_id, page)
 
 ## Server -> Client
+## Stateless Request
 ## @param p_lobbies : Array[Dictionary]
 @rpc("any_peer", "reliable")
 func recieve_lobbies(p_lobbies: Array) -> void:
 	_print_debug_rpc_call()
-	lobbies_refreshed.emit(p_lobbies.map(Lobby.from_dict))
+	var lobbies : Array[Lobby] = []
+	lobbies.assign(p_lobbies.map(Lobby.from_dict))
+
+	lobbies_refreshed.emit(lobbies)
 
 
 ## Client -> Server
@@ -136,7 +144,7 @@ func create_lobby() -> void:
 	var host_id := multiplayer.get_remote_sender_id()
 
 	# If already in a lobby, can't create a new lobby
-	if _player_id_to_lobby.get(host_id) == null:
+	if _player_id_to_lobby.get(host_id) != null:
 		return
 
 	var lobby := Lobby.new()
@@ -144,6 +152,7 @@ func create_lobby() -> void:
 	lobby.add_player(host_player)
 	_lobbies.append(lobby)
 	_host_id_to_lobby[host_id] = lobby
+	_player_id_to_lobby[host_id] = lobby
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
@@ -152,7 +161,7 @@ func join_lobby(lobby_id: int) -> void:
 	var client_id := multiplayer.get_remote_sender_id()
 
 	# If already in a lobby, can't join a new lobby
-	if _player_id_to_lobby.get(client_id) == null:
+	if _player_id_to_lobby.get(client_id) != null:
 		return
 
 	var lobby := _lobbies[lobby_id]
@@ -167,14 +176,17 @@ func leave_lobby() -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 
+	# Check if player is a host of some lobby
 	var host_lobby : Lobby = _host_id_to_lobby.get(client_id)
 	if host_lobby != null:
-		_lobbies.remove_at(_lobbies.find(host_lobby))
+		_lobbies.erase(host_lobby)
+		_host_id_to_lobby.erase(client_id)
+		_lobby_id_to_game.erase(host_lobby.id)
 	else:
-		for lobby in _lobbies:
-			if lobby.has(client_id):
-				lobby.remove_player(client_id)
-				break
+		var lobby : Lobby = _player_id_to_lobby[client_id]
+		lobby.remove_player(client_id)
+
+	_player_id_to_lobby.erase(client_id)
 
 	print_debug("Player %d has left lobby %d" % [client_id])
 

@@ -32,10 +32,9 @@ func to_dict() -> Dictionary:
 	var dict := {}
 
 	dict["lobby_id"] = id
-	var players : Array[PlayerInfo] = []
+	dict["players"] = []
 	for player in _players:
-		players.append(player.to_dict())
-	dict["players"] = players
+		dict["players"].append(player.to_dict())
 
 	# Todo: Serialize game config
 	#dict["game_config"] :=
@@ -44,9 +43,9 @@ func to_dict() -> Dictionary:
 
 static func from_dict(lobby_dict: Dictionary) -> Lobby:
 	var lobby := Lobby.new()
-	# for player in lobby_dict["players"]:
-	# 	lobby._players.append(Player.from_dict(player))
 
 	lobby.id = lobby_dict["lobby_id"]
+	for player: Dictionary in lobby_dict["players"]:
+		lobby._players.append(PlayerInfo.from_dict(player))
 
 	return lobby
