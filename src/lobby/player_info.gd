@@ -17,7 +17,7 @@ func _init(p_id: int, p_user_name: String) -> void:
 
 func to_dict() -> Dictionary:
 	var dict := {}
-	dict["id"] = id
+	dict["player_id"] = id
 	dict["user_name"] = user_name
 	# Todo: Serialize decks
 
@@ -26,4 +26,4 @@ func to_dict() -> Dictionary:
 
 static func from_dict(player_info_dict: Dictionary) -> PlayerInfo:
 	# Todo: Deserialize decks
-	return PlayerInfo.new(player_info_dict["id"], player_info_dict["user_name"])
+	return PlayerInfo.new(player_info_dict["player_id"], player_info_dict["user_name"])

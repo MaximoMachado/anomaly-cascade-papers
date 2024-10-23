@@ -3,14 +3,23 @@
 [ext_resource type="Script" path="res://scenes/server_browser/server_browser.gd" id="1_pgc5r"]
 
 [node name="ServerBrowser" type="HBoxContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+custom_minimum_size = Vector2(1920, 1080)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = -64.0
+offset_right = 49.5
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 1
 script = ExtResource("1_pgc5r")
 
 [node name="LobbyButtons" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 alignment = 1
 
@@ -27,15 +36,15 @@ layout_mode = 2
 text = "Refresh"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Lobbies" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
 
 [connection signal="pressed" from="LobbyButtons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="LobbyButtons/Join" to="." method="_on_join_pressed"]

@@ -1,10 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://dxpj6vqyjy2q4"]
+[gd_scene load_steps=9 format=3 uid="uid://dxpj6vqyjy2q4"]
 
 [ext_resource type="Script" path="res://scenes/follower_view/follower_view.gd" id="1_ftnhn"]
 [ext_resource type="Theme" uid="uid://t7na42rm0yn8" path="res://assets/themes/main_theme.tres" id="2_8jrsh"]
 [ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="4_0dvf4"]
-[ext_resource type="LabelSettings" uid="uid://dty3bce6077jw" path="res://scenes/follower_view/follower_stats_label_settings.tres" id="5_ssc4j"]
-[ext_resource type="LabelSettings" uid="uid://brgfkli8cxud8" path="res://scenes/card_view/card_name_label_settings.tres" id="5_y4hi1"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="7_vk0iy"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="8_hnf2c"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="9_qoh7k"]
@@ -73,7 +71,6 @@ offset_bottom = 304.0
 size_flags_horizontal = 4
 theme = ExtResource("2_8jrsh")
 text = "<Name>"
-label_settings = ExtResource("5_y4hi1")
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
@@ -102,7 +99,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_8jrsh")
 text = "0"
-label_settings = ExtResource("5_ssc4j")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -118,7 +114,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_8jrsh")
 text = "0"
-label_settings = ExtResource("5_ssc4j")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -134,7 +129,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_8jrsh")
 text = "0"
-label_settings = ExtResource("5_ssc4j")
 horizontal_alignment = 1
 vertical_alignment = 1
 

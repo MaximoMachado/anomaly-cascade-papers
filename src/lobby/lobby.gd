@@ -1,7 +1,7 @@
 
 class_name Lobby extends RefCounted
 
-var lobby_id := 0
+var id := 0
 var _players: Array[PlayerInfo] = []
 var players: Array[PlayerInfo] :
 	get: return _players.duplicate()
@@ -31,8 +31,8 @@ func has(player_id: int) -> bool:
 func to_dict() -> Dictionary:
 	var dict := {}
 
-	dict["lobby_id"] = lobby_id
-	var players = []
+	dict["lobby_id"] = id
+	var players : Array[PlayerInfo] = []
 	for player in _players:
 		players.append(player.to_dict())
 	dict["players"] = players
@@ -47,6 +47,6 @@ static func from_dict(lobby_dict: Dictionary) -> Lobby:
 	# for player in lobby_dict["players"]:
 	# 	lobby._players.append(Player.from_dict(player))
 
-	lobby.lobby_id = lobby_dict["lobby_id"]
+	lobby.id = lobby_dict["lobby_id"]
 
 	return lobby

@@ -12,7 +12,7 @@ func read_only(old_value: Variant, new_value: Variant) -> Variant:
 
 ## Returns whether object is a type that can be a target
 func is_target(object: Variant) -> bool:
-	return object is Player or object is Card
+	return object is Player or object is Card or object is Deck
 
 func to_dict(object: Object) -> Dictionary:
 	return object.to_dict()
