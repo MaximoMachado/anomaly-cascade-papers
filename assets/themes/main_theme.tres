@@ -8,6 +8,7 @@
 [resource]
 default_font = ExtResource("4_p1v1o")
 default_font_size = 24
+Label/fonts/font = ExtResource("4_p1v1o")
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
 RichTextLabel/fonts/bold_font = ExtResource("1_ftrk5")
 RichTextLabel/fonts/bold_italics_font = ExtResource("2_fr4eb")

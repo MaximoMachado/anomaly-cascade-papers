@@ -38,6 +38,11 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg", "res://addons/gut/plugin.cfg")
 
+[gui]
+
+theme/custom="res://assets/themes/main_theme.tres"
+theme/custom_font="res://assets/fonts/Recia_Complete/Fonts/OTF/Recia-Medium.otf"
+
 [input]
 
 select={

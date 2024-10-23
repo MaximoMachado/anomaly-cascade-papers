@@ -5,6 +5,7 @@ extends Node
 signal player_connected(peer_id: int)
 signal player_disconnected(peer_id: int)
 signal server_disconnected
+signal lobbies_refreshed
 
 ## If players have joined a particular lobby
 signal player_joined_lobby(peer_id: int, lobby_id: int)
@@ -78,21 +79,35 @@ func _on_server_disconnected():
 	multiplayer.multiplayer_peer = null
 	server_disconnected.emit()
 
+func _print_debug_rpc_call():
+	if OS.is_debug_build():
+		print("RPC Call: %s" % get_stack()[1]["function"])
+		print("\tSender: %d" % multiplayer.get_remote_sender_id())
+		print("\tReciever: %d\n" % multiplayer.get_unique_id())
+
+## Client -> Server
 @rpc("any_peer", "reliable")
-func request_lobbies(num_lobbies: int = 50):
+func request_lobbies(num_lobbies: int = 50) -> void:
+	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 	num_lobbies = clamp(num_lobbies, 0, min(50, lobbies.size()))
 
-	var page := lobbies.slice(0, num_lobbies)
+	var page := lobbies.slice(0, num_lobbies).map(Types.to_dict)
 	set_lobbies.rpc_id(client_id, page)
 
+## Server -> Client
+## @param p_lobbies : Array[Dictionary]
 @rpc("any_peer", "reliable")
-func set_lobbies(p_lobbies: Array[Lobby]):
-	lobbies = p_lobbies
+func set_lobbies(p_lobbies: Array) -> void:
+	_print_debug_rpc_call()
+	lobbies.assign(p_lobbies.map(Lobby.from_dict))
+	lobbies_refreshed.emit()
 
 
+## Client -> Server
 @rpc("any_peer", "reliable")
 func create_lobby():
+	_print_debug_rpc_call()
 	var host_id := multiplayer.get_remote_sender_id()
 
 	var lobby := Lobby.new()
@@ -101,8 +116,10 @@ func create_lobby():
 	lobbies.append(lobby)
 	host_id_to_lobby[host_id] = lobby
 
+## Client -> Server
 @rpc("any_peer", "reliable")
 func join_lobby(lobby_id: int):
+	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 
 	var lobby := lobbies[lobby_id]
@@ -111,8 +128,10 @@ func join_lobby(lobby_id: int):
 	lobby.add_player(player)
 	print_debug("Player %d has joined lobby %d" % [player.id, lobby_id])
 
+## Client -> Server
 @rpc("any_peer", "reliable")
 func leave_lobby():
+	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 
 	var host_lobby : Lobby = host_id_to_lobby.get(client_id)
@@ -126,8 +145,10 @@ func leave_lobby():
 
 	print_debug("Player %d has left lobby %d" % [client_id])
 
+## Host Client -> Server
 @rpc("any_peer", "reliable")
 func start_lobby():
+	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 	
 	var host_lobby : Lobby = host_id_to_lobby.get(client_id)
@@ -144,7 +165,8 @@ func start_lobby():
 
 	print_debug("Lobby was not found for host %d" % [client_id])
 
-## Server telling clients that lobby has started
+## Server -> All Clients in lobby
 @rpc("authority", "reliable")
 func lobby_started():
+	_print_debug_rpc_call()
 	pass

@@ -1,15 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bqpbh40dwih32"]
+[gd_scene load_steps=2 format=3 uid="uid://bqpbh40dwih32"]
 
 [ext_resource type="Script" path="res://scenes/server_browser/server_browser.gd" id="1_pgc5r"]
-[ext_resource type="FontFile" uid="uid://c8axnpxc0nrk4" path="res://addons/gut/fonts/AnonymousPro-Bold.ttf" id="2_l72q7"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_mpegr"]
-font = ExtResource("2_l72q7")
-font_size = 60
-font_color = Color(1, 0, 0, 1)
-
-[node name="ServerBrowser" type="Control"]
-layout_mode = 3
+[node name="ServerBrowser" type="HBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,9 +11,8 @@ grow_vertical = 2
 script = ExtResource("1_pgc5r")
 
 [node name="LobbyButtons" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 270.0
-offset_bottom = 1080.0
+layout_mode = 2
+alignment = 1
 
 [node name="Host" type="Button" parent="LobbyButtons"]
 layout_mode = 2
@@ -34,16 +26,16 @@ text = "Join"
 layout_mode = 2
 text = "Refresh"
 
-[node name="Lobbies" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 270.0
-offset_right = 910.0
-offset_bottom = 630.0
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="LobbyList" type="Label" parent="Lobbies"]
+[node name="Lobbies" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-label_settings = SubResource("LabelSettings_mpegr")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
 
 [connection signal="pressed" from="LobbyButtons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="LobbyButtons/Join" to="." method="_on_join_pressed"]

@@ -27,3 +27,26 @@ func has(player_id: int) -> bool:
 	var ids : Array[int] = _players.map(func(player: PlayerInfo) -> int: return player.id)
 
 	return ids.has(player_id)
+
+func to_dict() -> Dictionary:
+	var dict := {}
+
+	dict["lobby_id"] = lobby_id
+	var players = []
+	for player in _players:
+		players.append(player.to_dict())
+	dict["players"] = players
+
+	# Todo: Serialize game config
+	#dict["game_config"] :=
+
+	return dict
+
+static func from_dict(lobby_dict: Dictionary) -> Lobby:
+	var lobby := Lobby.new()
+	# for player in lobby_dict["players"]:
+	# 	lobby._players.append(Player.from_dict(player))
+
+	lobby.lobby_id = lobby_dict["lobby_id"]
+
+	return lobby

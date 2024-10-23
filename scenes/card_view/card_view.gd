@@ -18,7 +18,7 @@ var starting_position: = Vector2(0, 0)
 
 ## Returns visible size, not collider size
 var size: Vector2:
-	get: return $Background.size
+	get: return %Background.size
 	
 var _hovered := false
 @onready var _hover_timer := get_tree().create_timer(0)
@@ -72,19 +72,19 @@ func _on_mouse_exited() -> void:
 
 ## Select Logic
 func select():
-	$StateChart.send_event("select")
+	%StateChart.send_event("select")
 
 ## Select Logic
 func deselect():
-	$StateChart.send_event("deselect")
+	%StateChart.send_event("deselect")
 
 ## Select Logic
 func _on_selected_state_entered() -> void:
-	$Highlight.show()
+	%Highlight.show()
 
 ## Select Logic
 func _on_deselected_state_entered() -> void:
-	$Highlight.hide()
+	%Highlight.hide()
 
 ## Select Logic
 func _on_selected_state_input(event: InputEvent) -> void:

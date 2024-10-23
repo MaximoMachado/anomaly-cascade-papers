@@ -1,11 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://cangte1ff4xt1"]
+[gd_scene load_steps=9 format=3 uid="uid://cangte1ff4xt1"]
 
 [ext_resource type="Script" path="res://scenes/card_view/card_view.gd" id="1_fmmwm"]
 [ext_resource type="Theme" uid="uid://t7na42rm0yn8" path="res://assets/themes/main_theme.tres" id="2_ak66j"]
 [ext_resource type="Texture2D" uid="uid://c04eg3w1h37to" path="res://assets/images/no_image.jpg" id="2_icdem"]
-[ext_resource type="LabelSettings" uid="uid://brgfkli8cxud8" path="res://scenes/card_view/card_name_label_settings.tres" id="4_ei4ui"]
-[ext_resource type="LabelSettings" uid="uid://bhygh1yiw0ovp" path="res://scenes/card_view/card_description_label_settings.tres" id="5_7lox0"]
-[ext_resource type="LabelSettings" uid="uid://fh0m2sqo2l8g" path="res://scenes/card_view/stat_label_settings.tres" id="6_3gngh"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="7_mqqq5"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="8_iqunv"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="9_mxbqa"]
@@ -22,6 +19,7 @@ script = ExtResource("1_fmmwm")
 hoverable = true
 
 [node name="Highlight" type="ColorRect" parent="."]
+unique_name_in_owner = true
 visible = false
 offset_left = -1.0
 offset_top = -1.0
@@ -48,32 +46,27 @@ offset_bottom = 400.0
 mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
-[node name="Header" type="Control" parent="Background/CardContainer"]
+[node name="Header" type="MarginContainer" parent="Background/CardContainer"]
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
-anchors_preset = 0
 offset_right = 250.0
 offset_bottom = 35.0
 size_flags_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_ak66j")
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
 
 [node name="CardType" type="Label" parent="Background/CardContainer/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_right = 137.0
-offset_bottom = 32.0
 theme = ExtResource("2_ak66j")
 text = "Type"
-label_settings = ExtResource("5_7lox0")
 vertical_alignment = 1
 
 [node name="Flux" type="HBoxContainer" parent="Background/CardContainer/Header"]
 custom_minimum_size = Vector2(25, 0)
 layout_mode = 2
-offset_left = 208.0
-offset_right = 250.0
-offset_bottom = 32.0
 size_flags_horizontal = 10
 theme = ExtResource("2_ak66j")
 
@@ -102,7 +95,6 @@ offset_bottom = 232.0
 size_flags_horizontal = 4
 theme = ExtResource("2_ak66j")
 text = "<Name>"
-label_settings = ExtResource("4_ei4ui")
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
@@ -116,68 +108,67 @@ offset_bottom = 352.0
 size_flags_vertical = 6
 theme = ExtResource("2_ak66j")
 text = "<Description>"
-label_settings = ExtResource("5_7lox0")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="FollowerStats" type="HBoxContainer" parent="Background/CardContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Background/CardContainer"]
+layout_mode = 2
+offset_top = 350.0
+offset_right = 250.0
+offset_bottom = 400.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="FollowerStats" type="HBoxContainer" parent="Background/CardContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 10.0
-offset_top = 344.0
-offset_right = 240.0
-offset_bottom = 400.0
-size_flags_vertical = 8
 mouse_filter = 2
 theme = ExtResource("2_ak66j")
 alignment = 1
 
-[node name="AttackMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+[node name="AttackMargin" type="MarginContainer" parent="Background/CardContainer/MarginContainer/FollowerStats"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
-[node name="Attack" type="Label" parent="Background/CardContainer/FollowerStats/AttackMargin"]
+[node name="Attack" type="Label" parent="Background/CardContainer/MarginContainer/FollowerStats/AttackMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_ak66j")
 text = "0"
-label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InfluenceMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+[node name="InfluenceMargin" type="MarginContainer" parent="Background/CardContainer/MarginContainer/FollowerStats"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
-[node name="Influence" type="Label" parent="Background/CardContainer/FollowerStats/InfluenceMargin"]
+[node name="Influence" type="Label" parent="Background/CardContainer/MarginContainer/FollowerStats/InfluenceMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_ak66j")
 text = "0"
-label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HealthMargin" type="MarginContainer" parent="Background/CardContainer/FollowerStats"]
+[node name="HealthMargin" type="MarginContainer" parent="Background/CardContainer/MarginContainer/FollowerStats"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 mouse_filter = 2
 theme = ExtResource("2_ak66j")
 
-[node name="Health" type="Label" parent="Background/CardContainer/FollowerStats/HealthMargin"]
+[node name="Health" type="Label" parent="Background/CardContainer/MarginContainer/FollowerStats/HealthMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_ak66j")
 text = "0"
-label_settings = ExtResource("6_3gngh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -186,6 +177,7 @@ position = Vector2(125, 200)
 shape = SubResource("RectangleShape2D_4vihb")
 
 [node name="StateChart" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("7_mqqq5")
 
 [node name="CompoundState" type="Node" parent="StateChart"]
