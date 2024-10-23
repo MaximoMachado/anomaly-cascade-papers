@@ -19,9 +19,14 @@ func draw(lobbies: Array[Lobby]) -> void:
 
 func _on_host_pressed() -> void:
 	MultiplayerManager.create_lobby.rpc_id(MultiplayerManager.SERVER)
+	_transition_to_lobby_view()
 
 func _on_refresh_pressed() -> void:
 	MultiplayerManager.request_lobbies.rpc_id(MultiplayerManager.SERVER)
 
 func _on_join_pressed(lobby_id: int) -> void:
 	MultiplayerManager.join_lobby.rpc_id(MultiplayerManager.SERVER, lobby_id)
+	_transition_to_lobby_view()
+	
+func _transition_to_lobby_view() -> void:
+	get_tree().change_scene_to_file.call_deferred("res://scenes/lobby_view/lobby_view.tscn")
