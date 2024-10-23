@@ -40,6 +40,7 @@ func _validate_internal_invariants() -> void:
 	## Invariants: 
 	## - For each lobby:
 	##		- Lobby ids are unique
+	##		- Lobby ids are equal to their host's id
 	##		- Lobby's host exists in _host_id_to_lobby and map to lobby
 	##		- Lobby's players exist in player_id_lobby and map to lobby
 	##		- Player id that exists in lobby must exist in dictionaries with player_id as a key
@@ -147,9 +148,8 @@ func create_lobby() -> void:
 	if _player_id_to_lobby.get(host_id) != null:
 		return
 
-	var lobby := Lobby.new()
 	var host_player : PlayerInfo = _player_id_to_player_info[host_id]
-	lobby.add_player(host_player)
+	var lobby := Lobby.create(host_player)
 	_lobbies.append(lobby)
 	_host_id_to_lobby[host_id] = lobby
 	_player_id_to_lobby[host_id] = lobby
@@ -164,10 +164,10 @@ func join_lobby(lobby_id: int) -> void:
 	if _player_id_to_lobby.get(client_id) != null:
 		return
 
-	var lobby := _lobbies[lobby_id]
-	var player := PlayerInfo.new(client_id, str(client_id))
-	
+	var lobby : Lobby = _host_id_to_lobby[lobby_id]
+	var player : PlayerInfo = _player_id_to_player_info[client_id]
 	lobby.add_player(player)
+	
 	print_debug("Player %d has joined lobby %d" % [player.id, lobby_id])
 
 ## Client -> Server

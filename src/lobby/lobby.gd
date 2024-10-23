@@ -1,19 +1,30 @@
 
 class_name Lobby extends RefCounted
+## Represents a Lobby that players can join
+## Game can be customized before being started
+## Mutable data structure
 
 var id := 0
 var _players: Array[PlayerInfo] = []
 var players: Array[PlayerInfo] :
 	get: return _players.duplicate()
 	set(value): _players = Types.read_only(_players, value)
-var game_config: GameConfig = GameConfig.new()
 
 ## TODO: Add way to configure Game Settings
-#var game_config: GameConfig
+var game_config: GameConfig = GameConfig.new()
+
 
 ## TODO: Add teams/multiple player support 
 ## Maps player_id to team_id
 #var _team_to_players: Dictionary
+
+## Creates Lobby with a default ID derived from Host
+static func create(host_player: PlayerInfo) -> Lobby:
+	var lobby := Lobby.new()
+	lobby.id = host_player.id
+	lobby.add_player(host_player)
+	return lobby
+
 
 func add_player(p_player: PlayerInfo) -> bool:
 	_players.append(p_player)
