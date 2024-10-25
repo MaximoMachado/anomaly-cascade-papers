@@ -201,10 +201,10 @@ func start_lobby() -> void:
 		var game := Game.new(host_lobby)
 		_lobby_id_to_game[host_lobby.id] = game
 
-		var lobby_id := _lobbies.find(host_lobby)
-		_lobbies.remove_at(lobby_id)
-		_host_id_to_lobby.erase(client_id)
-		print_debug("Lobby %d was started by %d" % [lobby_id, client_id])
+		for player in host_lobby.players:
+			lobby_started.rpc_id(player.id)
+
+		print_debug("Lobby %d was started by %d" % [host_lobby.id, client_id])
 
 	print_debug("Lobby was not found for host %d" % [client_id])
 
@@ -212,6 +212,7 @@ func start_lobby() -> void:
 @rpc("authority", "reliable")
 func lobby_started() -> void:
 	_print_debug_rpc_call()
-	pass
+	var lobby : Lobby = _player_id_to_lobby[multiplayer.get_unique_id()]
+	game_started.emit(lobby.id, Game.new(lobby))
 
 ## RPC calls that relate to Game actions and handling syncing

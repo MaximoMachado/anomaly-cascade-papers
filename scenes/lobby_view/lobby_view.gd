@@ -17,3 +17,7 @@ func _process(delta: float) -> void:
 
 func _leave_lobby() -> void:
 	get_tree().change_scene_to_file.call_deferred("res://scenes/server_browser/server_browser.tscn")
+
+
+func _on_start_game_pressed() -> void:
+	MultiplayerManager.start_lobby()
