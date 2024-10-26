@@ -71,12 +71,12 @@ func shuffle_in_card(card: Card, position := -1) -> void:
 
 func to_dict() -> Dictionary:
 	var deck_dict := {}
-	deck_dict["deck"] = _cards.map(Types.to_dict)
+	deck_dict["cards"] = _cards.map(Types.to_dict)
 	return deck_dict
 
 static func from_dict(deck_dict: Dictionary) -> Deck:
 	var deck := Deck.new()
-	deck._cards = deck_dict["deck"].map(Card.from_dict)
+	deck._cards.assign(deck_dict["cards"].map(Card.from_dict))
 	return deck
 
 ## Public Observers

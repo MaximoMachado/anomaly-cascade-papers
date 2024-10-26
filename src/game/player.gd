@@ -9,8 +9,8 @@ var deck: Deck = Deck.new()
 var influence_deck: Deck = Deck.new()
 var graveyard: Deck = Deck.new()
 
-var followers_in_play: CardZone = CardZone.new()
-var factories_in_play: CardZone = CardZone.new()
+var followers_in_play: Array[Follower] = []
+var factories_in_play: Array[Factory] = []
 
 var health : int:
 	set(value):
@@ -53,8 +53,8 @@ func to_dict() -> Dictionary:
 	player_dict["deck"] = deck.to_dict()
 	player_dict["influence_deck"] = influence_deck.to_dict()
 	player_dict["graveyard"] = graveyard.to_dict()
-	player_dict["followers"] = followers_in_play.to_dict()
-	player_dict["factories"] = factories_in_play.to_dict()
+	player_dict["followers"] = followers_in_play.map(Types.to_dict)
+	player_dict["factories"] = factories_in_play.map(Types.to_dict)
 
 	player_dict["health"] = health
 	player_dict["influence"] = influence
@@ -65,14 +65,14 @@ static func from_dict(player_dict: Dictionary) -> Player:
 	var player = Player.new(player_dict["id"])
 	player.team_id = player_dict["team_id"]
 
-	player.hand = player_dict["hand"].map(Card.from_dict)
+	player.hand.assign(player_dict["hand"].map(Card.from_dict))
 
 	player.deck = Deck.from_dict(player_dict["deck"])
 	player.influence_deck = Deck.from_dict(player_dict["influence_deck"])
 	player.graveyard = Deck.from_dict(player_dict["graveyard"])
 
-	player.followers_in_play = player_dict["followers"].map(Types.to_dict)
-	player.factories_in_play = player_dict["factories"].map(Types.to_dict)
+	player.followers_in_play.assign(player_dict["followers"].map(Follower.from_dict))
+	player.factories_in_play.assign(player_dict["factories"].map(Factory.from_dict))
 
 	player.health = player_dict["health"]
 	player.influence = player_dict["influence"]

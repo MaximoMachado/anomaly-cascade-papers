@@ -271,23 +271,33 @@ func server_request_start_game() -> void:
 	var host_lobby : Lobby = _host_id_to_lobby.get(client_id)
 	# Only host can start the lobby
 	if host_lobby != null:
-		var game := Game.new(host_lobby)
+
+		# TODO: Replace test decks with letting user set their deck in the lobby
+		var test_deck := Deck.new()
+		for i in range(50):
+			test_deck.shuffle_in_card(Follower.new(str(i), str(i), FollowerStats.new(1, 1, 1)))
+			
+		for player in host_lobby.players:
+			player.deck = test_deck.duplicate()
+
+		var game := Game.new()
+		game.start_game(host_lobby)
 		_lobby_id_to_game[host_lobby.id] = game
+		for player in game.players: # TODO: Remove this once add in RPCs for game actions
+			game.mulligan(player.id, [])
 
 		for player in host_lobby.players:
 			client_start_game.rpc_id(player.id, game.to_dict_for_player(player.id))
-
 		print_debug("Lobby %d was started by %d" % [host_lobby.id, client_id])
-
-	print_debug("Lobby was not found for host %d" % [client_id])
+	else:
+		print_debug("Lobby was not found for host %d" % [client_id])
 
 ## Server -> All Clients in lobby
 @rpc("authority", "reliable")
 func client_start_game(game_dict: Dictionary) -> void:
 	_print_debug_rpc_call()
 
-	var game : Game = Game.from_dict(game_dict)
-	self.current_game = game
+	self.current_game = Game.from_dict(game_dict)
 	game_started.emit()
 
 ## RPC calls that relate to Game actions and handling syncing

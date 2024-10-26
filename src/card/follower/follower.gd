@@ -80,7 +80,7 @@ static func from_dict(follower_dict: Dictionary) -> Follower:
 	assert(follower_dict["dict_type"] == DICT_TYPE)
 
 	var follower := Follower.new()
-	follower.card_image = follower_dict["card_image"]
+	follower.card_image = Image.load_from_file(follower_dict["card_image"])
 	follower.card_name = follower_dict["card_name"]
 	follower.card_text = follower_dict["card_text"]
 	follower.flux = Flux.from_dict(follower_dict["flux"])

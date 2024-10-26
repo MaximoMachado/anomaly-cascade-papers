@@ -7,13 +7,13 @@ extends RefCounted
 @export var card_image: Image = Image.load_from_file("res://assets/images/no_image.jpg")
 
 ## Name of the card presented to players
-@export var card_name: String
+@export var card_name: String = ""
 
 ## Explanation of card mechanics presented to players
-@export_multiline var card_text: String
+@export_multiline var card_text: String = ""
 
 ## Required cost to play this card
-var flux: Flux
+var flux: Flux = Flux.new()
 
 func _init() -> void:
 	push_error("NotImplementedError: Card.new()")

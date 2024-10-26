@@ -1,7 +1,7 @@
 class_name Flux
 extends RefCounted
 
-var _flux: Dictionary
+var _flux: Dictionary = {}
 
 func _init() -> void:
 	for type: Enums.FluxType in Enums.FluxType.values():
@@ -12,7 +12,7 @@ func add_flux(flux: Enums.FluxType) -> void:
 	_flux[flux] += 1
 
 func to_dict() -> Dictionary:
-	return _flux
+	return _flux.duplicate()
 
 static func from_dict(flux_dict: Dictionary) -> Flux:
 	var flux := Flux.new()

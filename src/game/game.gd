@@ -40,21 +40,21 @@ var battles: Array:
 
 var _influencing_followers: Array[Follower] = []
 
-func _init(lobby: Lobby) -> void:
+## Public Mutators
+
+## Start the game object with lobby of players
+## Number of _players is equivalent to number of ids
+## Turn order is shuffled by default
+func start_game(lobby: Lobby, shuffle := true) -> bool:
 	_lobby = lobby
 	for player: PlayerInfo in lobby.players:
 		var game_player := Player.create_player_with_starting_hand(player)
 		_players.append(game_player)
 		_id_to_player[game_player.id] = game_player
-	
 
-## Public Mutators
+	if _players.size() < 2:
+		return false
 
-## Start the game object with previously added _players
-## Number of _players is equivalent to number of ids
-## Turn order is shuffled by default
-func start_game(shuffle := true) -> bool:
-	assert(_players.size() >= 2, "Game must have at least 2 _players")
 	if shuffle:
 		_players.shuffle()
 
@@ -243,15 +243,18 @@ func player(player_id: int) -> Player:
 
 ## Producer methods
 
+# TODO: Need to resolve the fact that all game entities don't have unique IDs yet and so can't determine what is what
 func to_dict() -> Dictionary:
 	var game_dict := {}
 	game_dict["lobby"] = _lobby.to_dict()
-	game_dict["game_phase"] = _game_phase
-	game_dict["current_player_id"] = _current_player_id
 	game_dict["players"] = _players.map(Types.to_dict)
+	game_dict["current_player_id"] = _current_player_id
+
+	game_dict["game_phase"] = _game_phase
+	game_dict["reaction_phase_end_turns_in_a_row"] = _reaction_phase_end_turns_in_a_row
+
 	game_dict["battles"] = []
 	game_dict["influencing_followers"] = []
-	game_dict["reaction_phase_end_turns_in_a_row"] = _reaction_phase_end_turns_in_a_row
 
 	return game_dict
 
@@ -260,13 +263,18 @@ func to_dict_for_player(player_id: int) -> Dictionary:
 	return self.to_dict()
 
 static func from_dict(game_dict: Dictionary) -> Game:
-	var lobby : Lobby = Lobby.from_dict(game_dict["lobby"])
-	var game := Game.new(lobby)
-	game._game_phase = game_dict["game_phase"]
+	var game := Game.new()
+	game._lobby = Lobby.from_dict(game_dict["lobby"])
+	game._players.assign(game_dict["players"].map(Player.from_dict))
+
 	game._current_player_id = game_dict["current_player_id"]
-	game._battles.assign(game_dict["battles"])
-	game._influencing_followers.assign(game_dict["influencing_followers"])
+
+	game._game_phase = game_dict["game_phase"]
 	game._reaction_phase_end_turns_in_a_row = game_dict["reaction_phase_end_turns_in_a_row"]
+
+	game._battles.assign(game_dict["battles"].map(Battle.from_dict))
+	game._influencing_followers.assign(game_dict["influencing_followers"].map(Follower.from_dict))
+
 	return game
 
 func duplicate() -> Game:

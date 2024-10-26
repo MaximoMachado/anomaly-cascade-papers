@@ -13,8 +13,8 @@ func to_dict() -> Dictionary:
 
 static func from_dict(battle_dict: Dictionary) -> Battle:
 	var battle := Battle.new()
-	battle.attackers = battle_dict["attackers"].map(Follower.from_dict)
-	battle.blockers = battle_dict["blockers"].map(Follower.from_dict)
+	battle.attackers.assign(battle_dict["attackers"].map(Follower.from_dict))
+	battle.blockers.assign(battle_dict["blockers"].map(Follower.from_dict))
 	return battle
 
 ## Mutators

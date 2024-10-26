@@ -5,25 +5,17 @@ const follower_view_scene := preload("res://scenes/follower_view/follower_view.t
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	MultiplayerManager.game_started.connect(_start_game)
+	if MultiplayerManager.current_game != null:
+		_start_game()
+
+func _start_game() -> void:
 	var game := MultiplayerManager.current_game
-	var test_deck := Deck.new()
-	for i in range(50):
-		test_deck.shuffle_in_card(Follower.new(str(i), str(i), FollowerStats.new(1, 1, 1)))
-		
-	for player in MultiplayerManager.current_game.players:
-		player.deck = test_deck.duplicate()
-		
-	for card in game._players[0].hand:
+
+	for card in game.player(multiplayer.get_unique_id()).hand:
 		var card_view := card_view_scene.instantiate()
 		card_view.card = card
 		$HandView.add_child(card_view)
-
-	var status := game.start_game()
-	assert(status)
-	for player in MultiplayerManager.current_game.players:
-		assert(game.mulligan(player.id, []))
-		assert(game.mulligan(player.id, []))
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

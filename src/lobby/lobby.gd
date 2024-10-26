@@ -44,9 +44,11 @@ func remove_player(player_id: int) -> bool:
 	return removed
 
 func has(player_id: int) -> bool:
-	var ids : Array[int] = _players.map(func(player: PlayerInfo) -> int: return player.id)
+	for player in _players:
+		if player.id == player_id:
+			return true
 
-	return ids.has(player_id)
+	return false
 
 func to_dict() -> Dictionary:
 	var dict := {}
