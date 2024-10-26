@@ -5,6 +5,7 @@ extends Control
 ## Game Config can be set and modified
 ## 
 
+var lobby: Lobby = Lobby.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

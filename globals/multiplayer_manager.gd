@@ -1,13 +1,16 @@
 # class_name MultiplayerManager
 extends Node
 
+## Signals related to server browser/lobby list
 ## If players have connected to the server browser
 signal player_connected(peer_id: int)
 signal player_disconnected(peer_id: int)
 signal server_disconnected
 signal lobbies_refreshed(lobbies: Array[Lobby])
+signal lobby_joined(lobby: Lobby)
 
 ## If players have joined a particular lobby
+## These get broadcast to all players within a specific lobby
 signal host_left_lobby(lobby_id: int)
 signal player_joined_lobby(peer_id: int, lobby_id: int)
 signal player_left_lobby(peer_id: int, lobby_id: int)
@@ -21,6 +24,15 @@ var SERVER_PORT := 23196
 var SERVER_IP := "winter-starling.maximomachado.com" 
 var MAX_CLIENTS := 4000
 
+## Client public variables
+## These are used for player to keep track of what lobby its in and who they are
+var active_lobby: Lobby = null
+var active_player: PlayerInfo = null
+
+
+## Server variables
+
+## Used by client to keep track of existing lobbies and 
 var _lobbies : Array[Lobby] = []
 
 ## Makes easy lookup to see who is host of lobby and is allowed to start lobby
@@ -137,7 +149,6 @@ func recieve_lobbies(p_lobbies: Array) -> void:
 
 	lobbies_refreshed.emit(lobbies)
 
-
 ## Client -> Server
 @rpc("any_peer", "reliable")
 func create_lobby() -> void:
@@ -189,6 +200,18 @@ func leave_lobby() -> void:
 	_player_id_to_lobby.erase(client_id)
 
 	print_debug("Player %d has left lobby %d" % [client_id])
+
+## Server -> Client
+## If client joins/creates lobby, on success client is notified
+## @param p_lobbies : Array[Dictionary]
+@rpc("any_peer", "reliable")
+func lobby_joined(lobby: Dictionary) -> void
+	_print_debug_rpc_call()
+	var lobbies : Array[Lobby] = []
+	lobbies.assign(p_lobbies.map(Lobby.from_dict))
+
+	lobby_joined.emit(lobby)
+
 
 ## Lobby Host Client -> Server
 @rpc("any_peer", "reliable")
