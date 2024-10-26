@@ -60,6 +60,29 @@ func influence() -> int:
 func is_dead() -> bool:
 	return stats.health <= 0
 
+## Producers
+
+func to_dict() -> Dictionary:
+	var follower_dict := {}
+	follower_dict["card_image"] = card_image.resource_path
+	follower_dict["card_name"] = card_name
+	follower_dict["card_text"] = card_text
+	follower_dict["flux"] = flux.to_dict()
+	follower_dict["stats"] = stats.to_dict()
+
+	return follower_dict
+
+static func from_dict(follower_dict: Dictionary) -> Follower:
+
+	var follower := Follower.new()
+	follower.card_image = follower_dict["card_image"]
+	follower.card_name = follower_dict["card_name"]
+	follower.card_text = follower_dict["card_text"]
+	follower.flux = Flux.from_dict(follower_dict["flux"])
+	follower.stats = FollowerStats.from_dict(follower_dict["stats"])
+
+	return follower
+
 ## Splits damage across followers, with leftover damage being split across lowest health followers
 ## @param defenders: Must be sorted from lowest health to highest health
 ## 						ties being broken by highest attack, and then mana cost

@@ -45,6 +45,40 @@ static func create_player_with_starting_hand(player_info: PlayerInfo, num_cards 
 
 	return player
 
+func to_dict() -> Dictionary:
+	var player_dict = {}
+	player_dict["id"] = id
+	player_dict["team_id"] = id
+	player_dict["hand"] = hand.map(Types.to_dict)
+	player_dict["deck"] = deck.map(Types.to_dict)
+	player_dict["influence_deck"] = influence_deck.map(Types.to_dict)
+	player_dict["graveyard"] = graveyard.map(Types.to_dict)
+	player_dict["followers"] = followers_in_play.to_dict
+	player_dict["factories"] = factories_in_play.to_dict
+
+	player_dict["health"] = health
+	player_dict["influence"] = influence
+
+	return player_dict
+
+static func from_dict(player_dict: Dictionary) -> Player:
+	var player = Player.new(player_dict["id"])
+	player.team_id = player_dict["team_id"]
+
+	player.hand = player_dict["hand"].map(Card.from_dict)
+
+	player.deck = Deck.from_dict(player_dict["deck"])
+	player.influence_deck = Deck.from_dict(player_dict["influence_deck"])
+	player.graveyard = Deck.from_dict(player_dict["graveyard"])
+
+	player.followers_in_play = player_dict["followers"].map(Types.to_dict)
+	player.factories_in_play = player_dict["factories"].map(Types.to_dict)
+
+	player.health = player_dict["health"]
+	player.influence = player_dict["influence"]
+	return player
+
+
 ## TODO: Implement duplicate
 func duplicate() -> Player:
 	var new_player := Player.new(id, deck, influence_deck, hand, graveyard)

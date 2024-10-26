@@ -3,6 +3,7 @@ extends Control
 func _ready() -> void:
 	MultiplayerManager.start_client()
 	MultiplayerManager.lobbies_recieved.connect(draw)
+	MultiplayerManager.lobby_joined.connect(_transition_to_lobby_view)
 
 func draw(lobbies: Array[Lobby]) -> void:
 	for lobby in lobbies:
@@ -18,15 +19,15 @@ func draw(lobbies: Array[Lobby]) -> void:
 		%Lobbies.add_child.call_deferred(lobby_panel)
 
 func _on_host_pressed() -> void:
-	MultiplayerManager.server_create_lobby.rpc_id(MultiplayerManager.SERVER_BROWSER)
-	_transition_to_lobby_view()
+	MultiplayerManager.server_request_create_lobby.rpc_id(MultiplayerManager.SERVER_BROWSER)
 
 func _on_refresh_pressed() -> void:
 	MultiplayerManager.server_request_lobbies.rpc_id(MultiplayerManager.SERVER_BROWSER)
 
 func _on_join_pressed(lobby_id: int) -> void:
 	MultiplayerManager.server_request_join_lobby.rpc_id(MultiplayerManager.SERVER, lobby_id)
-	_transition_to_lobby_view()
 	
-func _transition_to_lobby_view() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://scenes/lobby_view/lobby_view.tscn")
+func _transition_to_lobby_view(lobby: Lobby) -> void:
+	var lobby_view := preload("res://scenes/lobby_view/lobby_view.tscn").instantiate()
+	lobby_view.lobby = lobby
+	get_tree().change_scene_to_packed.call_deferred(lobby_view)

@@ -239,14 +239,29 @@ func player(player_id: int) -> Player:
 	return (_id_to_player[player_id].duplicate() as Player)
 
 ## Producer methods
-func duplicate() -> Game:
-	pass
-	return null
 
-## Duplicates the game but with only the information that this specific player is allowed to see
-func duplicate_for_player(player_id: int) -> Game:
-	pass
-	return null
+func to_dict() -> Dictionary:
+	var game_dict := {}
+	game_dict["game_phase"] = _game_phase
+	game_dict["current_player_id"] = _current_player_id
+	game_dict["players"] = _players.map(Types.to_dict)
+	game_dict["battles"] = []
+	game_dict["influencing_followers"] = []
+	game_dict["reaction_phase_end_turns_in_a_row"] = _reaction_phase_end_turns_in_a_row
+
+	return game_dict
+
+## Todo: Implement with hidden information
+func to_dict_for_player(player_id: int) -> Dictionary:
+	return self.to_dict()
+
+static func from_dict(game_dict: Dictionary) -> Game:
+	var lobby : Lobby = Lobby.from_dict(game_dict["lobby"])
+	var game := Game.new(lobby)
+	return game
+
+func duplicate() -> Game:
+	return Game.from_dict(self.to_dict())
 
 ## Private methods
 

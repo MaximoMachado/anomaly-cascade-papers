@@ -22,14 +22,17 @@ func _ready() -> void:
 
 
 
-func _start_game() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://scenes/game_view/game_view.tscn")
+func _start_game(_lobby_id: int, game: Game) -> void:
+	var game_view := preload("res://scenes/game_view/game_view.tscn").instantiate()
+	game_view.lobby = lobby
+	game_view.game = game
+	get_tree().change_scene_to_packed.call_deferred(game_view)
 
 func _leave_lobby() -> void:
 	get_tree().change_scene_to_file.call_deferred("res://scenes/server_browser/server_browser.tscn")
 
 func _on_start_game_pressed() -> void:
-	MultiplayerManager.server_request_start_lobby()
+	MultiplayerManager.server_request_start_game()
 
 func _on_leave_lobby_pressed() -> void:
 	MultiplayerManager.server_request_leave_lobby.rpc_id(MultiplayerManager.SERVER)

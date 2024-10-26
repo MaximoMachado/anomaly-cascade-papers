@@ -17,7 +17,7 @@ signal host_left_lobby(lobby_id: int)
 signal player_joined_lobby(player: PlayerInfo)
 signal player_left_lobby(peer_id: int)
 signal game_config_changed(game_config: GameConfig)
-signal game_started(lobby_id: int)
+signal game_started(game: Game)
 
 ## In-game signals for actions taken by other players that need to be synced
 ## TODO: outline of example game signals, would reflect Game interface
@@ -121,6 +121,7 @@ func start_client() -> Error:
 
 ## Basic listeners provided by ENetMultiplayerPeer
 
+
 func _player_connected_to_server(id: int) -> void:
 	print("Player connected! Id: %d" % id)
 	self._player_id_to_player_info[id] = PlayerInfo.new(id, str(id))
@@ -140,6 +141,8 @@ func _on_connected_fail() -> void:
 func _on_server_disconnected() -> void:
 	multiplayer.multiplayer_peer = null
 	server_disconnected.emit()
+
+## Helper functions for RPC calls
 
 func _print_debug_rpc_call() -> void:
 	if OS.is_debug_build():
@@ -173,7 +176,7 @@ func client_recieve_lobbies(p_lobbies: Array) -> void:
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
-func server_create_lobby() -> void:
+func server_request_create_lobby() -> void:
 	_print_debug_rpc_call()
 	var host_id := multiplayer.get_remote_sender_id()
 
@@ -186,6 +189,8 @@ func server_create_lobby() -> void:
 	_lobbies.append(lobby)
 	_host_id_to_lobby[host_id] = lobby
 	_player_id_to_lobby[host_id] = lobby
+
+	client_join_lobby.rpc_id(host_id, lobby.to_dict())
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
@@ -202,6 +207,18 @@ func server_request_join_lobby(lobby_id: int) -> void:
 	lobby.add_player(player)
 	
 	print_debug("Player %d has joined lobby %d" % [player.id, lobby_id])
+	client_join_lobby.rpc_id(player.id)
+
+## Server -> Client
+## If client joins/creates lobby, on success client is notified
+## @param p_lobbies : Array[Dictionary]
+@rpc("any_peer", "reliable")
+func client_join_lobby(lobby_dict: Dictionary) -> void:
+	_print_debug_rpc_call()
+	var lobby: Lobby = Lobby.from_dict(lobby_dict)
+	
+	self.joined_lobby = lobby
+	lobby_joined.emit(lobby)
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
@@ -223,21 +240,9 @@ func server_request_leave_lobby() -> void:
 
 	print_debug("Player %d has left lobby %d" % [client_id])
 
-## Server -> Client
-## If client joins/creates lobby, on success client is notified
-## @param p_lobbies : Array[Dictionary]
-@rpc("any_peer", "reliable")
-func client_join_lobby(lobby_dict: Dictionary) -> void:
-	_print_debug_rpc_call()
-	var lobby: Lobby = Lobby.from_dict(lobby_dict)
-	
-	self.joined_lobby = lobby
-	lobby_joined.emit(lobby)
-
-
 ## Lobby Host Client -> Server
 @rpc("any_peer", "reliable")
-func server_request_start_lobby() -> void:
+func server_request_start_game() -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 	
@@ -247,7 +252,7 @@ func server_request_start_lobby() -> void:
 		_lobby_id_to_game[host_lobby.id] = game
 
 		for player in host_lobby.players:
-			client_start_lobby.rpc_id(player.id)
+			client_start_game.rpc_id(player.id)
 
 		print_debug("Lobby %d was started by %d" % [host_lobby.id, client_id])
 
@@ -255,11 +260,11 @@ func server_request_start_lobby() -> void:
 
 ## Server -> All Clients in lobby
 @rpc("authority", "reliable")
-func client_start_lobby() -> void:
+func client_start_game(game_dict: Dictionary) -> void:
 	_print_debug_rpc_call()
-	var lobby : Lobby = _player_id_to_lobby[multiplayer.get_unique_id()]
-	var game : Game = Game.new(lobby)
+
+	var game : Game = Game.from_dict(game_dict)
 	self.current_game = game
-	game_started.emit(lobby.id, game)
+	game_started.emit(game)
 
 ## RPC calls that relate to Game actions and handling syncing

@@ -16,6 +16,3 @@ const FactionColors: Dictionary = { Faction.FOUNDATION: "black",
 									Faction.ABYSSAL: "purple", 
 									Faction.CLOCKWORK: "orange", 
 									Faction.NEUTRAL: "grey" }
-
-var DECK_SIZE := 50
-var INFLUENCE_DECK_SIZE := 15

@@ -10,6 +10,8 @@ var players: Array[PlayerInfo] :
 	get: return _players.duplicate()
 	set(value): _players = Types.read_only(_players, value)
 
+var host_player : PlayerInfo = null
+
 ## TODO: Add way to configure Game Settings
 var game_config: GameConfig = GameConfig.new()
 
@@ -23,6 +25,7 @@ static func create(host_player: PlayerInfo) -> Lobby:
 	var lobby := Lobby.new()
 	lobby.id = host_player.id
 	lobby.add_player(host_player)
+	lobby.host_player = host_player
 	return lobby
 
 
