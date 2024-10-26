@@ -13,8 +13,16 @@ script = ExtResource("1_4xm3y")
 
 [node name="StartGame" type="Button" parent="."]
 layout_mode = 0
-offset_right = 90.0
+offset_right = 150.0
 offset_bottom = 40.0
 text = "Start Game"
 
+[node name="LeaveLobby" type="Button" parent="."]
+layout_mode = 0
+offset_top = 60.0
+offset_right = 136.0
+offset_bottom = 100.0
+text = "Leave Lobby"
+
 [connection signal="pressed" from="StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="LeaveLobby" to="." method="_on_leave_lobby_pressed"]

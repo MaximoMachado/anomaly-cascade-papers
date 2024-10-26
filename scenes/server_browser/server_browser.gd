@@ -18,11 +18,11 @@ func draw(lobbies: Array[Lobby]) -> void:
 		%Lobbies.add_child.call_deferred(lobby_panel)
 
 func _on_host_pressed() -> void:
-	MultiplayerManager.server_create_lobby.rpc_id(MultiplayerManager.SERVER)
+	MultiplayerManager.server_create_lobby.rpc_id(MultiplayerManager.SERVER_BROWSER)
 	_transition_to_lobby_view()
 
 func _on_refresh_pressed() -> void:
-	MultiplayerManager.server_request_lobbies.rpc_id(MultiplayerManager.SERVER)
+	MultiplayerManager.server_request_lobbies.rpc_id(MultiplayerManager.SERVER_BROWSER)
 
 func _on_join_pressed(lobby_id: int) -> void:
 	MultiplayerManager.server_request_join_lobby.rpc_id(MultiplayerManager.SERVER, lobby_id)

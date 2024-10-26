@@ -14,9 +14,10 @@ signal lobby_joined(lobby: Lobby)
 ## If players have joined a particular lobby
 ## These get broadcast to all players within a specific lobby
 signal host_left_lobby(lobby_id: int)
-signal player_joined_lobby(peer_id: int, lobby_id: int)
-signal player_left_lobby(peer_id: int, lobby_id: int)
-signal game_started(lobby_id: int, game: Game)
+signal player_joined_lobby(player: PlayerInfo)
+signal player_left_lobby(peer_id: int)
+signal game_config_changed(game_config: GameConfig)
+signal game_started(lobby_id: int)
 
 ## In-game signals for actions taken by other players that need to be synced
 ## TODO: outline of example game signals, would reflect Game interface
@@ -32,16 +33,19 @@ signal player_ended_turn(player_id: int)
 
 signal game_synced(game: Game)
 
-## Server Default ID short-hand
-const SERVER := 1
-## Winter-Starling Foundation in numbers
-var SERVER_PORT := 23196 
+## Server to communicate with that is running this specific lobby/game instance
+var SERVER := 1
+
+## Server to communicate with to get a list of joinable lobbies
+var SERVER_BROWSER := 1
+var SERVER_PORT := 23196 ## Winter-Starling Foundation in numbers
 var SERVER_IP := "winter-starling.maximomachado.com" 
 var MAX_CLIENTS := 4000
 
 ## Client public variables
 ## These are used for player to keep track of what lobby its in and who they are
 var joined_lobby: Lobby = null
+var current_game: Game = null
 var client_player_info: PlayerInfo = null
 
 
@@ -109,15 +113,17 @@ func start_client() -> Error:
 		return error
 	multiplayer.multiplayer_peer = client_peer
 
-	print_debug(multiplayer.get_unique_id())
+	var id := multiplayer.get_unique_id()
+	print_debug(id)
 
+	self.client_player_info = PlayerInfo.new(id, str(id))
 	return Error.OK
 
 ## Basic listeners provided by ENetMultiplayerPeer
 
 func _player_connected_to_server(id: int) -> void:
 	print("Player connected! Id: %d" % id)
-	_player_id_to_player_info[id] = PlayerInfo.new(id, str(id))
+	self._player_id_to_player_info[id] = PlayerInfo.new(id, str(id))
 	player_connected.emit(id)
 
 func _player_disconnected_from_server(id: int) -> void:
@@ -221,9 +227,12 @@ func server_request_leave_lobby() -> void:
 ## If client joins/creates lobby, on success client is notified
 ## @param p_lobbies : Array[Dictionary]
 @rpc("any_peer", "reliable")
-func client_join_lobby(lobby: Dictionary) -> void:
+func client_join_lobby(lobby_dict: Dictionary) -> void:
 	_print_debug_rpc_call()
-	lobby_joined.emit(Lobby.from_dict(lobby))
+	var lobby: Lobby = Lobby.from_dict(lobby_dict)
+	
+	self.joined_lobby = lobby
+	lobby_joined.emit(lobby)
 
 
 ## Lobby Host Client -> Server
@@ -249,6 +258,8 @@ func server_request_start_lobby() -> void:
 func client_start_lobby() -> void:
 	_print_debug_rpc_call()
 	var lobby : Lobby = _player_id_to_lobby[multiplayer.get_unique_id()]
-	game_started.emit(lobby.id, Game.new(lobby))
+	var game : Game = Game.new(lobby)
+	self.current_game = game
+	game_started.emit(lobby.id, game)
 
 ## RPC calls that relate to Game actions and handling syncing
