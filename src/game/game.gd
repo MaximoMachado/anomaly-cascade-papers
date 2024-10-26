@@ -2,18 +2,10 @@ class_name Game
 extends RefCounted
 
 
-var _game_phase: Enums.GamePhase
-
 var _lobby: Lobby = Lobby.new()
+
 ## Dictates turn order for _players 
 var _players: Array[Player] = []
-
-## Gets a view into the players of the game. Players are mutable but array is not
-var players: Array[Player]: 
-	get(): return _players.duplicate()
-	set(value): _players = Types.read_only(_players, value)
-
-var _id_to_player: Dictionary = {}
 
 var _current_player_id: int = 0
 
@@ -22,16 +14,20 @@ var current_player_id: int:
 	get: return _current_player_id
 	set(value): _current_player_id = Types.read_only(_current_player_id, value)
 
+var _game_phase: Enums.GamePhase
+
 ## Used during the Reaction phase to dictate when to end the phase
 var _reaction_phase_end_turns_in_a_row: int = 0
 
-## Used solely for the start of the game to determine when it is safe to move to the first turn
-## Basically just a set, keys are player ids, values are null
-var _mulliganed_players : Dictionary = {}
+## Gets a view into the players of the game. Players are mutable but array is not
+var players: Array[Player]: 
+	get(): return _players.duplicate()
+	set(value): _players = Types.read_only(_players, value)
+
+var _id_to_player: Dictionary = {}
+
 
 var _battles: Array[Battle] = []
-## Maps initiating attacker (Follower) to a new battle (Battle)
-var _attacker_to_battle: Dictionary = {}
 
 ## Type is Array[Battle] but gdscript complains
 var battles: Array:
@@ -103,7 +99,7 @@ func end_turn(player_id: int) -> bool:
 func mulligan(player_id: int, cards: Array[Card]) -> bool:
 	# No player turn, everyone does this at the same time
 	# If everyone has mulligan, reset and go to Play
-	if _mulliganed_players.has(player_id):
+	if _id_to_player[player_id].mulliganed:
 		return false
 
 	var player : Player = _id_to_player[player_id]
@@ -125,10 +121,9 @@ func mulligan(player_id: int, cards: Array[Card]) -> bool:
 		player.add_to_deck([card])
 		
 
-	_mulliganed_players[player_id] = true
-
+	player.mulliganed = true
 	# Start Game if everyone has mulliganed
-	if _mulliganed_players.has_all(_id_to_player.keys()):
+	if _players.all(func(player: Player) -> bool: return player.mulliganed):
 		_game_phase = Enums.GamePhase.PLAY
 		_current_player_id = _players[0].id
 
@@ -253,8 +248,8 @@ func to_dict() -> Dictionary:
 	game_dict["game_phase"] = _game_phase
 	game_dict["reaction_phase_end_turns_in_a_row"] = _reaction_phase_end_turns_in_a_row
 
-	game_dict["battles"] = []
-	game_dict["influencing_followers"] = []
+	game_dict["battles"] = _battles
+	game_dict["influencing_followers"] = _influencing_followers
 
 	return game_dict
 
@@ -266,6 +261,10 @@ static func from_dict(game_dict: Dictionary) -> Game:
 	var game := Game.new()
 	game._lobby = Lobby.from_dict(game_dict["lobby"])
 	game._players.assign(game_dict["players"].map(Player.from_dict))
+
+	# Reconstruct _id_to_player
+	for player: Player in game._players:
+		game._id_to_player[player.id] = Player
 
 	game._current_player_id = game_dict["current_player_id"]
 
@@ -285,11 +284,9 @@ func duplicate() -> Game:
 ## Orchestrates all of the end of turn steps, deal combat damage, gain influence, etc.
 func _end_of_turn_step() -> void:
 
-	for attacker: Follower in _attacker_to_battle.keys():
-		var battle : Battle = _battles[attacker]
+	for battle in _battles:
 		battle.damage_step()
 
-	for battle in _battles:
 		for attacker in battle.attackers:
 			if attacker.is_dead():
 				## Remove attacker from player zone

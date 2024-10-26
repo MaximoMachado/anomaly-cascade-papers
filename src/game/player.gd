@@ -4,6 +4,8 @@ extends RefCounted
 
 var id: int = 0
 var team_id: int = 0
+var mulliganed: bool = false
+
 var hand: Array[Card] = []
 var deck: Deck = Deck.new()
 var influence_deck: Deck = Deck.new()
@@ -49,6 +51,7 @@ func to_dict() -> Dictionary:
 	var player_dict = {}
 	player_dict["id"] = id
 	player_dict["team_id"] = id
+	player_dict["mulliganed"] = mulliganed
 	player_dict["hand"] = hand.map(Types.to_dict)
 	player_dict["deck"] = deck.to_dict()
 	player_dict["influence_deck"] = influence_deck.to_dict()
@@ -64,6 +67,7 @@ func to_dict() -> Dictionary:
 static func from_dict(player_dict: Dictionary) -> Player:
 	var player = Player.new(player_dict["id"])
 	player.team_id = player_dict["team_id"]
+	player.mulliganed = player_dict["mulliganed"]
 
 	player.hand.assign(player_dict["hand"].map(Card.from_dict))
 
