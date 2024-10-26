@@ -1,8 +1,12 @@
 class_name Factory
 extends Card
 
+# Used for to_dict/from_dict for dynamic dispatch
+static var DICT_TYPE := "factory"
+
 func to_dict() -> Dictionary:
 	var factory_dict := {}
+	factory_dict["dict_type"] = DICT_TYPE
 	factory_dict["card_image"] = card_image.resource_path
 	factory_dict["card_name"] = card_name
 	factory_dict["card_text"] = card_text

@@ -28,6 +28,25 @@ extends RefCounted
 	set(value):
 		health = clamp(value, 0, max_health)
 
+func to_dict() -> Dictionary:
+	var stats_dict := {}
+	stats_dict["attack"] = attack
+	stats_dict["influence"] = influence
+	stats_dict["max_health"] = max_health
+	stats_dict["health"] = health
+
+	return stats_dict
+
+static func from_dict(stats_dict: Dictionary) -> FollowerStats:
+
+	var stats := FollowerStats.new()
+	stats.attack = stats_dict["attack"]
+	stats.influence = stats_dict["influence"]
+	stats.max_health = stats_dict["max_health"]
+	stats.health = stats_dict["health"]
+
+	return stats
+
 func _init(p_attack: int = 0, p_influence: int = 0, p_max_health: int = 0) -> void:
 	attack = p_attack
 	influence = p_influence

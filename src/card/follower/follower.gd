@@ -2,6 +2,9 @@ class_name Follower extends Card
 ## Represents the follower card type, equivalent to Hearthstone's Minion type
 ## When played from hand, it is summoned onto the board on player's side
 
+# Used for to_dict/from_dict for dynamic dispatch
+static var DICT_TYPE := "follower"
+
 signal follower_died(follower: Follower)
 
 var stats: FollowerStats
@@ -64,6 +67,7 @@ func is_dead() -> bool:
 
 func to_dict() -> Dictionary:
 	var follower_dict := {}
+	follower_dict["dict_type"] = DICT_TYPE
 	follower_dict["card_image"] = card_image.resource_path
 	follower_dict["card_name"] = card_name
 	follower_dict["card_text"] = card_text
@@ -73,6 +77,7 @@ func to_dict() -> Dictionary:
 	return follower_dict
 
 static func from_dict(follower_dict: Dictionary) -> Follower:
+	assert(follower_dict["dict_type"] == DICT_TYPE)
 
 	var follower := Follower.new()
 	follower.card_image = follower_dict["card_image"]

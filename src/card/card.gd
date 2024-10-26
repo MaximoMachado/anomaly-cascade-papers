@@ -26,14 +26,28 @@ func play(targets: Array) -> bool:
 	return false
 
 ## Producers
+
 func to_dict() -> Dictionary:
-	push_error("NotImplementedError: Card.to_dict()")
-	return {}
+	if self is Follower or self is Catalyst or self is Factory:
+		return self.to_dict()
+	else:
+		push_error("NotImplementedError: Card.to_dict()")
+		return {}
 
 
 static func from_dict(card_dict: Dictionary) -> Card:
-	push_error("NotImplementedError: Card.from_dict()")
-	return Card.new()
+	match card_dict["dict_type"]:
+		Follower.DICT_TYPE:
+			return Follower.from_dict(card_dict)
+		Factory.DICT_TYPE:
+			return Factory.from_dict(card_dict)
+		Catalyst.DICT_TYPE:
+			return Catalyst.from_dict(card_dict)
+		HiddenCard.DICT_TYPE:
+			return HiddenCard.from_dict(card_dict)
+		_:
+			push_error("NotImplementedError: Card.from_dict()")
+			return Card.new()
 
 ## Returns a copy of the card for modification
 func copy() -> Card:

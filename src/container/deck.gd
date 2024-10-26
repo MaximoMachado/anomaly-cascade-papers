@@ -10,17 +10,12 @@ var _cards : Array[Card]
 
 var _curr_index: int
 
-var _automatically_shuffle: bool
-
-func _init(p_cards: Array[Card] = [], p_shuffle := true) -> void:
+func _init(p_cards: Array[Card] = []) -> void:
 	_cards = p_cards.duplicate(true)
-	_automatically_shuffle = p_shuffle
-	shuffle()
 
 
 func shuffle() -> void:
-	if _automatically_shuffle:
-		_cards.shuffle()
+	_cards.shuffle()
 
 ## Draws a starting hand and removes these cards from the deck
 ## 
@@ -28,7 +23,7 @@ func shuffle() -> void:
 ## @param num_factories: If deck has factories, will draw up to that many first
 ##
 ## @return 0 <= array.size() <= num_cards
-func starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card]:
+func starting_hand(num_cards: int = 7, num_factories: int = 2, shuffle = true) -> Array[Card]:
 	var hand : Array[Card] = []
 
 	# If requested cards is less than needed, simply return those cards
@@ -38,7 +33,7 @@ func starting_hand(num_cards: int = 7, num_factories: int = 2) -> Array[Card]:
 		return hand
 	
 	var factories : Array[Card] = _cards.filter(func(card: Card) -> bool: return card is Factory)
-	if _automatically_shuffle:
+	if shuffle:
 		factories.shuffle()
 
 	var guaranteed_factories : int = min(num_factories, factories.size())
@@ -72,6 +67,17 @@ func shuffle_in_card(card: Card, position := -1) -> void:
 	var status := _cards.insert(position, card)
 	assert(not status)
 
+## Producers
+
+func to_dict() -> Dictionary:
+	var deck_dict := {}
+	deck_dict["deck"] = _cards.map(Types.to_dict)
+	return deck_dict
+
+static func from_dict(deck_dict: Dictionary) -> Deck:
+	var deck := Deck.new()
+	deck._cards = deck_dict["deck"].map(Card.from_dict)
+	return deck
 
 ## Public Observers
 

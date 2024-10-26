@@ -1,8 +1,11 @@
 class_name Catalyst 
 extends Card
 
+static var DICT_TYPE = "catalyst"
+
 func to_dict() -> Dictionary:
 	var catalyst_dict := {}
+	catalyst_dict["dict_type"] = DICT_TYPE
 	catalyst_dict["card_image"] = card_image.resource_path
 	catalyst_dict["card_name"] = card_name
 	catalyst_dict["card_text"] = card_text
