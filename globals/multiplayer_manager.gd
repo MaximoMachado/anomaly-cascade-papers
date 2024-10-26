@@ -278,6 +278,7 @@ func server_request_start_game() -> void:
 			test_deck.shuffle_in_card(Follower.new(str(i), str(i), FollowerStats.new(1, 1, 1)))
 			
 		for player in host_lobby.players:
+			test_deck.shuffle()
 			player.deck = test_deck.duplicate()
 
 		var game := Game.new()
