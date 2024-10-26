@@ -4,7 +4,7 @@ extends RefCounted
 ## Abstract Interface Class that details stats of a card
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 
-@export var card_image: Image = Image.load_from_file("res://assets/images/no_image.jpg")
+@export var card_image_path: String = "res://assets/images/no_image.jpg"
 
 ## Name of the card presented to players
 @export var card_name: String = ""

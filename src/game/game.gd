@@ -234,7 +234,9 @@ func is_players_turn(player_id: int) -> bool:
 
 ## Gets reference to player by its ID
 func player(player_id: int) -> Player:
-	return (_id_to_player[player_id].duplicate() as Player)
+	var found_player : Player = _id_to_player[player_id]
+	print_debug(found_player.to_dict())
+	return found_player
 
 ## Producer methods
 
@@ -264,7 +266,7 @@ static func from_dict(game_dict: Dictionary) -> Game:
 
 	# Reconstruct _id_to_player
 	for player: Player in game._players:
-		game._id_to_player[player.id] = Player
+		game._id_to_player[player.id] = player
 
 	game._current_player_id = game_dict["current_player_id"]
 

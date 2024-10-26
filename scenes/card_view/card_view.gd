@@ -5,7 +5,7 @@ signal select_requested(card_view: CardView)
 ## When this card is clicked while selected
 signal deselect_requested(card_view: CardView)
 
-var card: Card = Follower.new()
+var card: Card = HiddenCard.new()
 
 
 @export_subgroup("Hover Properties")
@@ -22,17 +22,16 @@ var size: Vector2:
 	
 var _hovered := false
 @onready var _hover_timer := get_tree().create_timer(0)
+@onready var card_texture := load(card.card_image_path)
 func _ready() -> void:
 	starting_position = position
-	draw()
+	draw.call_deferred()
 	
 func _process(delta: float) -> void:
 	pass
 
 ## Whenever card is updated, draw will need to be called as well
 func draw() -> void:
-	var card_texture = ImageTexture.create_from_image(card.card_image)
-	card_texture.set_size_override(%Art.scale)
 	%Art.texture = card_texture
 	%Name.text = card.card_name
 	%Description.text = card.card_text

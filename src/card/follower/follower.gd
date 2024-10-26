@@ -7,7 +7,7 @@ static var DICT_TYPE := "follower"
 
 signal follower_died(follower: Follower)
 
-var stats: FollowerStats
+var stats: FollowerStats = FollowerStats.new()
 
 ## Handles recieving damage from any card
 ## @emit If follower dies from this attack
@@ -68,7 +68,7 @@ func is_dead() -> bool:
 func to_dict() -> Dictionary:
 	var follower_dict := {}
 	follower_dict["dict_type"] = DICT_TYPE
-	follower_dict["card_image"] = card_image.resource_path
+	follower_dict["card_image_path"] = card_image_path
 	follower_dict["card_name"] = card_name
 	follower_dict["card_text"] = card_text
 	follower_dict["flux"] = flux.to_dict()
@@ -80,7 +80,7 @@ static func from_dict(follower_dict: Dictionary) -> Follower:
 	assert(follower_dict["dict_type"] == DICT_TYPE)
 
 	var follower := Follower.new()
-	follower.card_image = Image.load_from_file(follower_dict["card_image"])
+	follower.card_image_path = follower_dict["card_image_path"]
 	follower.card_name = follower_dict["card_name"]
 	follower.card_text = follower_dict["card_text"]
 	follower.flux = Flux.from_dict(follower_dict["flux"])

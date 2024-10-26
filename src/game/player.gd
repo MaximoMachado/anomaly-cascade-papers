@@ -82,12 +82,8 @@ static func from_dict(player_dict: Dictionary) -> Player:
 	player.influence = player_dict["influence"]
 	return player
 
-
-## TODO: Implement duplicate
 func duplicate() -> Player:
-	var new_player := Player.new(id, deck, influence_deck, hand, graveyard)
-
-	return new_player
+	return Player.from_dict(self.to_dict())
 
 ## Mutators
 

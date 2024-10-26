@@ -22,18 +22,17 @@ var size: Vector2:
 	get: return $Background.size
 	
 var _hovered := false
+@onready var follower_texture : Texture2D = load(follower.card_image_path)
 func _ready() -> void:
 	original_scale = scale
-	draw()
+	draw.call_deferred()
 	
 func _process(delta: float) -> void:
 	pass
 
 ## Whenever follower is updated, draw will need to be called as well
 func draw() -> void:
-	var card_texture := ImageTexture.create_from_image(follower.card_image)
-	card_texture.set_size_override(%Art.scale)
-	%Art.texture = card_texture
+	%Art.texture = follower_texture
 	%Name.text = follower.card_name
 	%Health.text = str(follower.stats.health)
 	%Influence.text = str(follower.stats.influence)

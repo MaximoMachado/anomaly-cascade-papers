@@ -16,7 +16,7 @@ func draw():
 		var card = cards[i]	
 		card.starting_position = Vector2(card.size.x * i, 0) + CARD_MARGIN
 		card.position = card.starting_position
-		card.draw()
+		card.draw.call_deferred()
 
 
 func _on_child_entered_tree(node: Node) -> void:
@@ -24,7 +24,7 @@ func _on_child_entered_tree(node: Node) -> void:
 		node.hoverable = true
 		node.select_requested.connect(_on_card_select_requested)
 		node.deselect_requested.connect(_on_card_deselect_requested)
-		draw()
+		draw.call_deferred()
 
 
 func _on_child_exiting_tree(node: Node) -> void:
@@ -33,7 +33,7 @@ func _on_child_exiting_tree(node: Node) -> void:
 			selected_card = null
 		node.select_requested.disconnect(_on_card_select_requested)
 		node.deselect_requested.disconnect(_on_card_deselect_requested)
-		draw()
+		draw.call_deferred()
 
 
 func _on_card_select_requested(card: CardView):

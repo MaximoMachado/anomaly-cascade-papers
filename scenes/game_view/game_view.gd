@@ -12,6 +12,7 @@ func _ready() -> void:
 func _start_game() -> void:
 	var game := MultiplayerManager.current_game
 
+	print_debug(multiplayer.get_unique_id())
 	for card in game.player(multiplayer.get_unique_id()).hand:
 		var card_view := card_view_scene.instantiate()
 		card_view.card = card
