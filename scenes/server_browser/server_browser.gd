@@ -2,7 +2,7 @@ extends Control
 
 func _ready() -> void:
 	MultiplayerManager.start_client()
-	MultiplayerManager.lobbies_refreshed.connect(draw)
+	MultiplayerManager.lobbies_recieved.connect(draw)
 
 func draw(lobbies: Array[Lobby]) -> void:
 	for lobby in lobbies:
@@ -18,14 +18,14 @@ func draw(lobbies: Array[Lobby]) -> void:
 		%Lobbies.add_child.call_deferred(lobby_panel)
 
 func _on_host_pressed() -> void:
-	MultiplayerManager.create_lobby.rpc_id(MultiplayerManager.SERVER)
+	MultiplayerManager.server_create_lobby.rpc_id(MultiplayerManager.SERVER)
 	_transition_to_lobby_view()
 
 func _on_refresh_pressed() -> void:
-	MultiplayerManager.request_lobbies.rpc_id(MultiplayerManager.SERVER)
+	MultiplayerManager.server_request_lobbies.rpc_id(MultiplayerManager.SERVER)
 
 func _on_join_pressed(lobby_id: int) -> void:
-	MultiplayerManager.join_lobby.rpc_id(MultiplayerManager.SERVER, lobby_id)
+	MultiplayerManager.server_request_join_lobby.rpc_id(MultiplayerManager.SERVER, lobby_id)
 	_transition_to_lobby_view()
 	
 func _transition_to_lobby_view() -> void:

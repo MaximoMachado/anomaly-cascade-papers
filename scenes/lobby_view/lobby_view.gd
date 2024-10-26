@@ -21,4 +21,4 @@ func _leave_lobby() -> void:
 
 
 func _on_start_game_pressed() -> void:
-	MultiplayerManager.start_lobby()
+	MultiplayerManager.server_request_start_lobby()

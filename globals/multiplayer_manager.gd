@@ -1,12 +1,14 @@
 # class_name MultiplayerManager
 extends Node
 
+## Sigals are used for any view to subscribe to multiplayer events
+
 ## Signals related to server browser/lobby list
 ## If players have connected to the server browser
 signal player_connected(peer_id: int)
 signal player_disconnected(peer_id: int)
 signal server_disconnected
-signal lobbies_refreshed(lobbies: Array[Lobby])
+signal lobbies_recieved(lobbies: Array[Lobby])
 signal lobby_joined(lobby: Lobby)
 
 ## If players have joined a particular lobby
@@ -16,6 +18,19 @@ signal player_joined_lobby(peer_id: int, lobby_id: int)
 signal player_left_lobby(peer_id: int, lobby_id: int)
 signal game_started(lobby_id: int, game: Game)
 
+## In-game signals for actions taken by other players that need to be synced
+## TODO: outline of example game signals, would reflect Game interface
+signal player_mulliganed(player_id: int)
+
+signal player_played_card(player_id: int)
+signal player_activated_ability(player_id: int)
+signal player_declared_attacker(player_id: int)
+signal player_declared_influencer(player_id: int)
+signal player_declared_blocker(player_id: int)
+
+signal player_ended_turn(player_id: int)
+
+signal game_synced(game: Game)
 
 ## Server Default ID short-hand
 const SERVER := 1
@@ -26,11 +41,12 @@ var MAX_CLIENTS := 4000
 
 ## Client public variables
 ## These are used for player to keep track of what lobby its in and who they are
-var active_lobby: Lobby = null
-var active_player: PlayerInfo = null
+var joined_lobby: Lobby = null
+var client_player_info: PlayerInfo = null
 
 
 ## Server variables
+## These are all private state
 
 ## Used by client to keep track of existing lobbies and 
 var _lobbies : Array[Lobby] = []
@@ -130,28 +146,28 @@ func _print_debug_rpc_call() -> void:
 ## Client -> Server
 ## Stateless Request
 @rpc("any_peer", "reliable")
-func request_lobbies(num_lobbies: int = 50) -> void:
+func server_request_lobbies(num_lobbies: int = 50) -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 	num_lobbies = clamp(num_lobbies, 0, min(50, _lobbies.size()))
 
 	var page := _lobbies.slice(0, num_lobbies).map(Types.to_dict)
-	recieve_lobbies.rpc_id(client_id, page)
+	client_recieve_lobbies.rpc_id(client_id, page)
 
 ## Server -> Client
 ## Stateless Request
 ## @param p_lobbies : Array[Dictionary]
 @rpc("any_peer", "reliable")
-func recieve_lobbies(p_lobbies: Array) -> void:
+func client_recieve_lobbies(p_lobbies: Array) -> void:
 	_print_debug_rpc_call()
 	var lobbies : Array[Lobby] = []
 	lobbies.assign(p_lobbies.map(Lobby.from_dict))
 
-	lobbies_refreshed.emit(lobbies)
+	lobbies_recieved.emit(lobbies)
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
-func create_lobby() -> void:
+func server_create_lobby() -> void:
 	_print_debug_rpc_call()
 	var host_id := multiplayer.get_remote_sender_id()
 
@@ -167,7 +183,7 @@ func create_lobby() -> void:
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
-func join_lobby(lobby_id: int) -> void:
+func server_request_join_lobby(lobby_id: int) -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 
@@ -183,7 +199,7 @@ func join_lobby(lobby_id: int) -> void:
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
-func leave_lobby() -> void:
+func server_request_leave_lobby() -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 
@@ -205,17 +221,14 @@ func leave_lobby() -> void:
 ## If client joins/creates lobby, on success client is notified
 ## @param p_lobbies : Array[Dictionary]
 @rpc("any_peer", "reliable")
-func lobby_joined(lobby: Dictionary) -> void
+func client_join_lobby(lobby: Dictionary) -> void:
 	_print_debug_rpc_call()
-	var lobbies : Array[Lobby] = []
-	lobbies.assign(p_lobbies.map(Lobby.from_dict))
-
-	lobby_joined.emit(lobby)
+	lobby_joined.emit(Lobby.from_dict(lobby))
 
 
 ## Lobby Host Client -> Server
 @rpc("any_peer", "reliable")
-func start_lobby() -> void:
+func server_request_start_lobby() -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 	
@@ -225,7 +238,7 @@ func start_lobby() -> void:
 		_lobby_id_to_game[host_lobby.id] = game
 
 		for player in host_lobby.players:
-			lobby_started.rpc_id(player.id)
+			client_start_lobby.rpc_id(player.id)
 
 		print_debug("Lobby %d was started by %d" % [host_lobby.id, client_id])
 
@@ -233,7 +246,7 @@ func start_lobby() -> void:
 
 ## Server -> All Clients in lobby
 @rpc("authority", "reliable")
-func lobby_started() -> void:
+func client_start_lobby() -> void:
 	_print_debug_rpc_call()
 	var lobby : Lobby = _player_id_to_lobby[multiplayer.get_unique_id()]
 	game_started.emit(lobby.id, Game.new(lobby))
