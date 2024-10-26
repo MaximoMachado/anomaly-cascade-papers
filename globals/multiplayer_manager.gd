@@ -9,15 +9,15 @@ signal player_connected(peer_id: int)
 signal player_disconnected(peer_id: int)
 signal server_disconnected
 signal lobbies_recieved(lobbies: Array[Lobby])
-signal lobby_joined(lobby: Lobby)
+signal lobby_joined
 
 ## If players have joined a particular lobby
 ## These get broadcast to all players within a specific lobby
 signal host_left_lobby(lobby_id: int)
 signal player_joined_lobby(player: PlayerInfo)
 signal player_left_lobby(peer_id: int)
-signal game_config_changed(game_config: GameConfig)
-signal game_started(game: Game)
+signal game_config_changed
+signal game_started
 
 ## In-game signals for actions taken by other players that need to be synced
 ## TODO: outline of example game signals, would reflect Game interface
@@ -31,7 +31,7 @@ signal player_declared_blocker(player_id: int)
 
 signal player_ended_turn(player_id: int)
 
-signal game_synced(game: Game)
+signal game_synced
 
 ## Server to communicate with that is running this specific lobby/game instance
 var SERVER := 1
@@ -166,7 +166,7 @@ func server_request_lobbies(num_lobbies: int = 50) -> void:
 ## Server -> Client
 ## Stateless Request
 ## @param p_lobbies : Array[Dictionary]
-@rpc("any_peer", "reliable")
+@rpc("authority", "reliable")
 func client_recieve_lobbies(p_lobbies: Array) -> void:
 	_print_debug_rpc_call()
 	var lobbies : Array[Lobby] = []
@@ -205,20 +205,21 @@ func server_request_join_lobby(lobby_id: int) -> void:
 	var lobby : Lobby = _host_id_to_lobby[lobby_id]
 	var player : PlayerInfo = _player_id_to_player_info[client_id]
 	lobby.add_player(player)
+	_player_id_to_lobby[player.id] = lobby
 	
 	print_debug("Player %d has joined lobby %d" % [player.id, lobby_id])
-	client_join_lobby.rpc_id(player.id)
+	client_join_lobby.rpc_id(player.id, lobby.to_dict())
 
 ## Server -> Client
 ## If client joins/creates lobby, on success client is notified
 ## @param p_lobbies : Array[Dictionary]
-@rpc("any_peer", "reliable")
+@rpc("authority", "reliable")
 func client_join_lobby(lobby_dict: Dictionary) -> void:
 	_print_debug_rpc_call()
 	var lobby: Lobby = Lobby.from_dict(lobby_dict)
 	
 	self.joined_lobby = lobby
-	lobby_joined.emit(lobby)
+	lobby_joined.emit()
 
 ## Client -> Server
 @rpc("any_peer", "reliable")
@@ -226,33 +227,55 @@ func server_request_leave_lobby() -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
 
+	# Can't leave a lobby if not in one
+	if _player_id_to_lobby.get(client_id) == null:
+		return
+
 	# Check if player is a host of some lobby
-	var host_lobby : Lobby = _host_id_to_lobby.get(client_id)
-	if host_lobby != null:
-		_lobbies.erase(host_lobby)
-		_host_id_to_lobby.erase(client_id)
-		_lobby_id_to_game.erase(host_lobby.id)
-	else:
-		var lobby : Lobby = _player_id_to_lobby[client_id]
+	var lobby : Lobby = _host_id_to_lobby.get(client_id)
+	if lobby != null:
 		lobby.remove_player(client_id)
+		_lobbies.erase(lobby)
+		_host_id_to_lobby.erase(client_id)
+		_lobby_id_to_game.erase(lobby.id)
+	else:
+		lobby = _player_id_to_lobby[client_id]
+		lobby.remove_player(client_id)
+
+		# clean-up empty lobby
+		if lobby._players.size() == 0:
+			_lobbies.erase(lobby)
 
 	_player_id_to_lobby.erase(client_id)
 
-	print_debug("Player %d has left lobby %d" % [client_id])
+	client_leave_lobby.rpc_id(client_id)
+	print_debug("Player %d has left lobby %d" % [client_id, lobby.id])
+
+## Server -> Client
+@rpc("authority", "reliable")
+func client_leave_lobby() -> void:
+	_print_debug_rpc_call()
+	self.joined_lobby = null
+	self.current_game = null
 
 ## Lobby Host Client -> Server
 @rpc("any_peer", "reliable")
 func server_request_start_game() -> void:
 	_print_debug_rpc_call()
 	var client_id := multiplayer.get_remote_sender_id()
+
+	# Can't start a lobby if not in one
+	if _player_id_to_lobby.get(client_id) == null:
+		return
 	
 	var host_lobby : Lobby = _host_id_to_lobby.get(client_id)
+	# Only host can start the lobby
 	if host_lobby != null:
 		var game := Game.new(host_lobby)
 		_lobby_id_to_game[host_lobby.id] = game
 
 		for player in host_lobby.players:
-			client_start_game.rpc_id(player.id)
+			client_start_game.rpc_id(player.id, game.to_dict_for_player(player.id))
 
 		print_debug("Lobby %d was started by %d" % [host_lobby.id, client_id])
 
@@ -265,6 +288,6 @@ func client_start_game(game_dict: Dictionary) -> void:
 
 	var game : Game = Game.from_dict(game_dict)
 	self.current_game = game
-	game_started.emit(game)
+	game_started.emit()
 
 ## RPC calls that relate to Game actions and handling syncing

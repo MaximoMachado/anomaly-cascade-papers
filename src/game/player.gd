@@ -50,11 +50,11 @@ func to_dict() -> Dictionary:
 	player_dict["id"] = id
 	player_dict["team_id"] = id
 	player_dict["hand"] = hand.map(Types.to_dict)
-	player_dict["deck"] = deck.map(Types.to_dict)
-	player_dict["influence_deck"] = influence_deck.map(Types.to_dict)
-	player_dict["graveyard"] = graveyard.map(Types.to_dict)
-	player_dict["followers"] = followers_in_play.to_dict
-	player_dict["factories"] = factories_in_play.to_dict
+	player_dict["deck"] = deck.to_dict()
+	player_dict["influence_deck"] = influence_deck.to_dict()
+	player_dict["graveyard"] = graveyard.to_dict()
+	player_dict["followers"] = followers_in_play.to_dict()
+	player_dict["factories"] = factories_in_play.to_dict()
 
 	player_dict["health"] = health
 	player_dict["influence"] = influence

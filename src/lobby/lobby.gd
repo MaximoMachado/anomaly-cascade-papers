@@ -34,8 +34,14 @@ func add_player(p_player: PlayerInfo) -> bool:
 	return true
 
 func remove_player(player_id: int) -> bool:
-	_players = _players.filter(func(player: PlayerInfo) -> bool: return player.id != player_id)
-	return true
+	var removed := false
+	for i in range(players.size()):
+		var player := players[i]
+		if player.id == player_id:
+			players.remove_at(i)
+			removed = true
+
+	return removed
 
 func has(player_id: int) -> bool:
 	var ids : Array[int] = _players.map(func(player: PlayerInfo) -> int: return player.id)

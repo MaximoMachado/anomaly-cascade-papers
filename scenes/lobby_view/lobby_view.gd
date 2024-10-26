@@ -5,15 +5,7 @@ extends Control
 ## Game Config can be set and modified
 ## 
 
-var lobby: Lobby = Lobby.new()
-
 func _ready() -> void:
-	if MultiplayerManager.joined_lobby != null:
-		lobby = MultiplayerManager.joined_lobby
-	else:
-		push_error("Joined lobby that doesn't exist")
-		_leave_lobby()
-
 	MultiplayerManager.host_left_lobby.connect(_leave_lobby)
 	MultiplayerManager.game_started.connect(_start_game)
 
@@ -22,17 +14,14 @@ func _ready() -> void:
 
 
 
-func _start_game(_lobby_id: int, game: Game) -> void:
-	var game_view := preload("res://scenes/game_view/game_view.tscn").instantiate()
-	game_view.lobby = lobby
-	game_view.game = game
-	get_tree().change_scene_to_packed.call_deferred(game_view)
+func _start_game() -> void:
+	get_tree().change_scene_to_file.call_deferred("res://scenes/game_view/game_view.tscn")
 
 func _leave_lobby() -> void:
 	get_tree().change_scene_to_file.call_deferred("res://scenes/server_browser/server_browser.tscn")
 
 func _on_start_game_pressed() -> void:
-	MultiplayerManager.server_request_start_game()
+	MultiplayerManager.server_request_start_game.rpc_id(MultiplayerManager.SERVER)
 
 func _on_leave_lobby_pressed() -> void:
 	MultiplayerManager.server_request_leave_lobby.rpc_id(MultiplayerManager.SERVER)
@@ -40,7 +29,7 @@ func _on_leave_lobby_pressed() -> void:
 
 
 func _add_player(player: PlayerInfo) -> void:
-	lobby.add_player(player)
+	MultiplayerManager.joined_lobby.add_player(player)
 
 func _remove_player(player_id: int) -> void:
-	lobby.remove_player(player_id)
+	MultiplayerManager.joined_lobby.remove_player(player_id)

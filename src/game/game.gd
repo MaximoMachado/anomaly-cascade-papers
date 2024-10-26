@@ -4,6 +4,7 @@ extends RefCounted
 
 var _game_phase: Enums.GamePhase
 
+var _lobby: Lobby = Lobby.new()
 ## Dictates turn order for _players 
 var _players: Array[Player] = []
 
@@ -12,9 +13,9 @@ var players: Array[Player]:
 	get(): return _players.duplicate()
 	set(value): _players = Types.read_only(_players, value)
 
-var _id_to_player: Dictionary
+var _id_to_player: Dictionary = {}
 
-var _current_player_id: int
+var _current_player_id: int = 0
 
 ## Dictates which player has the ability to take actions
 var current_player_id: int:
@@ -28,19 +29,21 @@ var _reaction_phase_end_turns_in_a_row: int = 0
 ## Basically just a set, keys are player ids, values are null
 var _mulliganed_players : Dictionary = {}
 
+var _battles: Array[Battle] = []
 ## Maps initiating attacker (Follower) to a new battle (Battle)
-var _battles: Dictionary = {}
+var _attacker_to_battle: Dictionary = {}
 
 ## Type is Array[Battle] but gdscript complains
 var battles: Array:
-	get: return _battles.values()
+	get: return _battles.duplicate()
 	set(value): _battles = Types.read_only(_battles, value)
 
 var _influencing_followers: Array[Follower] = []
 
 func _init(lobby: Lobby) -> void:
+	_lobby = lobby
 	for player: PlayerInfo in lobby.players:
-		var game_player = Player.create_player_with_starting_hand(player)
+		var game_player := Player.create_player_with_starting_hand(player)
 		_players.append(game_player)
 		_id_to_player[game_player.id] = game_player
 	
@@ -242,6 +245,7 @@ func player(player_id: int) -> Player:
 
 func to_dict() -> Dictionary:
 	var game_dict := {}
+	game_dict["lobby"] = _lobby.to_dict()
 	game_dict["game_phase"] = _game_phase
 	game_dict["current_player_id"] = _current_player_id
 	game_dict["players"] = _players.map(Types.to_dict)
@@ -258,6 +262,11 @@ func to_dict_for_player(player_id: int) -> Dictionary:
 static func from_dict(game_dict: Dictionary) -> Game:
 	var lobby : Lobby = Lobby.from_dict(game_dict["lobby"])
 	var game := Game.new(lobby)
+	game._game_phase = game_dict["game_phase"]
+	game._current_player_id = game_dict["current_player_id"]
+	game._battles.assign(game_dict["battles"])
+	game._influencing_followers.assign(game_dict["influencing_followers"])
+	game._reaction_phase_end_turns_in_a_row = game_dict["reaction_phase_end_turns_in_a_row"]
 	return game
 
 func duplicate() -> Game:
@@ -268,12 +277,11 @@ func duplicate() -> Game:
 ## Orchestrates all of the end of turn steps, deal combat damage, gain influence, etc.
 func _end_of_turn_step() -> void:
 
-	for attacker in _battles.keys():
+	for attacker: Follower in _attacker_to_battle.keys():
 		var battle : Battle = _battles[attacker]
 		battle.damage_step()
 
-	for key in _battles.keys():
-		var battle : Battle = _battles[key]
+	for battle in _battles:
 		for attacker in battle.attackers:
 			if attacker.is_dead():
 				## Remove attacker from player zone
