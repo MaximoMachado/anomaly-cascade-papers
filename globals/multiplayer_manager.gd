@@ -44,9 +44,13 @@ var MAX_CLIENTS := 4000
 
 ## Client public variables
 ## These are used for player to keep track of what lobby its in and who they are
-var joined_lobby: Lobby = null
-var current_game: Game = null
-var client_player_info: PlayerInfo = null
+
+## Optional<Lobby>
+var joined_lobby: Option = Option.None()
+## Optional<Game>
+var current_game: Option = Option.None()
+## Optional<PlayerInfo>
+var client_player_info: Option = Option.None()
 
 
 ## Server variables
@@ -88,7 +92,7 @@ func _ready() -> void:
 	pass
 
 ## Initializes server
-func start_server() -> Error:
+func start_server() -> int:
 	var server_peer := ENetMultiplayerPeer.new()
 	var error := server_peer.create_server(SERVER_PORT, MAX_CLIENTS)
 	if error:
@@ -102,11 +106,11 @@ func start_server() -> Error:
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	print_debug(multiplayer.get_unique_id())
 
-	return Error.OK
+	return 0
 
 
 ## Initializes client and connects to server
-func start_client() -> Error:
+func start_client() -> int:
 	var client_peer := ENetMultiplayerPeer.new()
 	var error := client_peer.create_client(SERVER_IP, SERVER_PORT)
 	if error:
@@ -116,8 +120,8 @@ func start_client() -> Error:
 	var id := multiplayer.get_unique_id()
 	print_debug(id)
 
-	self.client_player_info = PlayerInfo.new(id, str(id))
-	return Error.OK
+	self.client_player_info = Option.Some(PlayerInfo.new(id, str(id)))
+	return 0
 
 ## Basic listeners provided by ENetMultiplayerPeer
 
@@ -181,7 +185,7 @@ func server_request_create_lobby() -> void:
 	var host_id := multiplayer.get_remote_sender_id()
 
 	# If already in a lobby, can't create a new lobby
-	if _player_id_to_lobby.get(host_id) != null:
+	if Option.dict_get(_player_id_to_lobby, host_id).is_some():
 		return
 
 	var host_player : PlayerInfo = _player_id_to_player_info[host_id]
@@ -199,7 +203,7 @@ func server_request_join_lobby(lobby_id: int) -> void:
 	var client_id := multiplayer.get_remote_sender_id()
 
 	# If already in a lobby, can't join a new lobby
-	if _player_id_to_lobby.get(client_id) != null:
+	if Option.dict_get(_player_id_to_lobby, client_id).is_some():
 		return
 
 	var lobby : Lobby = _host_id_to_lobby[lobby_id]
@@ -218,7 +222,7 @@ func client_join_lobby(lobby_dict: Dictionary) -> void:
 	_print_debug_rpc_call()
 	var lobby: Lobby = Lobby.from_dict(lobby_dict)
 	
-	self.joined_lobby = lobby
+	self.joined_lobby = Option.Some(lobby)
 	lobby_joined.emit()
 
 ## Client -> Server
@@ -228,18 +232,19 @@ func server_request_leave_lobby() -> void:
 	var client_id := multiplayer.get_remote_sender_id()
 
 	# Can't leave a lobby if not in one
-	if _player_id_to_lobby.get(client_id) == null:
+	if Option.dict_get(_player_id_to_lobby, client_id).is_none():
 		return
 
 	# Check if player is a host of some lobby
-	var lobby : Lobby = _host_id_to_lobby.get(client_id)
-	if lobby != null:
+	var in_lobby : Option = Option.dict_get(_host_id_to_lobby, client_id)
+	if in_lobby.is_some():
+		var lobby : Lobby = lobby.unwrap()
 		lobby.remove_player(client_id)
 		_lobbies.erase(lobby)
 		_host_id_to_lobby.erase(client_id)
 		_lobby_id_to_game.erase(lobby.id)
 	else:
-		lobby = _player_id_to_lobby[client_id]
+		var lobby : Lobby = Option.dict_get(_player_id_to_lobby, client_id).unwrap()
 		lobby.remove_player(client_id)
 
 		# clean-up empty lobby
@@ -249,14 +254,14 @@ func server_request_leave_lobby() -> void:
 	_player_id_to_lobby.erase(client_id)
 
 	client_leave_lobby.rpc_id(client_id)
-	print_debug("Player %d has left lobby %d" % [client_id, lobby.id])
+	print_debug("Player %d has left lobby" % [client_id])
 
 ## Server -> Client
 @rpc("authority", "reliable")
 func client_leave_lobby() -> void:
 	_print_debug_rpc_call()
-	self.joined_lobby = null
-	self.current_game = null
+	self.joined_lobby = Option.None()
+	self.current_game = Option.None()
 
 ## Lobby Host Client -> Server
 @rpc("any_peer", "reliable")
@@ -265,12 +270,13 @@ func server_request_start_game() -> void:
 	var client_id := multiplayer.get_remote_sender_id()
 
 	# Can't start a lobby if not in one
-	if _player_id_to_lobby.get(client_id) == null:
+	if Option.dict_get(_player_id_to_lobby, client_id).is_none():
 		return
 	
-	var host_lobby : Lobby = _host_id_to_lobby.get(client_id)
+	var is_host_of_lobby : Option = Option.dict_get(_host_id_to_lobby, client_id)
 	# Only host can start the lobby
-	if host_lobby != null:
+	if is_host_of_lobby.is_some():
+		var host_lobby : Lobby = is_host_of_lobby.unwrap()
 
 		# TODO: Replace test decks with letting user set their deck in the lobby
 		var test_deck := Deck.new()
@@ -298,7 +304,7 @@ func server_request_start_game() -> void:
 func client_start_game(game_dict: Dictionary) -> void:
 	_print_debug_rpc_call()
 
-	self.current_game = Game.from_dict(game_dict)
+	self.current_game = Option.Some(Game.from_dict(game_dict))
 	game_started.emit()
 
 ## RPC calls that relate to Game actions and handling syncing
