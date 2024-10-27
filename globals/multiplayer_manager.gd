@@ -5,39 +5,58 @@ extends Node
 
 ## Signals related to server browser/lobby list
 ## If players have connected to the server browser
+
+## Player connected to server
 signal player_connected(peer_id: int)
+## Player disconnected to server
 signal player_disconnected(peer_id: int)
+## Server has shutdown/disconnected
 signal server_disconnected
+## Response that contains new lobbies sent over network
 signal lobbies_recieved(lobbies: Array[Lobby])
+## Notification that server has recognized that you have joined a lobby. Can access lobby through joined_lobby
 signal lobby_joined
 
 ## If players have joined a particular lobby
 ## These get broadcast to all players within a specific lobby
+
+## Notification that a new player has joined the lobby
 signal player_joined_lobby(player: PlayerInfo)
+## Notification that a player has left the lobby
 signal player_left_lobby(peer_id: int)
+## Notification that joined_lobby has a new game configuration
 signal game_config_changed
+## Notification that game has started and current_game has Game object
 signal game_started
 
 ## In-game signals for actions taken by other players that need to be synced
 ## TODO: outline of example game signals, would reflect Game interface
+## Notification that a player has mulliganed
 signal player_mulliganed(player_id: int)
 
+## Notification that a player has played a card
 signal player_played_card(player_id: int)
+## Notification that a player has activated an ability
 signal player_activated_ability(player_id: int)
+## Notification that a player has declared a follower
 signal player_declared_attacker(player_id: int)
 signal player_declared_influencer(player_id: int)
 signal player_declared_blocker(player_id: int)
 
+## Notification that a player has ended their turn
 signal player_ended_turn(player_id: int)
 
+## Notification that server has sent over info to resync game state when client cheats/desyncs
 signal game_synced
 
-## Server to communicate with that is running this specific lobby/game instance
+## Server id to communicate with that is running this specific lobby/game instance
 var SERVER := 1
 
-## Server to communicate with to get a list of joinable lobbies
+## Server id to communicate with to get a list of joinable lobbies
 var SERVER_BROWSER := 1
+## Port to listen on for server browsers and dedicated game instance servers
 var SERVER_PORT := 23196 ## Winter-Starling Foundation in numbers
+## IP address for server browser
 var SERVER_IP := "winter-starling.maximomachado.com" 
 var MAX_CLIENTS := 4000
 

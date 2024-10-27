@@ -7,6 +7,13 @@ enum CardRarity { COMMON, RARE, MYTHIC }
 
 enum FluxType { FOUNDATION, WORSHIPPERS, INVESTIGATORS, FEY, ABYSSAL, CLOCKWORK, NEUTRAL }
 
+enum StackSpeed { 
+	SLOW, ## Only played in Play phase during your turn
+	FAST, ## May be played during Play phase or Reaction phase
+	REACTION, ## Only played in Reaction phase
+	BLINK, ## May be played during Play phase or Reaction phase but resolves instantly (does not go onto Stack)
+ }
+
 enum Faction { FOUNDATION, WORSHIPPERS, INVESTIGATORS, FEY, ABYSSAL, CLOCKWORK, NEUTRAL }
 
 ## Maps faction to their respective color

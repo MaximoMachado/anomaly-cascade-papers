@@ -14,6 +14,9 @@ signal follower_died(follower: Follower)
 ## The stats unique to a Follower card when on the battlefield
 @export var stats: FollowerStats = FollowerStats.new()
 
+## List of abilities that can be activated
+@export var abilities : Array = []
+
 ## Mutator method[br]
 ## Recieve damage from any [Card] [br]
 ## [param return] If this follower dies from the damage
@@ -67,6 +70,10 @@ func attack(defenders: Array[Follower]) -> Array[int]:
 ## [param return] [code]attacker i is assigned damage equal to return[i][/code]
 func block(attackers: Array[Follower]) -> Array[int]:
 	return _split_damage_equally(attackers)
+
+## Creates an effect that can be placed on stack and resolved at a later time
+func activate_ability(ability, targets) -> Variant:
+	pass
 	
 ## Observer method[br]
 ## [param return] How much influence to attain

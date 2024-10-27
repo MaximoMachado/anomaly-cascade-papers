@@ -1,23 +1,13 @@
 
-class_name Card 
+
+class_name Permanent 
 extends Resource
-## Immutable Card Interface Class. Do not create directly.
+## Permanent Interface Class. Do not create directly.
 ##
-## Any Resource must implement the methods below to be considered a 'Card' Resource
+## This represents anything that lives on the battlefield. Factories, Followers, Token Followers, etc.
 
-## Path to a resource that will be loaded as the artwork for this particular card
-@export var card_image_path: String = "res://assets/images/no_image.jpg"
-
-## Name of the card that is to be displayed
-@export var card_name: String = "<Card Name>"
-
-## Explanation of the card's mechanics presented to players
-@export_multiline var card_text: String = "<Card Text>"
-
-## List of abilities that are applied when card is played
-@export var on_play_ability : Ability = Ability.make_empty():
-	get: return Ability.duplicate()
-	set(value): Types.read_only()
+## This represents what the permanent's derived card is. Used for tooltips
+@export var card: Card = HiddenCard.new()
 
 func _init() -> void:
 	push_error("NotImplementedError: Card.new()")
@@ -26,7 +16,7 @@ func _init() -> void:
 ## Attempts to play card with specified targets[br]
 ## [param param targets] Will mutate targets acoording to the on-play effects of the card[br]
 ## [param return] Whether this card was able to be played
-func play(targets: Array) -> bool:
+func exhaust(targets: Array) -> bool:
 	push_error("NotImplementedError: Card.play()")
 	return false
 
