@@ -7,7 +7,7 @@ static var DICT_TYPE := "follower"
 
 signal follower_died(follower: Follower)
 
-var stats: FollowerStats = FollowerStats.new()
+@export var stats: FollowerStats = FollowerStats.new()
 
 ## Handles recieving damage from any card
 ## @emit If follower dies from this attack

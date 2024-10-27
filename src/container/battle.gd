@@ -1,4 +1,5 @@
-class_name Battle extends RefCounted
+class_name Battle 
+extends Resource
 
 var attackers: Array[Follower] = []
 var blockers: Array[Follower] = []

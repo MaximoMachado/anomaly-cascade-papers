@@ -1,14 +1,15 @@
 class_name Deck 
-extends RefCounted
+extends Resource
 ## A deck of cards
+##
 ## Representation: An array of cards
 ## Abstraction Function: card i in deck = _cards[i]
 ## Invariants: 0 <= _curr_index < _cards.size()
 
 
-var _cards : Array[Card]
+@export var _cards : Array[Card]
 
-var _curr_index: int
+@export var _curr_index: int
 
 func _init(p_cards: Array[Card] = []) -> void:
 	_cards = p_cards.duplicate(true)
@@ -100,9 +101,6 @@ func _iter_get() -> Card:
 	return _cards[_curr_index]
 
 # Useful Array methods to use as-is
-
-func duplicate(deep := false) -> Deck:
-	return Deck.new(_cards.duplicate(deep))
 
 func find(what: Card, from: int = 0) -> int:
 	return _cards.find(what, from)

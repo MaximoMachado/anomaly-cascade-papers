@@ -26,9 +26,6 @@ var _hovered := false
 func _ready() -> void:
 	starting_position = position
 	draw.call_deferred()
-	
-func _process(delta: float) -> void:
-	pass
 
 ## Whenever card is updated, draw will need to be called as well
 func draw() -> void:

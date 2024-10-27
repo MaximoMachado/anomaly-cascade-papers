@@ -1,19 +1,20 @@
 
 class_name Card 
-extends RefCounted
+extends Resource
 ## Abstract Interface Class that details stats of a card
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 
+## Path to a resource that will be loaded as the artwork for this particular card
 @export var card_image_path: String = "res://assets/images/no_image.jpg"
 
-## Name of the card presented to players
+## Name of the card that is to be displayed
 @export var card_name: String = ""
 
-## Explanation of card mechanics presented to players
+## Explanation of the card's mechanics presented to players
 @export_multiline var card_text: String = ""
 
 ## Required cost to play this card
-var flux: Flux = Flux.new()
+@export var flux: Flux = Flux.new()
 
 func _init() -> void:
 	push_error("NotImplementedError: Card.new()")

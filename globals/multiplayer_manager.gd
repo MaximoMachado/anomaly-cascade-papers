@@ -302,3 +302,10 @@ func client_start_game(game_dict: Dictionary) -> void:
 	game_started.emit()
 
 ## RPC calls that relate to Game actions and handling syncing
+
+@rpc("any_peer", "reliable")
+func server_request_mulligan(game_dict: Dictionary) -> void:
+	pass
+
+func client_mulligan_player() -> void:
+	pass

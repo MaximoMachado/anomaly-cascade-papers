@@ -1,7 +1,8 @@
 class_name Flux
-extends RefCounted
+extends Resource
 
-var _flux: Dictionary = {}
+## Underlying data structure of Flux
+@export var _flux: Dictionary = {}
 
 func _init() -> void:
 	for type: Enums.FluxType in Enums.FluxType.values():

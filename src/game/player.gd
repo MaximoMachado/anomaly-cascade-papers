@@ -1,18 +1,18 @@
 class_name Player
-extends RefCounted
+extends Resource
 
 
-var id: int = 0
-var team_id: int = 0
-var mulliganed: bool = false
+@export var id: int = 0
+@export var team_id: int = 0
+@export var mulliganed: bool = false
 
-var hand: Array[Card] = []
-var deck: Deck = Deck.new()
-var influence_deck: Deck = Deck.new()
-var graveyard: Deck = Deck.new()
+@export var hand: Array[Card] = []
+@export var deck: Deck = Deck.new()
+@export var influence_deck: Deck = Deck.new()
+@export var graveyard: Deck = Deck.new()
 
-var followers_in_play: Array[Follower] = []
-var factories_in_play: Array[Factory] = []
+@export var followers_in_play: Array[Follower] = []
+@export var factories_in_play: Array[Factory] = []
 
 var health : int:
 	set(value):
@@ -81,9 +81,6 @@ static func from_dict(player_dict: Dictionary) -> Player:
 	player.health = player_dict["health"]
 	player.influence = player_dict["influence"]
 	return player
-
-func duplicate() -> Player:
-	return Player.from_dict(self.to_dict())
 
 ## Mutators
 
