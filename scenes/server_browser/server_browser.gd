@@ -5,8 +5,6 @@ func _ready() -> void:
 	MultiplayerManager.lobby_joined.connect(_transition_to_lobby_view)
 
 func draw(lobbies: Array[Lobby]) -> void:
-	for lobby in lobbies:
-		print_debug(lobby.to_dict())
 	for child in %Lobbies.get_children():
 		if child is LobbyPanel:
 			child.lobby_joined.disconnect(_on_join_pressed)

@@ -235,7 +235,6 @@ func is_players_turn(player_id: int) -> bool:
 ## Gets reference to player by its ID
 func player(player_id: int) -> Player:
 	var found_player : Player = _id_to_player[player_id]
-	print_debug(found_player.to_dict())
 	return found_player
 
 ## Producer methods
