@@ -29,7 +29,7 @@ func _on_leave_lobby_pressed() -> void:
 
 
 func _add_player(player: PlayerInfo) -> void:
-	MultiplayerManager.joined_lobby.add_player(player)
+	MultiplayerManager.joined_lobby.unwrap().add_player(player)
 
 func _remove_player(player_id: int) -> void:
-	MultiplayerManager.joined_lobby.remove_player(player_id)
+	MultiplayerManager.joined_lobby.unwrap().remove_player(player_id)
