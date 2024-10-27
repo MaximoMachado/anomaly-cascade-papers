@@ -13,7 +13,6 @@ signal lobby_joined
 
 ## If players have joined a particular lobby
 ## These get broadcast to all players within a specific lobby
-signal host_left_lobby(lobby_id: int)
 signal player_joined_lobby(player: PlayerInfo)
 signal player_left_lobby(peer_id: int)
 signal game_config_changed
@@ -210,6 +209,8 @@ func server_request_join_lobby(lobby_id: int) -> void:
 	var player : PlayerInfo = _player_id_to_player_info[client_id]
 	lobby.add_player(player)
 	_player_id_to_lobby[player.id] = lobby
+
+	# Todo: Alert all other clients in lobby that someone has joined
 	
 	print_debug("Player %d has joined lobby %d" % [player.id, lobby_id])
 	client_join_lobby.rpc_id(player.id, lobby.to_dict())
@@ -251,6 +252,7 @@ func server_request_leave_lobby() -> void:
 		if lobby._players.size() == 0:
 			_lobbies.erase(lobby)
 
+	# Todo: Alert all other clients in lobby that someone has left
 	_player_id_to_lobby.erase(client_id)
 
 	client_leave_lobby.rpc_id(client_id)

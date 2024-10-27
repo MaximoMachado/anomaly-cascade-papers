@@ -8,7 +8,7 @@ extends RefCounted
 
 @export var id := 0
 
-@export var host_player : PlayerInfo = PlayerInfo.new()
+@export var host_player_id: int = 0
 
 ## TODO: Add way to configure Game Settings
 @export var game_config: GameConfig = GameConfig.new()
@@ -28,7 +28,7 @@ static func create(host_player: PlayerInfo) -> Lobby:
 	var lobby := Lobby.new()
 	lobby.id = host_player.id
 	lobby.add_player(host_player)
-	lobby.host_player = host_player
+	lobby.host_player_id = host_player.id
 	return lobby
 
 
@@ -59,8 +59,10 @@ func to_dict() -> Dictionary:
 
 	dict["lobby_id"] = id
 	dict["players"] = []
-	for player in _players:
+	for player: PlayerInfo in _players:
 		dict["players"].append(player.to_dict())
+
+	dict["host_player_id"] = host_player_id
 
 	# Todo: Serialize game config
 	#dict["game_config"] :=
@@ -73,5 +75,6 @@ static func from_dict(lobby_dict: Dictionary) -> Lobby:
 	lobby.id = lobby_dict["lobby_id"]
 	for player: Dictionary in lobby_dict["players"]:
 		lobby._players.append(PlayerInfo.from_dict(player))
+	lobby.host_player_id = lobby_dict["host_player_id"]
 
 	return lobby

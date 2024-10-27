@@ -32,4 +32,9 @@ func _add_player(player: PlayerInfo) -> void:
 	MultiplayerManager.joined_lobby.unwrap().add_player(player)
 
 func _remove_player(player_id: int) -> void:
-	MultiplayerManager.joined_lobby.unwrap().remove_player(player_id)
+	var lobby : Lobby = MultiplayerManager.joined_lobby.unwrap()
+	var host_left := lobby.host_player_id == player_id
+	lobby.remove_player(player_id)
+
+	if host_left:
+		_leave_lobby()
