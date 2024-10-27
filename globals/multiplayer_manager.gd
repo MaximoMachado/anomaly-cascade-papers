@@ -46,6 +46,7 @@ var MAX_CLIENTS := 4000
 
 ## Optional<Lobby>
 var joined_lobby: Option = Option.None()
+
 ## Optional<Game>
 var current_game: Option = Option.None()
 ## Optional<PlayerInfo>
