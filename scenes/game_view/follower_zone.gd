@@ -21,7 +21,7 @@ func draw():
 func remove_card(card: CardView):
 	if card == selected_follower:
 		selected_follower = null
-	remove_child(card)
+	remove_child.call_deferred(card)
 
 
 func _on_child_entered_tree(node: Node) -> void:

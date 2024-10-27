@@ -5,7 +5,8 @@ extends Area2D
 	set(value): $CollisionShape.shape.size = value
 
 @export var CARD_MARGIN := Vector2(0, 0)
-var selected_card: CardView = null
+## Option<CardView>
+var selected_card: Option = Option.None()
 
 func _ready() -> void:
 	draw()
@@ -29,8 +30,8 @@ func _on_child_entered_tree(node: Node) -> void:
 
 func _on_child_exiting_tree(node: Node) -> void:
 	if node is CardView:
-		if node == selected_card:
-			selected_card = null
+		if selected_card.matches(node):
+			selected_card = Option.None()
 		node.select_requested.disconnect(_on_card_select_requested)
 		node.deselect_requested.disconnect(_on_card_deselect_requested)
 		draw.call_deferred()
@@ -39,10 +40,10 @@ func _on_child_exiting_tree(node: Node) -> void:
 func _on_card_select_requested(card: CardView):
 	if selected_card != null:
 		selected_card.deselect()
-	selected_card = card
+	selected_card = Option.Some(card)
 	selected_card.select()
 
 func _on_card_deselect_requested(card: CardView):
 	if selected_card == card:
 		selected_card.deselect()
-		selected_card = null
+		selected_card = Option.None()
