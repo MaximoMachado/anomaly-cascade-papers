@@ -11,3 +11,7 @@
 	- menu_ui: Menus for UI outside of main game flow
 	- main: Root node that starts application
 - tests: Unit and integration testing 
+
+## Docstrings
+
+Please refer to [this class materials](https://web.mit.edu/6.031/www/sp22/classes/10-abstract-data-types/#classifying_types_and_operations) to understand why methods are classified as Creators, Producers, Observers, and Mutators.

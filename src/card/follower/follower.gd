@@ -1,17 +1,22 @@
 class_name Follower extends Card
-## Represents the follower card type, equivalent to Hearthstone's Minion type
-## When played from hand, it is summoned onto the board on player's side
+## Represents the Follower card type, equivalent to Hearthstone's Minion type
+##
+## Class handles both when a Follower is in the player's hand and when it is played out onto the Battlefield.
+## As such, Follower has an interface that defines actions that can be taken on the battlefield such as attacking, blocking, and influencing.
 
-# Used for to_dict/from_dict for dynamic dispatch
+## Used for to_dict/from_dict for dynamic dispatch
 static var DICT_TYPE := "follower"
 
+## Emitted when this follower dies[br]
+## [param param follower] Follower that died
 signal follower_died(follower: Follower)
 
+## The stats unique to a Follower card when on the battlefield
 @export var stats: FollowerStats = FollowerStats.new()
 
-## Handles recieving damage from any card
-## @emit If follower dies from this attack
-## @return Whether this follower dies from this attack
+## Mutator method[br]
+## Recieve damage from any [Card] [br]
+## [param return] If this follower dies from the damage
 func recieve_damage(damage_dealer: Card, damage: int) -> bool:
 	stats.health -= damage
 	var has_died := is_dead()
@@ -19,9 +24,11 @@ func recieve_damage(damage_dealer: Card, damage: int) -> bool:
 		follower_died.emit(self)
 	return has_died
 
-## Handles recieving damage in a battle
-## @emit If follower dies from this attack
-## @return Whether this follower dies from this attack
+## Mutator method[br]
+## Recieve damage in a battle[br]
+## [param param damage_dealers] Combatants dealing damage[br]
+## [param param damage] Total damage to recieve[br]
+## [param return] If this follower dies from this attack
 func recieve_battle_damage(damage_dealers: Array[Follower], damage: int) -> bool:
 	stats.health -= damage
 	var has_died := is_dead()
@@ -29,8 +36,9 @@ func recieve_battle_damage(damage_dealers: Array[Follower], damage: int) -> bool
 		follower_died.emit(self)
 	return has_died
 
-##
-## @return Whether this follower dies from this stat change
+## Mutator method[br]
+## Mutates follower's stats with +[param attack] / +[param influence] / +[param health][br]
+## [param return] If this follower dies from this attack
 func add_stats(attack: int, influence: int, health: int) -> bool:
 	stats.attack += attack
 	stats.influence += influence
@@ -42,29 +50,36 @@ func add_stats(attack: int, influence: int, health: int) -> bool:
 	return has_died
 	
 
-## @param defenders: Must be sorted from lowest health to highest health
-## 						ties being broken by highest attack, and then mana cost
-##			e.g. defenders[i].recieve_damage([attacker], return[i])
+## Observer Method[br]
+## Deals damage to defenders.[br]
+## [param param defenders] Array must be sorted from lowest health to highest health[br]
+## 						Remainder damage is dealt to those earlier in array[br]
+##						[code]e.g. defenders[i].recieve_damage([attacker], return[i])[/code][br]
+## [param return] [code]defender i is assigned damage equal to return[i][/code]
 func attack(defenders: Array[Follower]) -> Array[int]:
 	return _split_damage_equally(defenders)
 
-## @param attackers: Must be sorted from lowest health to highest health
-## 						ties being broken by highest attack, and then mana cost
-## @returns how much damage each defender should recieve
-##			e.g. attackers[i].recieve_damage([attacker], return[i])
+## Observer Method[br]
+## Deals damage to attackers.[br]
+## @param attackers: Must be sorted from lowest health to highest health[br]
+## 						Remainder damage is dealt to those earlier in array[br]
+##						[code]e.g. attackers[i].recieve_damage([defender], return[i])[/code][br]
+## [param return] [code]attacker i is assigned damage equal to return[i][/code]
 func block(attackers: Array[Follower]) -> Array[int]:
 	return _split_damage_equally(attackers)
 	
-##
-## @returns how much influence to attain
+## Observer method[br]
+## [param return] How much influence to attain
 func influence() -> int:
 	return stats.influence
 	
+## Observer method[br]
+## [param return] Whether or not this follower is dead
 func is_dead() -> bool:
 	return stats.health <= 0
 
-## Producers
-
+## Observer method[br]
+## [param return] Returns dictionary representation
 func to_dict() -> Dictionary:
 	var follower_dict := {}
 	follower_dict["dict_type"] = DICT_TYPE
@@ -76,6 +91,8 @@ func to_dict() -> Dictionary:
 
 	return follower_dict
 
+## Creator method[br]
+## [param return] Returns dictionary representation
 static func from_dict(follower_dict: Dictionary) -> Follower:
 	assert(follower_dict["dict_type"] == DICT_TYPE)
 
@@ -88,6 +105,7 @@ static func from_dict(follower_dict: Dictionary) -> Follower:
 
 	return follower
 
+## Observer method[br]
 ## Splits damage across followers, with leftover damage being split across lowest health followers
 ## @param defenders: Must be sorted from lowest health to highest health
 ## 						ties being broken by highest attack, and then mana cost
@@ -106,8 +124,8 @@ func _split_damage_equally(followers: Array[Follower]) -> Array[int]:
 		
 	return damage_dealt
 
-func _init(p_card_name := "<Card Name>", \
-			p_card_text := "<Card Text>", \
+func _init(p_card_name : String = "<Card Name>", \
+			p_card_text : String = "<Card Text>", \
 			p_follower_stats : FollowerStats = null) -> void:
 	card_name = p_card_name
 	card_text = p_card_text
@@ -115,4 +133,4 @@ func _init(p_card_name := "<Card Name>", \
 	if p_follower_stats == null:
 		stats = FollowerStats.new()
 	else:
-		stats = p_follower_stats
+		stats = p_follower_stats.duplicate()

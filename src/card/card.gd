@@ -1,7 +1,8 @@
 
 class_name Card 
 extends Resource
-## Abstract Interface Class that details stats of a card
+## Card Interface Class. Do not create directly.
+##
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 
 ## Path to a resource that will be loaded as the artwork for this particular card
@@ -16,18 +17,22 @@ extends Resource
 ## Required cost to play this card
 @export var flux: Flux = Flux.new()
 
+## List of effects that are applied when card is played
+@export var on_play_effect : Array = []
+
 func _init() -> void:
 	push_error("NotImplementedError: Card.new()")
 
-## Mutators
-
-## Plays card 
+## Mutator method[br]
+## Attempts to play card with specified targets[br]
+## [param param targets] Will mutate targets acoording to the on-play effects of the card[br]
+## [param return] Whether this card was able to be played
 func play(targets: Array) -> bool:
 	push_error("NotImplementedError: Card.play()")
 	return false
 
-## Producers
-
+## Observer method[br]
+## [param return] Dictionary with value-based semantics of card's state
 func to_dict() -> Dictionary:
 	if self is Follower or self is Catalyst or self is Factory:
 		return self.to_dict()
@@ -35,7 +40,8 @@ func to_dict() -> Dictionary:
 		push_error("NotImplementedError: Card.to_dict()")
 		return {}
 
-
+## Creator method[br]
+## Converts a dictionary to a card based on "dict_type" field
 static func from_dict(card_dict: Dictionary) -> Card:
 	match card_dict["dict_type"]:
 		Follower.DICT_TYPE:
@@ -50,17 +56,14 @@ static func from_dict(card_dict: Dictionary) -> Card:
 			push_error("NotImplementedError: Card.from_dict()")
 			return Card.new()
 
-## Returns a copy of the card for modification
-func copy() -> Card:
-	push_error("NotImplementedError: Card.copy()")
-	return Card.new()
-
-## Public Observers
-
+## Observer method[br]
+## [param return] Whether card is playable for player
 func is_playable(player: Player) -> bool:
 	push_error("NotImplementedError: Card.is_playable()")
 	return false
 
+## Observer method[br]
+## [param return] An array of potential targets
 func valid_targets(targets: Array) -> Array:
 	var valid_targets := []
 	for target in targets:
@@ -68,7 +71,3 @@ func valid_targets(targets: Array) -> Array:
 			valid_targets.append(target)
 
 	return valid_targets
-
-## Calls query on card and returns true if it matches query conditions
-# func query(card_query: CardQuery) -> bool:
-# 	pass
