@@ -238,7 +238,7 @@ func server_request_leave_lobby() -> void:
 	# Check if player is a host of some lobby
 	var in_lobby : Option = Option.dict_get(_host_id_to_lobby, client_id)
 	if in_lobby.is_some():
-		var lobby : Lobby = lobby.unwrap()
+		var lobby : Lobby = in_lobby.unwrap()
 		lobby.remove_player(client_id)
 		_lobbies.erase(lobby)
 		_host_id_to_lobby.erase(client_id)
