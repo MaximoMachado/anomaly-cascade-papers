@@ -5,6 +5,8 @@ extends Resource
 ##
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 
+static var DICT_TYPE := "card"
+
 ## Path to a resource that will be loaded as the artwork for this particular card
 @export var card_image_path: String = "res://assets/images/no_image.jpg"
 
@@ -43,11 +45,11 @@ func to_dict() -> Dictionary:
 ## Converts a dictionary to a card based on "dict_type" field
 static func from_dict(card_dict: Dictionary) -> Card:
 	match card_dict["dict_type"]:
-		Follower.DICT_TYPE:
+		FollowerCard.DICT_TYPE:
 			return Follower.from_dict(card_dict)
-		Factory.DICT_TYPE:
+		FactoryCard.DICT_TYPE:
 			return Factory.from_dict(card_dict)
-		Catalyst.DICT_TYPE:
+		CatalystCard.DICT_TYPE:
 			return Catalyst.from_dict(card_dict)
 		HiddenCard.DICT_TYPE:
 			return HiddenCard.from_dict(card_dict)

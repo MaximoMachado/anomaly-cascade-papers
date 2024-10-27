@@ -2,7 +2,7 @@
 
 class_name Permanent 
 extends Resource
-## Permanent Interface Class. Do not create directly.
+## Mutable Permanent Interface Class. Do not create directly.
 ##
 ## This represents anything that lives on the battlefield. Factories, Followers, Token Followers, etc.
 
@@ -31,7 +31,7 @@ func to_dict() -> Dictionary:
 
 ## Creator method[br]
 ## Converts a dictionary to a card based on "dict_type" field
-static func from_dict(card_dict: Dictionary) -> Card:
+static func from_dict(card_dict: Dictionary) -> Permanent:
 	match card_dict["dict_type"]:
 		Follower.DICT_TYPE:
 			return Follower.from_dict(card_dict)
@@ -44,6 +44,17 @@ static func from_dict(card_dict: Dictionary) -> Card:
 		_:
 			push_error("NotImplementedError: Card.from_dict()")
 			return Card.new()
+
+## Creator method[br]
+## Converts a dictionary to a card based on "dict_type" field
+static func from_card(card: Card) -> Permanent:
+	if card is PermanentCard:
+		return Follower.from_card(card_dict)
+	elif card is PermanentCard:
+		return Factory.from_card(card_dict)
+	elif card is CatalystCard:
+		push_error("NotImplementedError: Permanent.from_card()")
+		return Permanent.new()
 
 ## Observer method[br]
 ## [param return] Whether card is playable for player

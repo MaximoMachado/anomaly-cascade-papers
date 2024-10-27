@@ -1,8 +1,11 @@
-class_name Factory
-extends Card
+class_name FactoryCard
+extends PermanentCard
+## Immutable FactoryCard
+##
+## Represents a Card that when played creates a Factory that will persist on the Battlefield
 
 # Used for to_dict/from_dict for dynamic dispatch
-static var DICT_TYPE := "factory"
+static var DICT_TYPE := "card.permanent.factory"
 
 func to_dict() -> Dictionary:
 	var factory_dict := {}
@@ -13,9 +16,9 @@ func to_dict() -> Dictionary:
 
 	return factory_dict
 
-static func from_dict(catalyst_dict: Dictionary) -> Factory:
+static func from_dict(catalyst_dict: Dictionary) -> FactoryCard:
 
-	var factory := Factory.new()
+	var factory := FactoryCard.new()
 	factory.card_image_path = catalyst_dict["card_image_path"]
 	factory.card_name = catalyst_dict["card_name"]
 	factory.card_text = catalyst_dict["card_text"]

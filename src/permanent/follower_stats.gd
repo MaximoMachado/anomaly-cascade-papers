@@ -1,7 +1,7 @@
 
 class_name FollowerStats 
 extends Resource
-## Struct containing the basic stats of a Follower
+## Immutable Struct containing the basic stats of a Follower
 ## Defined by Attack, Influence, Max Health, and Health
 
 ## How much damage this follower deals
