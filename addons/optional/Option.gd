@@ -359,7 +359,7 @@ func to_dict() -> Dictionary:
 ## [br][param dict] must have either of [code]"Some": Variant[/code] or [code]"None"[/code], but not both, in which case it will return [Result][code].Err(ERR_INVALID_DATA)[/code]
 ## [br]See [method to_dict]
 static func from_dict(dict: Dictionary) -> Result:
-	var dict_type := dict["dict_type"]
+	var dict_type : String = dict["dict_type"]
 	if dict_type != "option.none" or dict_type != "option.some":
 		return Result.Err(ERR_INVALID_DATA)
 	elif dict_type == "option.some":
@@ -373,5 +373,6 @@ static func from_dict(dict: Dictionary) -> Result:
 		return Result.Ok(Option.None())
 	else:
 		push_error("Should be unreachable")
+		return Result.Err(ERR_INVALID_DATA)
 
 #endregion

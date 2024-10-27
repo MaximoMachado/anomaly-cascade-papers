@@ -6,7 +6,6 @@ extends Control
 ## 
 
 func _ready() -> void:
-	MultiplayerManager.host_left_lobby.connect(_leave_lobby)
 	MultiplayerManager.game_started.connect(_start_game)
 
 	MultiplayerManager.player_joined_lobby.connect(_add_player)
