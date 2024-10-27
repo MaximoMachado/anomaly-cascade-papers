@@ -38,8 +38,8 @@ func _on_child_exiting_tree(node: Node) -> void:
 
 
 func _on_card_select_requested(card: CardView):
-	if selected_card != null:
-		selected_card.deselect()
+	if selected_card.is_some():
+		selected_card.unwrap().deselect()
 	selected_card = Option.Some(card)
 	selected_card.select()
 

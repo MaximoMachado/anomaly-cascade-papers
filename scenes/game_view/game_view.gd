@@ -27,7 +27,7 @@ func _process(delta: float) -> void:
 
 func _on_play_card_pressed() -> void:
 	var selected_card : CardView = $HandView.selected_card.unwrap()
-	if selected_card != null:
+	if selected_card.is_some():
 		var status : bool = MultiplayerManager.current_game.unwrap().play_card(0, selected_card.card, [])
 		if status:
 			print_debug("Play card")

@@ -5,7 +5,8 @@ extends Area2D
 	set(value): $CollisionShape.shape.size = value
 
 @export var CARD_MARGIN := Vector2(0, 0)
-var selected_follower: FollowerView = null
+## Option<FollowerView>
+var selected_follower = Option.None()
 
 func _ready() -> void:
 	draw()
@@ -19,8 +20,8 @@ func draw():
 		follower.draw()
 		
 func remove_card(card: CardView):
-	if card == selected_follower:
-		selected_follower = null
+	if selected_follower.matches(card):
+		selected_follower = Option.None()
 	remove_child.call_deferred(card)
 
 
@@ -40,12 +41,12 @@ func _on_child_exiting_tree(node: Node) -> void:
 
 
 func _on_follower_select_requested(follower: FollowerView):
-	if selected_follower != null:
-		selected_follower.deselect()
+	if selected_follower.is_some():
+		selected_follower.unwrap().deselect()
 	selected_follower = follower
 	selected_follower.select()
 
 func _on_follower_deselect_requested(follower: FollowerView):
-	if selected_follower == follower:
-		selected_follower.deselect()
+	if selected_follower.matches(follower):
+		selected_follower.unwrap().deselect()
 		selected_follower = null
