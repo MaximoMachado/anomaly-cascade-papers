@@ -26,6 +26,15 @@ func to_dict() -> Dictionary:
 		push_error("NotImplementedError: Permanent.to_dict()")
 		return {}
 
+static func from_dict(dict: Dictionary) -> PermanentCard:
+	if dict["dict_type"] == FollowerCard.DICT_TYPE():
+		return FollowerCard.from_dict(dict)
+	elif dict["dict_type"] == FactoryCard.DICT_TYPE():
+		return FactoryCard.from_dict(dict)
+	else:
+		push_error("NotImplementedError: PermanentCard.from_dict()")
+		return PermanentCard.new()
+
 func _init(p_card_name : String = "<Card Name>", p_card_text : String = "<Card Text>") -> void:
 	card_name = p_card_name
 	card_text = p_card_text
