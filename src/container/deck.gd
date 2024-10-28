@@ -33,7 +33,7 @@ func starting_hand(num_cards: int = 7, num_factories: int = 2, shuffle = true) -
 		_cards = []
 		return hand
 	
-	var factories : Array[Card] = _cards.filter(func(card: Card) -> bool: return card is Factory)
+	var factories : Array[Card] = _cards.filter(func(card: Card) -> bool: return card is FactoryCard)
 	if shuffle:
 		factories.shuffle()
 

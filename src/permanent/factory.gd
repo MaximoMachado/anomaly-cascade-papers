@@ -6,7 +6,7 @@ static func DICT_TYPE() -> String : return "permanent.factory"
 
 func to_dict() -> Dictionary:
 	var factory_dict := {}
-	factory_dict["dict_type"] = DICT_TYPE
+	factory_dict["dict_type"] = DICT_TYPE()
 
 	return factory_dict
 

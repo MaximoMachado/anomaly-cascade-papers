@@ -22,7 +22,7 @@ var size: Vector2:
 	get: return $Background.size
 	
 var _hovered := false
-@onready var follower_texture : Texture2D = load(follower.card_image_path)
+@onready var follower_texture : Texture2D = load(follower.card.card_image_path)
 func _ready() -> void:
 	original_scale = scale
 	draw.call_deferred()

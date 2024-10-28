@@ -73,7 +73,8 @@ func block(attackers: Array[Follower]) -> Array[int]:
 
 ## Creates an effect that can be placed on stack and resolved at a later time
 func activate_ability(ability, targets) -> Variant:
-	pass
+	# TODO
+	return null
 	
 ## Observer method[br]
 ## [param return] How much influence to attain

@@ -7,11 +7,14 @@ extends PermanentCard
 
 static func DICT_TYPE() -> String : return "card.permanent.follower"
 
+func spawn() -> Permanent:
+	return Follower.new()
+
 ## Observer method[br]
 ## [param return] Returns dictionary representation
 func to_dict() -> Dictionary:
 	var follower_dict := {}
-	follower_dict["dict_type"] = DICT_TYPE
+	follower_dict["dict_type"] = DICT_TYPE()
 	follower_dict["card_image_path"] = card_image_path
 	follower_dict["card_name"] = card_name
 	follower_dict["card_text"] = card_text
@@ -21,7 +24,7 @@ func to_dict() -> Dictionary:
 ## Creator method[br]
 ## [param return] Returns dictionary representation
 static func from_dict(follower_dict: Dictionary) -> FollowerCard:
-	assert(follower_dict["dict_type"] == DICT_TYPE)
+	assert(follower_dict["dict_type"] == DICT_TYPE())
 
 	var follower := FollowerCard.new()
 	follower.card_image_path = follower_dict["card_image_path"]

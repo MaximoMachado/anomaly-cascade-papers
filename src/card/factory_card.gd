@@ -8,7 +8,7 @@ static func DICT_TYPE() -> String : return "card.permanent.factory"
 
 func to_dict() -> Dictionary:
 	var factory_dict := {}
-	factory_dict["dict_type"] = DICT_TYPE
+	factory_dict["dict_type"] = DICT_TYPE()
 	factory_dict["card_image_path"] = card_image_path
 	factory_dict["card_name"] = card_name
 	factory_dict["card_text"] = card_text

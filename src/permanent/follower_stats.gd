@@ -4,7 +4,7 @@ extends Resource
 ## Immutable Struct containing the basic stats of a Follower
 ## Defined by Attack, Influence, Max Health, and Health
 
-static var DICT_TYPE := "follower_stats"
+static func DICT_TYPE() -> String : return "follower_stats"
 
 ## How much damage this follower deals
 ## attack >= 0
@@ -31,24 +31,24 @@ var health: int :
 	set(value): _health = Types.read_only(_health, value)
 
 @export var _attack: int = 0:
-	set(value): attack = maxi(0, value)
+	set(value): _attack = maxi(0, value)
 
 @export var _influence: int = 0:
-	set(value): influence = value
+	set(value): _influence = value
 
 @export var _max_health: int = 0:
 	set(value):
-		max_health = maxi(0, value)
+		_max_health = maxi(0, value)
 		# Clamp health down to new value
-		health = clamp(value, 0, max_health)
+		_health = clamp(value, 0, max_health)
 
 @export var _health: int = 0:
 	set(value):
-		health = clamp(value, 0, max_health)
+		_health = clamp(value, 0, max_health)
 
 func to_dict() -> Dictionary:
 	var stats_dict := {}
-	stats_dict["dict_type"] = DICT_TYPE
+	stats_dict["dict_type"] = DICT_TYPE()
 	stats_dict["attack"] = attack
 	stats_dict["influence"] = influence
 	stats_dict["max_health"] = max_health
@@ -67,7 +67,7 @@ static func from_dict(stats_dict: Dictionary) -> FollowerStats:
 	return stats
 
 func _init(p_attack: int = 0, p_influence: int = 0, p_max_health: int = 0) -> void:
-	attack = p_attack
-	influence = p_influence
-	max_health = p_max_health
-	health = max_health
+	_attack = p_attack
+	_influence = p_influence
+	_max_health = p_max_health
+	_health = max_health

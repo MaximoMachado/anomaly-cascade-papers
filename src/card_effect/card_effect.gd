@@ -1,5 +1,5 @@
 
-class_name Effect 
+class_name CardEffect 
 extends Resource
 ## Effect Interface. Do not construct directly.
 ##

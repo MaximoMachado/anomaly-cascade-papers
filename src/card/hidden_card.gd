@@ -13,8 +13,8 @@ func _init() -> void:
 	pass
 
 func to_dict() -> Dictionary:
-	return { "dict_type": DICT_TYPE }
+	return { "dict_type": DICT_TYPE() }
 
 static func from_dict(hidden_card_dict: Dictionary) -> HiddenCard:
-	assert(hidden_card_dict["dict_type"] == DICT_TYPE)
+	assert(hidden_card_dict["dict_type"] == DICT_TYPE())
 	return HiddenCard.new()

@@ -8,19 +8,25 @@ extends Card
 static func DICT_TYPE() -> String : return "card.permanent"
 
 ## Callable[Permanent]
-@export var permanent_spawner: Callable = func() -> Permanent: return Permanent.from_card(self)
+@export var permanent_spawner := func() -> Permanent: return Permanent.from_card(self)
+@export var permanent_template: Permanent = Permanent.new()
+
+## Observer Method[br]
+## [param return] Returns instance of permanent that card represents
+func spawn() -> Permanent:
+	push_error("NotImplementedError: Permanent.spawn())")
+	return Permanent.new()
 
 ## Observer method[br]
 ## [param return] Returns dictionary representation
 func to_dict() -> Dictionary:
-	var dict := {}
-	dict["dict_type"] = DICT_TYPE
-	dict["card_image_path"] = card_image_path
-	dict["card_name"] = card_name
-	dict["card_text"] = card_text
-
-	return dict
+	if self is FollowerCard or self is FactoryCard:
+		return self.to_dict()
+	else:
+		push_error("NotImplementedError: Permanent.to_dict()")
+		return {}
 
 func _init(p_card_name : String = "<Card Name>", p_card_text : String = "<Card Text>") -> void:
 	card_name = p_card_name
 	card_text = p_card_text
+	self.permanent_template = self.permanent_spawner.call()

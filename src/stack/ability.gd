@@ -9,9 +9,7 @@ extends Resource
 ## Required cost to activate this ability
 @export var flux: Flux = Flux.new()
 
-
-
-@export var effects : Effect = []
+@export var effects : Array[CardEffect] = []
 
 @export var speed := Enums.StackSpeed.SLOW
 
@@ -19,10 +17,9 @@ static func make_empty() -> Ability:
 	return Ability.new()
 
 func can_resolve() -> bool:
-	pass
+	# TODO
+	return false
 
 func resolve():
-	pass
-
-func duplicate() -> Ability:
+	# TODO
 	pass

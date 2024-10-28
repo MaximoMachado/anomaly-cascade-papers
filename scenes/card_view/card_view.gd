@@ -32,16 +32,18 @@ func draw() -> void:
 	%Art.texture = card_texture
 	%Name.text = card.card_name
 	%Description.text = card.card_text
-	if card is Follower:
+	if card is FollowerCard:
+		var follower := (card as FollowerCard).spawn() as Follower
 		%CardType.text = "Follower"
 		%FollowerStats.show()
-		%Health.text = str(card.stats.health)
-		%Influence.text = str(card.stats.influence)
-		%Attack.text = str(card.stats.attack)
-	elif card is Factory:
+		%Health.text = str(follower.stats.health)
+		%Influence.text = str(follower.stats.influence)
+		%Attack.text = str(follower.stats.attack)
+	elif card is FactoryCard:
+		var factory := card as FactoryCard
 		%CardType.text = "Factory"
 		%FollowerStats.hide()
-	elif card is Catalyst:
+	elif card is CatalystCard:
 		%CardType.text = "Catalyst"
 		%FollowerStats.hide()
 	elif card is HiddenCard:

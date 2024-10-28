@@ -301,9 +301,9 @@ func server_request_start_game() -> void:
 		var host_lobby : Lobby = is_host_of_lobby.unwrap()
 
 		# TODO: Replace test decks with letting user set their deck in the lobby
-		var test_deck := Deck.new()
+		var test_deck : Deck = Deck.new()
 		for i in range(50):
-			test_deck.shuffle_in_card(Follower.new(str(i), str(i), FollowerStats.new(1, 1, 1)))
+			test_deck.shuffle_in_card(FollowerCard.new(str(i), str(i)))
 			
 		for player in host_lobby.players:
 			test_deck.shuffle()

@@ -6,6 +6,7 @@ extends Resource
 ##
 ## Contains bare minimum information a player needs to enter a lobby and start a game
 
+# TODO: Make immutable
 @export var id: int = 0
 @export var user_name: String = ""
 @export var deck : Deck = Deck.new()

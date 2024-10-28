@@ -2,7 +2,7 @@ class_name Flux
 extends Resource
 ## Immutable Type representing flux
 
-static var DICT_TYPE := "flux"
+static func DICT_TYPE() -> String : return "flux"
 ## Underlying data structure of Flux[br]
 ## Dictionary[FluxType, int]
 @export var _flux: Dictionary = {}
@@ -45,11 +45,14 @@ func flux(flux_type: Enums.FluxType) -> int:
 
 ## Observer method
 func to_dict() -> Dictionary:
-	return _flux.duplicate()
+	var dict : Dictionary = _flux.duplicate()
+	dict["dict_type"] = DICT_TYPE()
+
+	return dict
 
 ## Creator method
 static func from_dict(flux_dict: Dictionary) -> Flux:
-	assert(flux_dict["dict_type"] == DICT_TYPE)
+	assert(flux_dict["dict_type"] == DICT_TYPE())
 	var flux := Flux.new()
 	flux._flux = flux_dict.duplicate()
 	return flux

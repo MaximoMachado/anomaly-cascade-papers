@@ -5,7 +5,7 @@ static func DICT_TYPE() -> String : return "card.catalyst"
 
 func to_dict() -> Dictionary:
 	var catalyst_dict := {}
-	catalyst_dict["dict_type"] = DICT_TYPE
+	catalyst_dict["dict_type"] = DICT_TYPE()
 	catalyst_dict["card_image_path"] = card_image_path
 	catalyst_dict["card_name"] = card_name
 	catalyst_dict["card_text"] = card_text

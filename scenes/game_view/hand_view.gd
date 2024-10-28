@@ -41,9 +41,9 @@ func _on_card_select_requested(card: CardView):
 	if selected_card.is_some():
 		selected_card.unwrap().deselect()
 	selected_card = Option.Some(card)
-	selected_card.select()
+	selected_card.unwrap().select()
 
 func _on_card_deselect_requested(card: CardView):
-	if selected_card == card:
-		selected_card.deselect()
+	if selected_card.matches(card):
+		selected_card.unwrap().deselect()
 		selected_card = Option.None()
