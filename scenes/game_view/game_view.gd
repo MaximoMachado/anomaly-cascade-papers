@@ -26,10 +26,10 @@ func _process(delta: float) -> void:
 
 
 func _on_play_card_pressed() -> void:
-	var selected_card = $HandView.selected_card
-	if selected_card.is_some():
-		selected_card = selected_card.unwrap()
-		var status : bool = MultiplayerManager.current_game.unwrap().play_card(0, selected_card.card, [])
+	var card_opt : Option = $HandView.selected_card
+	if card_opt.is_some():
+		var selected_card := card_opt.unwrap() as CardView
+		var status : bool = MultiplayerManager.current_game.unwrap().play_card(multiplayer.get_unique_id(), selected_card.card, [])
 		if status:
 			print_debug("Play card")
 			if selected_card.card is FollowerCard:
