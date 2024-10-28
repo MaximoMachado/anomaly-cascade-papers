@@ -5,7 +5,7 @@ extends Resource
 ##
 ## Any Resource must implement the methods below to be considered a 'Card' Resource
 
-static var DICT_TYPE := "card"
+static func DICT_TYPE() -> String : return "card"
 
 ## Path to a resource that will be loaded as the artwork for this particular card
 @export var card_image_path: String = "res://assets/images/no_image.jpg"
@@ -17,9 +17,7 @@ static var DICT_TYPE := "card"
 @export_multiline var card_text: String = "<Card Text>"
 
 ## List of abilities that are applied when card is played
-@export var on_play_ability : Ability = Ability.make_empty():
-	get: return Ability.duplicate()
-	set(value): Types.read_only()
+@export var on_play_ability : Ability = Ability.make_empty()
 
 func _init() -> void:
 	push_error("NotImplementedError: Card.new()")
@@ -35,7 +33,7 @@ func play(targets: Array) -> bool:
 ## Observer method[br]
 ## [param return] Dictionary with value-based semantics of card's state
 func to_dict() -> Dictionary:
-	if self is Follower or self is Catalyst or self is Factory:
+	if self is FollowerCard or self is CatalystCard or self is FactoryCard:
 		return self.to_dict()
 	else:
 		push_error("NotImplementedError: Card.to_dict()")
@@ -44,18 +42,17 @@ func to_dict() -> Dictionary:
 ## Creator method[br]
 ## Converts a dictionary to a card based on "dict_type" field
 static func from_dict(card_dict: Dictionary) -> Card:
-	match card_dict["dict_type"]:
-		FollowerCard.DICT_TYPE:
-			return Follower.from_dict(card_dict)
-		FactoryCard.DICT_TYPE:
-			return Factory.from_dict(card_dict)
-		CatalystCard.DICT_TYPE:
-			return Catalyst.from_dict(card_dict)
-		HiddenCard.DICT_TYPE:
-			return HiddenCard.from_dict(card_dict)
-		_:
-			push_error("NotImplementedError: Card.from_dict()")
-			return Card.new()
+	if card_dict["dict_type"] == FollowerCard.DICT_TYPE():
+		return FollowerCard.from_dict(card_dict)
+	elif card_dict["dict_type"] == FactoryCard.DICT_TYPE():
+		return FactoryCard.from_dict(card_dict)
+	elif card_dict["dict_type"] == CatalystCard.DICT_TYPE():
+		return CatalystCard.from_dict(card_dict)
+	elif card_dict["dict_type"] == HiddenCard.DICT_TYPE():
+		return HiddenCard.from_dict(card_dict)
+	else:
+		push_error("NotImplementedError: Card.from_dict()")
+		return Card.new()
 
 ## Observer method[br]
 ## [param return] Whether card is playable for player

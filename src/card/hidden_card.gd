@@ -6,7 +6,7 @@ extends Card
 ## Card that represents hidden state from the current player
 ## Can also be used as an empty placeholder
 
-static var DICT_TYPE := "card.hidden"
+static func DICT_TYPE() -> String : return "card.hidden"
 
 ## Overrides init so it does not error
 func _init() -> void:

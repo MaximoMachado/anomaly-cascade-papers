@@ -5,7 +5,7 @@ extends Card
 ## Represents a Card that when played creates a Permanent that will persist on the Battlefield
 
 ## Used for to_dict/from_dict for dynamic dispatch
-static var DICT_TYPE := "card.permanent"
+static func DICT_TYPE() -> String : return "card.permanent"
 
 ## Callable[Permanent]
 @export var permanent_spawner: Callable = func() -> Permanent: return Permanent.from_card(self)

@@ -4,14 +4,13 @@ class_name Follower extends Permanent
 ## Class handles both when a Follower is on the Battlefield.
 ## As such, Follower has an interface that defines actions that can be taken on the battlefield such as attacking, blocking, and influencing.
 
-## Used for to_dict/from_dict for dynamic dispatch
-static var DICT_TYPE := "permanent.follower"
+static func DICT_TYPE() -> String : return "permanent.follower"
 
 ## Emitted when this follower dies[br]
 ## [param param follower] Follower that died
 signal follower_died(follower: Follower)
 
-@export var card: Card = FollowerCard.new()
+@export var _card: Card = FollowerCard.new()
 ## The stats unique to a Follower card when on the battlefield
 @export var stats: FollowerStats = FollowerStats.new()
 
@@ -90,7 +89,7 @@ func is_dead() -> bool:
 ## [param return] Returns dictionary representation
 func to_dict() -> Dictionary:
 	var follower_dict := {}
-	follower_dict["dict_type"] = DICT_TYPE
+	follower_dict["dict_type"] = DICT_TYPE()
 	follower_dict["card"] = card.to_dict()
 	follower_dict["stats"] = stats.to_dict()
 
@@ -99,7 +98,7 @@ func to_dict() -> Dictionary:
 ## Creator method[br]
 ## [param return] Returns dictionary representation
 static func from_dict(follower_dict: Dictionary) -> Follower:
-	assert(follower_dict["dict_type"] == DICT_TYPE)
+	assert(follower_dict["dict_type"] == DICT_TYPE())
 
 	var follower := Follower.new()
 	follower.card = Card.from_dict(follower_dict["card"])
@@ -108,8 +107,8 @@ static func from_dict(follower_dict: Dictionary) -> Follower:
 	return follower
 
 ## Creator method[br]
-static func from_card(card: FollowerCard) -> Follower:
-	pass 
+static func _from_card(card: FollowerCard) -> Follower:
+	return Follower.new()
 
 ## Observer method[br]
 ## Splits damage across followers, with leftover damage being split across lowest health followers

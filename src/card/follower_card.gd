@@ -1,11 +1,11 @@
+
 class_name FollowerCard 
 extends PermanentCard
 ## Immutable FollowerCard
 ##
 ## Represents a Card that when played creates a Follower that will persist on the Battlefield
 
-## Used for to_dict/from_dict for dynamic dispatch
-static var DICT_TYPE := "card.permanent.follower"
+static func DICT_TYPE() -> String : return "card.permanent.follower"
 
 ## Observer method[br]
 ## [param return] Returns dictionary representation

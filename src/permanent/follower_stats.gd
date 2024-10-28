@@ -4,6 +4,8 @@ extends Resource
 ## Immutable Struct containing the basic stats of a Follower
 ## Defined by Attack, Influence, Max Health, and Health
 
+static var DICT_TYPE := "follower_stats"
+
 ## How much damage this follower deals
 ## attack >= 0
 var attack: int :
@@ -46,6 +48,7 @@ var health: int :
 
 func to_dict() -> Dictionary:
 	var stats_dict := {}
+	stats_dict["dict_type"] = DICT_TYPE
 	stats_dict["attack"] = attack
 	stats_dict["influence"] = influence
 	stats_dict["max_health"] = max_health

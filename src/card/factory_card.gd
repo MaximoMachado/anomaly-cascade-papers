@@ -4,8 +4,7 @@ extends PermanentCard
 ##
 ## Represents a Card that when played creates a Factory that will persist on the Battlefield
 
-# Used for to_dict/from_dict for dynamic dispatch
-static var DICT_TYPE := "card.permanent.factory"
+static func DICT_TYPE() -> String : return "card.permanent.factory"
 
 func to_dict() -> Dictionary:
 	var factory_dict := {}

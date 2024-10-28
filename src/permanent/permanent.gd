@@ -6,6 +6,7 @@ extends Resource
 ##
 ## This represents anything that lives on the battlefield. Factories, Followers, Token Followers, etc.
 
+static func DICT_TYPE() -> String : return "permanent"
 ## This represents what the permanent's derived card is. Used for tooltips
 @export var card: Card = HiddenCard.new()
 
@@ -23,36 +24,31 @@ func exhaust(targets: Array) -> bool:
 ## Observer method[br]
 ## [param return] Dictionary with value-based semantics of card's state
 func to_dict() -> Dictionary:
-	if self is Follower or self is Catalyst or self is Factory:
+	if self is Follower or self is Factory:
 		return self.to_dict()
 	else:
-		push_error("NotImplementedError: Card.to_dict()")
+		push_error("NotImplementedError: Permanent.to_dict()")
 		return {}
 
 ## Creator method[br]
 ## Converts a dictionary to a card based on "dict_type" field
 static func from_dict(card_dict: Dictionary) -> Permanent:
-	match card_dict["dict_type"]:
-		Follower.DICT_TYPE:
-			return Follower.from_dict(card_dict)
-		Factory.DICT_TYPE:
-			return Factory.from_dict(card_dict)
-		Catalyst.DICT_TYPE:
-			return Catalyst.from_dict(card_dict)
-		HiddenCard.DICT_TYPE:
-			return HiddenCard.from_dict(card_dict)
-		_:
-			push_error("NotImplementedError: Card.from_dict()")
-			return Card.new()
+	if card_dict["dict_type"] == Follower.DICT_TYPE():
+		return Follower.from_dict(card_dict)
+	elif card_dict["dict_type"] == Factory.DICT_TYPE():
+		return Factory.from_dict(card_dict)
+	else:
+		push_error("NotImplementedError: Permanent.from_dict()")
+		return Permanent.new()
 
 ## Creator method[br]
 ## Converts a dictionary to a card based on "dict_type" field
-static func from_card(card: Card) -> Permanent:
-	if card is PermanentCard:
-		return Follower.from_card(card_dict)
-	elif card is PermanentCard:
-		return Factory.from_card(card_dict)
-	elif card is CatalystCard:
+static func from_card(card: PermanentCard) -> Permanent:
+	if card is FollowerCard:
+		return Follower._from_card(card as FollowerCard)
+	elif card is FactoryCard:
+		return Factory._from_card(card as FactoryCard)
+	else:
 		push_error("NotImplementedError: Permanent.from_card()")
 		return Permanent.new()
 

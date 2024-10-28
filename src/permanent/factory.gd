@@ -2,8 +2,7 @@
 class_name Factory
 extends Permanent
 
-# Used for to_dict/from_dict for dynamic dispatch
-static var DICT_TYPE := "permanent.factory"
+static func DICT_TYPE() -> String : return "permanent.factory"
 
 func to_dict() -> Dictionary:
 	var factory_dict := {}
@@ -12,5 +11,9 @@ func to_dict() -> Dictionary:
 	return factory_dict
 
 static func from_dict(catalyst_dict: Dictionary) -> Factory:
-	var factory := FactoryCard.new()
+	var factory := Factory.new()
 	return factory
+
+## Creator method[br]
+static func _from_card(card: FactoryCard) -> Factory:
+	return Factory.new()
