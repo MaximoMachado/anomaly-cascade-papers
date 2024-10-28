@@ -6,25 +6,41 @@ extends Resource
 
 ## How much damage this follower deals
 ## attack >= 0
-@export var attack: int :
-	set(value): attack = maxi(0, value)
+var attack: int :
+	get: return _attack
+	set(value): _attack = Types.read_only(_attack, value)
 
 ## How much influence this follower will gather
 ## influence = any integer
-@export var influence: int :
-	set(value): influence = value
+var influence: int :
+	get: return _influence
+	set(value): _influence = Types.read_only(_influence, value)
 		
 ## Max health value of follower
 ## max_health >= 0
-@export var max_health: int :
+var max_health: int :
+	get: return _max_health
+	set(value): _max_health = Types.read_only(_max_health, value)
+
+## Current health of the follower
+## 0 <= health <= max_health
+var health: int :
+	get: return _health
+	set(value): _health = Types.read_only(_health, value)
+
+@export var _attack: int = 0:
+	set(value): attack = maxi(0, value)
+
+@export var _influence: int = 0:
+	set(value): influence = value
+
+@export var _max_health: int = 0:
 	set(value):
 		max_health = maxi(0, value)
 		# Clamp health down to new value
 		health = clamp(value, 0, max_health)
 
-## Current health of the follower
-## 0 <= health <= max_health
-@export var health: int :
+@export var _health: int = 0:
 	set(value):
 		health = clamp(value, 0, max_health)
 

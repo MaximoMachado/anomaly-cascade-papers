@@ -20,3 +20,7 @@ static func from_dict(catalyst_dict: Dictionary) -> Catalyst:
 	catalyst.card_text = catalyst_dict["card_text"]
 
 	return catalyst
+
+func _init(p_card_name : String = "<Card Name>", p_card_text : String = "<Card Text>") -> void:
+	card_name = p_card_name
+	card_text = p_card_text
