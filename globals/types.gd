@@ -11,12 +11,12 @@ func read_only(old_value: Variant, new_value: Variant) -> Variant:
 		assert(false, "read_only: invalid assignment on variable")
 		return old_value
 
-## Returns whether object is a type that can be a target
-func is_target(object: Variant) -> bool:
-	return object is Player or object is Card or object is Deck
-
 func to_dict(object: Object) -> Dictionary:
-	return object.to_dict()
+	if object.has_method("to_dict"):
+		return object.to_dict()
+	else:
+		push_error("Object does not implement to_dict()")
+		return {}
 
 ## Returns whether Object implements Interface[br]
 ## An object implements an interface if it has the same public methods, public properties, and signals
@@ -36,6 +36,8 @@ func implements(object: Object, interface: Script) -> bool:
 			return false
 
 	for signal_method: Dictionary in interface.get_script_signal_list():
-		pass
+		var name : String = signal_method["name"]
+		if not object.has_signal(name):
+			return false
 
 	return true
