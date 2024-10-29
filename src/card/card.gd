@@ -42,10 +42,8 @@ func to_dict() -> Dictionary:
 ## Creator method[br]
 ## Converts a dictionary to a card based on "dict_type" field
 static func from_dict(card_dict: Dictionary) -> Card:
-	if card_dict["dict_type"] == FollowerCard.DICT_TYPE():
-		return FollowerCard.from_dict(card_dict)
-	elif card_dict["dict_type"] == FactoryCard.DICT_TYPE():
-		return FactoryCard.from_dict(card_dict)
+	if card_dict["dict_type"] == PermanentCard.DICT_TYPE():
+		return PermanentCard.from_dict(card_dict)
 	elif card_dict["dict_type"] == CatalystCard.DICT_TYPE():
 		return CatalystCard.from_dict(card_dict)
 	elif card_dict["dict_type"] == HiddenCard.DICT_TYPE():

@@ -17,3 +17,25 @@ func is_target(object: Variant) -> bool:
 
 func to_dict(object: Object) -> Dictionary:
 	return object.to_dict()
+
+## Returns whether Object implements Interface[br]
+## An object implements an interface if it has the same public methods, public properties, and signals
+func implements(object: Object, interface: Script) -> bool:
+	var uses_interfaces : bool = object.get("implements") != null and object.implements != null
+	if not uses_interfaces:
+		return false
+
+	for method: Dictionary in interface.get_script_method_list():
+		var name : String = method["name"]
+		if not object.has_method(name):
+			return false
+
+	for property: Dictionary in interface.get_script_property_list():
+		var name : String = property["name"]
+		if not object.has_method(name):
+			return false
+
+	for signal_method: Dictionary in interface.get_script_signal_list():
+		pass
+
+	return true
