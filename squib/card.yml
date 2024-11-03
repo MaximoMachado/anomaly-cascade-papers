@@ -27,74 +27,80 @@ card:
   width: 825
   height: 1125
 
+header:
+  width: 795
+  height: 70
+
 title:
-  x: 25
+  x: 17.5
   y: 15
-  width: 750
-  height: 50
+  valign: middle
+  extends: header
 
 title_right:
+  x: 12.5
   align: right
   extends: title
 
 art:
-  x: 50
-  y: 80
+  x: 12.5
+  y: 100
   width: 800
-  height: 600
+  height: 500
 
 type:
-  x: 50
-  y: 675
-  width: 725
-  height: 50
+  x: 17.5
+  y: 615
+  valign: middle
+  extends: header
 
 type_right:
+  x: 12.5
   align: right
   extends: type
 tr: #alias
   extends: type_right
 
 description:
-  x: middle - 362.5
-  y: 730
-  width: 725
-  height: 275
-  valign: middle
+  x: 12.5
+  y: 700
+  width: 800
+  height: 300
   align: center
-  font_size: 8
+  valign: middle
+  font_size: 12
 desc: # alias
   extends: description
 
-lower_right:
-  x: 675
-  y: 1020
-  width: 75
-  height: 75
-  font_size: 8
+attack:
+  x: 33
+  y: 1021
+  width: 87
+  height: 87
+  font_size: 16
   valign: middle
   align: center
 lr: #alias
-  extends: lower_right
+  extends: attack
 
-lower_middle:
-  x: middle - 37.5
-  y: 1020
-  width: 75
-  height: 75
-  font_size: 8
+influence:
+  x: 362.5
+  y: 1015
+  width: 100
+  height: 100
+  font_size: 16
   valign: middle
   align: center
 lr: #alias
-  extends: lower_right
+  extends: influence
 
-lower_left:
-  x: 75
-  y: 1020
-  width: 75
-  height: 75
-  font_size: 8
+health:
+  x: 683
+  y: 1005
+  width: 118
+  height: 108
+  font_size: 16
   valign: middle
   align: center
 ll: # alias
-  extends: lower_left
+  extends: health
