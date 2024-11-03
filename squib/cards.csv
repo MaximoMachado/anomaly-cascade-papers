@@ -1,5 +1,6 @@
 name, desc, art, type, faction, class, flux, attack, influence, health
-Scientist, "", "", Follower, Foundation, Researcher, 1N 1B, 2, 2, 2
-Big Scientist, "", "", Follower, Foundation, Researcher, 1N 1B, 99, 99, 99
-Risky Experiment, Gain influence equal to allied follower's influence. Draw a card., "", Catalyst, Foundation, "", 1B, "", "", ""
-Site #001, Gain 1B, "", Factory, Foundation, "", "", "", "", ""
+Scientist, "", "", Follower, Foundation, Researcher, ":N: :B:", 2, 2, 2
+Big Scientist, ":exhaust: :B: : Gain +1/+1", "", Follower, Foundation, Researcher, ":N: :B:", 99, 99, 99
+Risky Experiment, Gain influence equal to allied follower's influence. Draw a card., "", Catalyst, Foundation, "", ":B:", "", "", ""
+Site #001, ":exhaust:: Gain :B:", "", Factory, Foundation, "", "", "", "", ""
+Fairy, "", "", Follower, Fey, "", ":#N: :N: :G: :G: :G:", "10", "5", "10"
