@@ -58,5 +58,5 @@ Squib::Deck.new(width: 825, height: 1125, cards: data['name'].size, layout: 'car
   text str: data['attack'], layout: :attack
   text str: data['influence'], layout: :influence
   text str: data['health'], layout: :health
-  save_png prefix: data['name'].map{ |n| 'wsf_' + n.downcase }
+  save_png prefix: data['name'].map{ |n| 'wsf_' + n.downcase }, count_format: ""
 end
