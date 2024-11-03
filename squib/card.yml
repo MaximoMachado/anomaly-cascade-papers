@@ -1,0 +1,100 @@
+faction:
+  x: 75
+  y: 75
+  width: 75
+  height: 75
+
+Foundation:
+  extends: faction
+  file: foundation.svg
+The Gilded:
+  extends: faction
+  file: gilded.svg
+Veil Walkers:
+  extends: faction
+  file: veil_walkers.svg
+Fey:
+  extends: faction
+  file: fey.svg
+Abyssal:
+  extends: faction
+  file: abyssal.svg
+Clockwork:
+  extends: faction
+  file: clockwork.svg
+
+card:
+  width: 825
+  height: 1125
+
+title:
+  x: 25
+  y: 15
+  width: 750
+  height: 50
+
+title_right:
+  align: right
+  extends: title
+
+art:
+  x: 50
+  y: 80
+  width: 800
+  height: 600
+
+type:
+  x: 50
+  y: 675
+  width: 725
+  height: 50
+
+type_right:
+  align: right
+  extends: type
+tr: #alias
+  extends: type_right
+
+description:
+  x: middle - 362.5
+  y: 730
+  width: 725
+  height: 275
+  valign: middle
+  align: center
+  font_size: 8
+desc: # alias
+  extends: description
+
+lower_right:
+  x: 675
+  y: 1020
+  width: 75
+  height: 75
+  font_size: 8
+  valign: middle
+  align: center
+lr: #alias
+  extends: lower_right
+
+lower_middle:
+  x: middle - 37.5
+  y: 1020
+  width: 75
+  height: 75
+  font_size: 8
+  valign: middle
+  align: center
+lr: #alias
+  extends: lower_right
+
+lower_left:
+  x: 75
+  y: 1020
+  width: 75
+  height: 75
+  font_size: 8
+  valign: middle
+  align: center
+ll: # alias
+  extends: lower_left
