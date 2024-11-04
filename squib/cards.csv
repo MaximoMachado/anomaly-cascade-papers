@@ -1,1 +1,3 @@
-name, type, faction, flux, attack, influence, health, class, desc, art
+name, type, speed, flux, attack, influence, health, class, desc, art
+Manic Truthbearer, Follower, Slow, :R:, 1, 1, 1, "", "When this follower influences, deal 1 damage to all players.", ""
+Flame Rebirthed, Catalyst, Reaction, :N: :N: :N: :R: :R:, "", "", "", "", "Deal 10 damage.", ""
