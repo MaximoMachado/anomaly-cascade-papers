@@ -1,3 +1,18 @@
 name, type, speed, flux, attack, influence, health, class, desc, art
-Manic Truthbearer, Follower, Slow, :R:, 1, 1, 1, "", "When this follower influences, deal 1 damage to all players.", ""
-Flame Rebirthed, Catalyst, Reaction, :N: :N: :N: :R: :R:, "", "", "", "", "Deal 10 damage.", ""
+Enshrined Temple, Factory, Slow, "", "", "", "", "", "Exhaust (Blink): Gain :R:", "images/game_icons/factory.svg"
+Manic Truthbearer, Follower, Slow, 1 :R:, 1, 1, 1, "", "When this follower influences, deal 2 damage to all players.", ""
+Enthusiastic Occultist
+Crazed Amalgamation
+Cloaked Noble
+Beast of the Night
+Gravedigger
+Conjure Homunculus
+Ritual Sacrifice
+Proclaim to All that Listen
+Blood Strike
+Static Shock
+Flame Rebirthed, Catalyst, Reaction, 5 :N: :R: :R:, "", "", "", "", "Deal 10 damage.", ""
+Wistful Soul, Influence Follower, Slow, 3 :N: :R: :R:, "5", "0", "3", "", "First Strike", ""
+The Fallen King
+Tie their Fates
+A Better Future

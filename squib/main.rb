@@ -39,9 +39,8 @@ Squib::Deck.new(width: 825, height: 1125, cards: data['name'].size, layout: 'car
     embed.svg key: ':N:', dy: -40, width: 50, height: 50, file: 'images/flux_icons/neutral.svg'
     embed.svg key: ':#N:', dy: -40, width: 50, height: 50, file: 'images/flux_icons/neutral_blank.svg'
   end
-  text str: "art", layout: :art
 
-  svg file: data['art'], placeholder: "images/flux_icons/neutral.svg", layout: :art
+  svg file: data['art'], placeholder: "images/flux_icons/neutral_blank.svg", layout: :art
   text str: combine_text(data['type'], data['class'], ' - '), layout: :type
   text str: data['speed'], layout: :type_right
   text(str: data['desc'], layout: :description) do | embed |
