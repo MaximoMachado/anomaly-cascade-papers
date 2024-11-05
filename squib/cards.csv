@@ -1,18 +1,28 @@
 name, type, speed, flux, attack, influence, health, class, desc, art
-Enshrined Temple, Factory, Slow, "", "", "", "", "", "Exhaust (Blink): Gain :R:", "images/game_icons/factory.svg"
+Enshrined Temple, Factory, Slow, "", "", "", "", "", ":exhaust: Blink: Gain :R:", "images/game_icons/factory.svg"
+Lunatic, Follower, Slow, 1 :R:, 1, 0, 1, "", "Acclimated, Unnerved", ""
 Manic Truthbearer, Follower, Slow, 1 :R:, 1, 1, 1, "", "When this follower influences, deal 2 damage to all players.", ""
-Enthusiastic Occultist
-Crazed Amalgamation
-Cloaked Noble
-Beast of the Night
-Gravedigger
-Conjure Homunculus
-Ritual Sacrifice
-Proclaim to All that Listen
-Blood Strike
-Static Shock
-Flame Rebirthed, Catalyst, Reaction, 5 :N: :R: :R:, "", "", "", "", "Deal 10 damage.", ""
-Wistful Soul, Influence Follower, Slow, 3 :N: :R: :R:, "5", "0", "3", "", "First Strike", ""
-The Fallen King
-Tie their Fates
-A Better Future
+Enthusiastic Occultist, Follower, Slow, 2 :R:, 2, 0, 3, "", "Whenever this follower influences, deal 2 damage to all players", ""
+Duty-bound Assassin, Follower, Fast, 2 :R:, 3, 2, 2, "", ":exhaust: 2 :N:: Deal 1 damage to a follower", ""
+Scheming Noble, Follower, Slow, 1 :N: 1 :R:, 4, 1, 2, "", "Acclimated", ""
+Blood Crawler, Follower, Slow, 1 :N: 1 :R:, 3, 0, 3, "", "Breach. Whenever this follower deals damage to the player, gain +1 health.", ""
+Crazed Amalgamation, Follower, Slow, 2 :N: 1 :R:, 3, 1, 2, "", "On Death: Deploy a Manic Truthbearer", ""
+Beast of the Night, Follower, Slow, 2 :N: 2 :R:, 3, 2, 3, "", "Ambush, Cleave, Last Breath", ""
+Gravedigger, Follower, Slow, 3 :N: 1 :R:, 5, 2, 5, "", ":exhaust: 3 :R:: Manifest a follower from your graveyard. Deploy it. Mark it as neutralized.", ""
+Doomcaller, Follower, Slow, 4 :N: 2 :R:, 2, 5, 3, "", "3 :N:: Deal 2 damage", ""
+Duke Regis of the Night, "Follower", "Slow", 4 :N: 2 :R:, 2, 5, 3, "", "Ambush, Breach", ""
+Rageful Revenant, Follower, Slow, 6 :N: 1 :R:, 6, 2, 6, "", "Ethereal, Acclimated, Last Breath", ""
+Transfusion, Catalyst, Reaction, 1 :R:, "", "", "", "", "Deal 2 damage to a follower and give a follower +1/+1/+1.", ""
+Conjure Homunculus, Catalyst, Reaction, 1 :R:, "", "", "", "", "Give a follower Regrowth", ""
+Ritual Sacrifice, Catalyst, Fast, 1 :N: 1 :R:, "", "", "", "", "Sacrifice an allied follower. Draw 2 cards.", ""
+Proclaim to All that Listen, Catalyst, Fast, 1 :N: 1 :R:, "", "", "", "", "Deal 1 damage to all followers. Draw a card.", ""
+Blood Strike, Catalyst, Reaction, 1 :N: 1 :R:, "", "", "", "", "Deal 3 damage", ""
+Static Shock, Catalyst, Reaction, 2 :N: 1 :R:, "", "", "", "", "Deal 4 damage to 2 followers", ""
+Electrocute, Catalyst, Reaction, 3 :N: 2 :R:, "", "", "", "", "Deal 12 damage to a follower", ""
+Flame Rebirthed, Catalyst, Reaction, 6 :N: 2 :R:, "", "", "", "", "Deal 10 damage", ""
+Wistful Soul, Influence Follower, Slow, 1 :R:, "5", "0", "3", "", "Acclimated, First Strike", ""
+The Fallen King, Influence Follower, Slow, 4 :N: 1 :R:, "6", "0", "8", "", "Cleave, Faraday Cage", ""
+One of the Seven, Influence Follower, Slow, 5 :N: 2 :R:, "7", "7", "7", "", "When an allied follower dies or is neutralized, add a Blood Strike to your hand.", "" 
+Tie their Fates, Influence Catalyst, Fast, 1 :R:, "", "", "", "", "Choose 2 followers. Any damage dealt to one is also dealt to the other. Draw a card.", "" 
+Glory for the Damned, Influence Catalyst, Fast, 2 :R:, "", "", "", "", "Summon 3 1/1/1 Apprentices with Ambush. Draw a card.", "" 
+A Better Future, Influence Catalyst, Fast, 4 :N: 2 :R:, "", "", "", "", "Transform all of your followers into 8/8 shadows", "" 
