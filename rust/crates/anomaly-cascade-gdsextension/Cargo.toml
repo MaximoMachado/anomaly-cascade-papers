@@ -1,0 +1,12 @@
+[package]
+name = "anomaly-cascade-gdsextension"
+version = "0.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"] # Compile this crate to a dynamic C library.
+
+[dependencies]
+godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
+
+# TODO: Add release/export tag that when used, will export library inside of res:// folder

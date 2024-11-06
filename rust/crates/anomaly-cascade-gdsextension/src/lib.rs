@@ -1,10 +1,10 @@
 use godot::prelude::*;
 use godot::classes::IResource;
 
-struct WinterStarlingTcgExtension;
+struct CardGameExtension;
 
 #[gdextension]
-unsafe impl ExtensionLibrary for WinterStarlingTcgExtension {}
+unsafe impl ExtensionLibrary for CardGameExtension {}
 
 #[derive(GodotClass)]
 #[class(base=Resource)]
