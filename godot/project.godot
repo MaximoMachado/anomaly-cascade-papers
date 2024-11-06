@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="winter-starling-tcg"
+config/name="anomaly-cascade-papers"
 config/version="v0.0.1"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
