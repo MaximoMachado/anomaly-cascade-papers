@@ -16,7 +16,7 @@ name = "anomaly-cascade"
 version = "0.0.0"
 
 [[package]]
-name = "anomaly-cascade-gdsextension"
+name = "anomaly-cascade-gdextension"
 version = "0.0.0"
 dependencies = [
  "godot",
