@@ -1,5 +1,5 @@
 name, type, speed, flux, attack, influence, health, class, desc, art
-Enshrined Temple, Factory, Slow, "", "", "", "", "", ":exhaust: Blink: Gain :R:", "images/game_icons/factory.svg"
+Enshrined Temple, Factory, Slow, "", "", "", "", "", ":exhaust: Blink: Gain :R:%n%n:exhaust: Blink: Gain 3 influence", "images/game_icons/factory.svg"
 Lunatic, Follower, Slow, 1 :R:, 1, 0, 1, "", "Acclimated, Unnerved", ""
 Manic Truthbearer, Follower, Slow, 1 :R:, 1, 1, 1, "", "When this follower influences, deal 2 damage to all players.", ""
 Enthusiastic Occultist, Follower, Slow, 2 :R:, 2, 0, 3, "", "Whenever this follower influences, deal 2 damage to all players", ""

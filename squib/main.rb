@@ -43,7 +43,7 @@ Squib::Deck.new(width: 825, height: 1125, cards: data['name'].size, layout: 'car
   svg file: data['art'], placeholder: "images/flux_icons/neutral_blank.svg", layout: :art
   text str: combine_text(data['type'], data['class'], ' - '), layout: :type
   text str: data['speed'], layout: :type_right
-  text(str: data['desc'], layout: :description) do | embed |
+  text(str: data['desc'].each { |str| str.gsub! /%n/, "\n" }, layout: :description) do | embed |
     embed.svg key: ':exhaust:', dy: -50, width: 75, height: 75, file: 'images/icons/exhaust.svg'
     embed.svg key: ':B:', dy: -50, width: 75, height: 75, file: 'images/flux_icons/foundation.svg'
     embed.svg key: ':R:', dy: -50, width: 75, height: 75, file: 'images/flux_icons/gilded.svg'
