@@ -1,5 +1,7 @@
-use godot::prelude::*;
+extern crate anomaly_cascade;
+
 use godot::classes::IResource;
+use godot::prelude::*;
 
 struct CardGameExtension;
 
@@ -9,12 +11,12 @@ unsafe impl ExtensionLibrary for CardGameExtension {}
 #[derive(GodotClass)]
 #[class(base=Resource)]
 struct Game {
-    base: Base<Resource>
+    base: Base<Resource>,
 }
 
 #[godot_api]
 impl IResource for Game {
-    fn init(base: Base<Resource>) -> Self { 
+    fn init(base: Base<Resource>) -> Self {
         Self { base }
     }
 }

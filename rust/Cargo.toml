@@ -1,2 +1,2 @@
 [workspace]
-members = ["crates/*"]
+members = ["crates/anomaly-cascade", "crates/anomaly-cascade-gdextension"]

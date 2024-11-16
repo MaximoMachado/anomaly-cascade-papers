@@ -19,6 +19,7 @@ version = "0.0.0"
 name = "anomaly-cascade-gdextension"
 version = "0.0.0"
 dependencies = [
+ "anomaly-cascade",
  "godot",
 ]
 
