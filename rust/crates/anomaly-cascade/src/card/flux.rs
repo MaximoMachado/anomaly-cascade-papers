@@ -1,10 +1,8 @@
-use crate::card::flux;
-
 use super::Faction;
 use std::cmp::PartialOrd;
 use std::ops::{Add, Sub};
 
-#[derive(Clone, Copy, PartialEq, Eq, Default, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Default, Debug)]
 pub struct Flux {
     pub foundation: i64,
     pub gilded: i64,
