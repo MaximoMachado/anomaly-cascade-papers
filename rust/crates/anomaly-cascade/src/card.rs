@@ -21,8 +21,12 @@ pub enum Speed {
     Blink,
 }
 
+#[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
+pub struct CardId(u64);
+
 #[derive(Clone, Default, PartialEq, Eq, Debug, Serialize, Deserialize)]
 struct Info {
+    id: CardId,
     name: String,
     cost: Flux,
     rarity: Rarity,

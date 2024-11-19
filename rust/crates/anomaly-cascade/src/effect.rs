@@ -16,7 +16,7 @@ pub struct Effect {
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 enum Target {
-    Definite(/* Specific targetable entity */),
+    Definite(),
     Indefinite {
         name: Option<String>,
         filter: i64, /* Fn */
