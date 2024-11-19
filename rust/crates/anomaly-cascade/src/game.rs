@@ -8,12 +8,12 @@ use serde::{Deserialize, Serialize};
 pub enum GameError {}
 
 /// Represents the possible moves a player can make during the game
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub enum Move {
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+pub enum Move<'a> {
     EndTurn,
-    PlayCard { card: Card },
-    Choose { card: Card },
-    Select { cards: Vec<Card> },
+    PlayCard { card: Card<'a> },
+    Choose { card: Card<'a> },
+    Select { cards: Vec<Card<'a>> },
     Activate { ability: Effect },
     DeclareAttacker { attacker: Follower },
     DeclareInfluencer { influencer: Follower },
@@ -21,8 +21,9 @@ pub enum Move {
     Undeclare { follower: Follower },
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub enum Phase {
+    #[default]
     Mulligan,
     Play,
     Attack,
@@ -36,11 +37,11 @@ pub struct PlayerId(u64);
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct TeamId(u64);
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub struct Player {
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+pub struct Player<'a> {
     pub id: PlayerId,
-    pub team_id: PlayerId,
-    pub hand: Vec<Card>,
+    pub team_id: TeamId,
+    pub hand: Vec<Card<'a>>,
     pub deck: Deck,
     pub influence_deck: Deck,
     pub graveyard: Deck,
@@ -52,15 +53,15 @@ pub struct Player {
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
-pub struct Game {
+pub struct Game<'a> {
     phase: Phase,
-    players: Vec<Player>,
-    battles: Vec<Battle>,
+    players: Vec<Player<'a>>,
+    battles: Vec<Battle<'a>>,
     collection: Collection,
 }
 
-impl Game {
-    fn new() -> Game {
+impl<'a> Game<'a> {
+    fn new() -> Game<'a> {
         Game {
             phase: Phase::Mulligan,
             players: vec![],
@@ -83,8 +84,8 @@ impl Game {
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
-pub struct Battle {
-    attacking: Vec<Follower>,
-    blocking: Vec<Follower>,
-    target: Player,
+pub struct Battle<'a> {
+    attacking: Vec<&'a Follower>,
+    blocking: Vec<&'a Follower>,
+    target: &'a Player<'a>,
 }

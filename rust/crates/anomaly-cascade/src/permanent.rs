@@ -38,24 +38,24 @@ pub struct Follower {
     abilities: Vec<Effect>,
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub enum Damageable {
-    Follower(Follower),
-    Player(Player),
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+pub enum Damageable<'a> {
+    Follower(&'a Follower),
+    Player(&'a Player<'a>),
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub enum Targetable {
-    Follower(Follower),
-    Factory(Factory),
-    Player(Player),
-    Deck(Deck),
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+pub enum Targetable<'a> {
+    Follower(&'a Follower),
+    Factory(&'a Factory),
+    Player(&'a Player<'a>),
+    Deck(&'a Deck),
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub enum Activatable {
-    Follower(Follower),
-    Factory(Factory),
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+pub enum Activatable<'a> {
+    Follower(&'a Follower),
+    Factory(&'a Factory),
 }
 
 impl Follower {

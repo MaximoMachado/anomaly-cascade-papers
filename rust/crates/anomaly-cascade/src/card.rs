@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub mod flux;
 pub use flux::Flux;
 
-#[derive(Clone, Copy, Default, PartialEq, Eq, Debug, Serialize, Deserialize)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 enum Rarity {
     #[default]
     Common,
@@ -24,26 +24,29 @@ pub enum Speed {
 #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct CardId(u64);
 
-#[derive(Clone, Default, PartialEq, Eq, Debug, Serialize, Deserialize)]
-struct Info {
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+struct Info<'a> {
     id: CardId,
+    base_card: &'a Card<'a>,
     name: String,
     cost: Flux,
     rarity: Rarity,
 }
 
-#[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub enum Card {
+#[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize)]
+pub enum Card<'a> {
     #[default]
     Hidden,
-    Factory {},
+    Factory {
+        info: Info<'a>,
+    },
     Catalyst {},
     Follower {
         follower: Follower,
     },
 }
 
-impl Card {}
+impl<'a> Card<'a> {}
 
 #[cfg(test)]
 mod tests {}
