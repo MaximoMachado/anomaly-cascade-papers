@@ -1,4 +1,4 @@
-use super::Faction;
+use crate::faction::Faction;
 use serde::{Deserialize, Serialize};
 use std::cmp::PartialOrd;
 use std::ops::{Add, Sub};
@@ -18,6 +18,40 @@ impl Flux {
     /// Constructs an empty Flux
     pub fn new() -> Flux {
         Flux::default()
+    }
+
+    // Returns the factions that this represents
+    pub fn factions(&self) -> Vec<Faction> {
+        let mut factions: Vec<Faction> = vec![];
+        if self.foundation > 0 {
+            factions.push(Faction::Foundation);
+        }
+
+        if self.gilded > 0 {
+            factions.push(Faction::Gilded);
+        }
+
+        if self.veil > 0 {
+            factions.push(Faction::Veil);
+        }
+
+        if self.abyssal > 0 {
+            factions.push(Faction::Abyssal);
+        }
+
+        if self.fey > 0 {
+            factions.push(Faction::Fey);
+        }
+
+        if self.clockwork > 0 {
+            factions.push(Faction::Clockwork);
+        }
+
+        if self.neutral > 0 {
+            factions.push(Faction::Neutral);
+        }
+
+        factions
     }
 
     /// Returns whether or not this could pay for flux_cost

@@ -1,17 +1,24 @@
-use super::faction::Faction;
-use super::follower::Follower;
-use flux::Flux;
+use crate::permanent::Follower;
 use serde::{Deserialize, Serialize};
 
-mod flux;
+pub mod flux;
+pub use flux::Flux;
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug, Serialize, Deserialize)]
 enum Rarity {
     #[default]
     Common,
     Rare,
-    Anomaly,
     Esoteric,
+}
+
+#[derive(Clone, Default, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
+pub enum Speed {
+    #[default]
+    Slow,
+    Fast,
+    Reaction,
+    Blink,
 }
 
 #[derive(Clone, Default, PartialEq, Eq, Debug, Serialize, Deserialize)]
@@ -22,7 +29,7 @@ struct Info {
 }
 
 #[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-enum Card {
+pub enum Card {
     #[default]
     Hidden,
     Factory {},

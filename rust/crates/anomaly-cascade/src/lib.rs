@@ -1,9 +1,9 @@
 mod card;
+mod collection;
 mod effect;
 mod faction;
-mod follower;
 mod game;
-mod speed;
+mod permanent;
 
 #[cfg(test)]
 mod tests {}
