@@ -1,4 +1,6 @@
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Copy, Default, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub enum Faction {
     Foundation,
     Gilded,
@@ -6,10 +8,11 @@ pub enum Faction {
     Abyssal,
     Fey,
     Clockwork,
+    #[default]
     Neutral,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub enum Color {
     Blue,
     Red,

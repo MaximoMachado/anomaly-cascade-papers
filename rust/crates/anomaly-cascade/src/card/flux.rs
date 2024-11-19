@@ -1,8 +1,9 @@
 use super::Faction;
+use serde::{Deserialize, Serialize};
 use std::cmp::PartialOrd;
 use std::ops::{Add, Sub};
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Default, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Default, Debug, Serialize, Deserialize)]
 pub struct Flux {
     pub foundation: i64,
     pub gilded: i64,
