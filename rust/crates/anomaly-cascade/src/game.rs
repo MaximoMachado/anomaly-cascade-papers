@@ -9,6 +9,7 @@ use crate::permanent::follower;
 use crate::permanent::follower::Follower;
 use player::Player;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
 pub enum Damageable {
@@ -33,7 +34,7 @@ pub enum Activatable<'a> {
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub enum GameError {}
+pub enum Error {}
 
 /// Represents the possible moves a player can make during the game
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
@@ -85,25 +86,29 @@ pub mod player {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
-pub struct Game {
+#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
+pub struct GameState {
     phase: Phase,
-    players: Vec<Player>,
+    players: HashMap<player::Id, Player>,
+    followers: HashMap<follower::Id, Follower>,
+    factories: HashMap<factory::Id, Factory>,
     battles: Vec<Battle>,
     collection: Collection,
 }
 
-impl Game {
-    fn new() -> Game {
-        Game {
+impl GameState {
+    fn new() -> GameState {
+        GameState {
             phase: Phase::Mulligan,
-            players: vec![],
+            players: HashMap::new(),
+            followers: HashMap::new(),
+            factories: HashMap::new(),
             battles: vec![],
             collection: COMPLETE_COLLECTION.clone(),
         }
     }
 
-    fn play_move(&mut self) -> Result<(), GameError> {
+    fn play_move(&mut self) -> Result<(), Error> {
         todo!()
     }
 
@@ -116,7 +121,7 @@ impl Game {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct Battle {
     attacking: Vec<follower::Id>,
     blocking: Vec<follower::Id>,

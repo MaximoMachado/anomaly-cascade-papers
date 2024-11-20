@@ -1,7 +1,5 @@
 use crate::effect::Effect;
-use crate::game::player;
-use crate::game::player::Player;
-use crate::game::{Damageable, Game, GameError, Targetable};
+use crate::game;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
@@ -15,7 +13,7 @@ impl Permanent {
         todo!();
         vec![].into_iter()
     }
-    fn activate_ability(&mut self) -> Result<Effect, GameError> {
+    fn activate_ability(&mut self) -> Result<Effect, game::Error> {
         todo!();
     }
 }
@@ -30,12 +28,8 @@ enum Status {
 
 pub mod follower {
     use super::Status;
-    use crate::card;
-    use crate::collection::deck;
     use crate::effect::Effect;
-    use crate::game;
-    use crate::game::player::Player;
-    use crate::game::{Damageable, Game, GameError, Targetable};
+    use crate::game::{Damageable, GameState};
     use serde::{Deserialize, Serialize};
 
     #[derive(Clone, Copy, PartialEq, Eq, Hash, Default, Debug, Serialize, Deserialize)]
@@ -68,13 +62,13 @@ pub mod follower {
     }
 
     impl Follower {
-        fn attack(&mut self, game: &Game) -> Option<Effect> {
+        fn attack(&mut self, game: &GameState) -> Option<Effect> {
             todo!()
         }
-        fn influence(&mut self, game: &Game) -> Option<Effect> {
+        fn influence(&mut self, game: &GameState) -> Option<Effect> {
             todo!()
         }
-        fn block(&mut self, game: &Game) -> Option<Effect> {
+        fn block(&mut self, game: &GameState) -> Option<Effect> {
             todo!()
         }
         fn recieve_damage(&mut self, source: &Follower) -> Option<Effect> {
@@ -88,11 +82,7 @@ pub mod follower {
 
 pub mod factory {
     use super::Status;
-    use crate::card;
-    use crate::collection::deck;
     use crate::effect::Effect;
-    use crate::game::player::Player;
-    use crate::game::{Damageable, Game, GameError, Targetable};
     use serde::{Deserialize, Serialize};
 
     #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]

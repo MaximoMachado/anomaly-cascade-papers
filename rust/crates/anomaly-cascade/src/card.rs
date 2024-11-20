@@ -1,4 +1,5 @@
-use crate::permanent::follower::Follower;
+use crate::effect::Effect;
+use crate::permanent::{factory::Factory, follower::Follower};
 use serde::{Deserialize, Serialize};
 
 pub mod flux;
@@ -25,12 +26,13 @@ pub enum Speed {
 pub struct Id(u64);
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-struct Info {
+pub struct Info {
     id: Id,
     base_card: Id,
     name: String,
     cost: Flux,
     rarity: Rarity,
+    on_play: Effect,
 }
 
 #[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
@@ -39,9 +41,13 @@ pub enum Card {
     Hidden,
     Factory {
         info: Info,
+        factory: Factory,
     },
-    Catalyst {},
+    Catalyst {
+        info: Info,
+    },
     Follower {
+        info: Info,
         follower: Follower,
     },
 }
