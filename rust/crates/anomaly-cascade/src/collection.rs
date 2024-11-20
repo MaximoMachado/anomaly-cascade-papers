@@ -21,13 +21,21 @@ impl Collection {
         todo!()
     }
 }
-
-/// Represents a deck of cards that can be ordered
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-pub struct Deck {}
-
 const fn make_complete_collection() -> Collection {
     Collection {}
 }
 
 pub const COMPLETE_COLLECTION: Collection = make_complete_collection();
+
+pub mod deck {
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
+    pub struct Id(u64);
+
+    /// Represents a deck of cards that can be ordered
+    #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
+    pub struct Deck {
+        id: Id,
+    }
+}

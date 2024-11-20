@@ -1,4 +1,4 @@
-use crate::permanent::Follower;
+use crate::permanent::follower::Follower;
 use serde::{Deserialize, Serialize};
 
 pub mod flux;
@@ -22,23 +22,23 @@ pub enum Speed {
 }
 
 #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
-pub struct CardId(u64);
+pub struct Id(u64);
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
-struct Info<'a> {
-    id: CardId,
-    base_card: &'a Card<'a>,
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
+struct Info {
+    id: Id,
+    base_card: Id,
     name: String,
     cost: Flux,
     rarity: Rarity,
 }
 
-#[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize)]
-pub enum Card<'a> {
+#[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
+pub enum Card {
     #[default]
     Hidden,
     Factory {
-        info: Info<'a>,
+        info: Info,
     },
     Catalyst {},
     Follower {
@@ -46,7 +46,7 @@ pub enum Card<'a> {
     },
 }
 
-impl<'a> Card<'a> {}
+impl Card {}
 
 #[cfg(test)]
 mod tests {}
