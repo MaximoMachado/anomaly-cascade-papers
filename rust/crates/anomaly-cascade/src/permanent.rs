@@ -9,6 +9,7 @@ pub enum Permanent {
 }
 
 impl Permanent {
+    /// Lists out the abilities this permanent has
     fn abilities(&self) -> impl Iterator<Item = Effect> {
         todo!();
         vec![].into_iter()

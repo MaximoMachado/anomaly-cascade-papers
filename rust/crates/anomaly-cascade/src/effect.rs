@@ -6,16 +6,26 @@ use serde::{Deserialize, Serialize};
 pub enum Action {
     #[default]
     Empty,
+    ModifyFlux,
+    ModifyFollower,
+    DrawCards,
+    Manifest,
+    DiscardCards,
+    DealDamage,
 }
 
 #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct EffectId(u64);
 
+/// An effect is made up of a cost and an action
+/// If the cost can be paid, the effect goes onto the stack and the action is queued to resolve
+/// When the action resolves, it will attempt to perform its action
 #[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct Effect {
     id: EffectId,
     source: Target,
     dest: Target,
+    cost: Action,
     action: Action,
 }
 
