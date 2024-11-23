@@ -9,6 +9,7 @@ pub use flux::Flux;
 enum Rarity {
     #[default]
     Common,
+    Uncommon,
     Rare,
     Esoteric,
 }

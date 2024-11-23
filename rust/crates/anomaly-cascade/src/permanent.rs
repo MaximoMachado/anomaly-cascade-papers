@@ -45,9 +45,14 @@ pub mod follower {
     enum Classification {
         Machine,
         Fairy,
-        Animal,
+        Beast,
         Vampire,
         Undead,
+        Elemental,
+        Researcher,
+        Military,
+        Occult,
+        Infohazard,
     }
 
     #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
