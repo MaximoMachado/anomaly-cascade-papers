@@ -1,6 +1,7 @@
 use crate::effect::Effect;
 use crate::game;
 use serde::{Deserialize, Serialize};
+use slotmap;
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub enum Permanent {
@@ -55,8 +56,7 @@ pub mod follower {
         Infohazard,
     }
 
-    #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
-    pub struct Id(u64);
+    slotmap::new_key_type! { pub struct Id; }
 
     #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
     pub struct Follower {
@@ -96,8 +96,8 @@ pub mod factory {
         Basic,
         Factory,
     }
-    #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
-    pub struct Id(u64);
+
+    slotmap::new_key_type! { pub struct Id; }
 
     #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
     pub struct Factory {

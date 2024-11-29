@@ -2,14 +2,17 @@ use crate::card;
 use crate::card::Card;
 use crate::collection::deck::Deck;
 use crate::collection::{deck, Collection, COMPLETE_COLLECTION};
-use crate::effect::{Effect, EffectId};
+use crate::effect;
+use crate::effect::Effect;
 use crate::permanent::factory;
 use crate::permanent::factory::Factory;
 use crate::permanent::follower;
 use crate::permanent::follower::Follower;
+use itertools;
 use player::Player;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use slotmap;
+use slotmap::SlotMap;
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
 pub enum Damageable {
@@ -24,13 +27,13 @@ pub enum Targetable {
     Player(player::Id),
     Deck(deck::Id),
     Card(card::Id),
-    Effect(EffectId),
+    Effect(effect::Id),
 }
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
-pub enum Activatable<'a> {
-    Follower(&'a Follower),
-    Factory(&'a Factory),
+pub enum Activatable {
+    Follower(follower::Id),
+    Factory(factory::Id),
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
@@ -64,11 +67,8 @@ pub mod player {
     use super::*;
     use serde::{Deserialize, Serialize};
 
-    #[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
-    pub struct Id(u64);
-
-    #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
-    pub struct TeamId(u64);
+    slotmap::new_key_type! { pub struct Id; }
+    slotmap::new_key_type! { pub struct TeamId; }
 
     #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
     pub struct Player {
@@ -86,24 +86,37 @@ pub mod player {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct GameState {
     phase: Phase,
-    players: HashMap<player::Id, Player>,
-    followers: HashMap<follower::Id, Follower>,
-    factories: HashMap<factory::Id, Factory>,
-    battles: Vec<Battle>,
+    players: SlotMap<player::Id, Player>,
+    followers: SlotMap<follower::Id, Follower>,
+    factories: SlotMap<factory::Id, Factory>,
+    battles: SlotMap<slotmap::DefaultKey, Battle>,
     collection: Collection,
 }
+
+impl PartialEq for GameState {
+    fn eq(&self, other: &Self) -> bool {
+        self.phase == other.phase
+            && itertools::equal(self.battles.iter(), other.battles.iter())
+            && itertools::equal(self.players.iter(), other.players.iter())
+            && itertools::equal(self.followers.iter(), other.followers.iter())
+            && itertools::equal(self.factories.iter(), other.factories.iter())
+            && self.collection == other.collection
+    }
+}
+
+impl Eq for GameState {}
 
 impl GameState {
     fn new() -> GameState {
         GameState {
             phase: Phase::Mulligan,
-            players: HashMap::new(),
-            followers: HashMap::new(),
-            factories: HashMap::new(),
-            battles: vec![],
+            players: SlotMap::with_key(),
+            followers: SlotMap::with_key(),
+            factories: SlotMap::with_key(),
+            battles: SlotMap::with_key(),
             collection: COMPLETE_COLLECTION.clone(),
         }
     }
@@ -125,5 +138,5 @@ impl GameState {
 pub struct Battle {
     attacking: Vec<follower::Id>,
     blocking: Vec<follower::Id>,
-    target: Player,
+    target: player::Id,
 }

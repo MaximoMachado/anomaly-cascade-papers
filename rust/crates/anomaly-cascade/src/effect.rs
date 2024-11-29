@@ -1,6 +1,7 @@
 use crate::card::Speed;
 use crate::game::Targetable;
 use serde::{Deserialize, Serialize};
+use slotmap;
 
 #[derive(Clone, Default, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub enum Action {
@@ -14,15 +15,14 @@ pub enum Action {
     DealDamage,
 }
 
-#[derive(Copy, Clone, PartialEq, Default, Eq, Hash, Debug, Serialize, Deserialize)]
-pub struct EffectId(u64);
+slotmap::new_key_type! { pub struct Id; }
 
 /// An effect is made up of a cost and an action
 /// If the cost can be paid, the effect goes onto the stack and the action is queued to resolve
 /// When the action resolves, it will attempt to perform its action
 #[derive(Clone, Default, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct Effect {
-    id: EffectId,
+    id: Id,
     source: Target,
     dest: Target,
     cost: Action,
