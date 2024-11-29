@@ -21,6 +21,13 @@ impl Collection {
         todo!()
     }
 }
+
+impl Default for Collection {
+    fn default() -> Self {
+        make_complete_collection()
+    }
+}
+
 const fn make_complete_collection() -> Collection {
     Collection {}
 }

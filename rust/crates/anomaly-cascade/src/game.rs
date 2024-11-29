@@ -13,6 +13,7 @@ use player::Player;
 use serde::{Deserialize, Serialize};
 use slotmap;
 use slotmap::SlotMap;
+use std::hash::{Hash, Hasher};
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize)]
 pub enum Damageable {
@@ -86,8 +87,17 @@ pub mod player {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Default, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
+enum Authority {
+    #[default]
+    Server,
+    Client,
+}
+
+#[derive(Clone, Default, Debug, Serialize, Deserialize)]
 pub struct GameState {
+    /// Whether the game state acts in server-mode (complete information) or client-mode (hidden information)
+    authority: Authority,
     phase: Phase,
     players: SlotMap<player::Id, Player>,
     followers: SlotMap<follower::Id, Follower>,
@@ -109,16 +119,35 @@ impl PartialEq for GameState {
 
 impl Eq for GameState {}
 
+impl Hash for GameState {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.authority.hash(state);
+        self.phase.hash(state);
+        self.collection.hash(state);
+        {
+            self.players.iter().for_each(|(k, v)| {
+                k.hash(state);
+                v.hash(state);
+            });
+            self.followers.iter().for_each(|(k, v)| {
+                k.hash(state);
+                v.hash(state);
+            });
+            self.factories.iter().for_each(|(k, v)| {
+                k.hash(state);
+                v.hash(state);
+            });
+            self.battles.iter().for_each(|(k, v)| {
+                k.hash(state);
+                v.hash(state);
+            });
+        }
+    }
+}
+
 impl GameState {
     fn new() -> GameState {
-        GameState {
-            phase: Phase::Mulligan,
-            players: SlotMap::with_key(),
-            followers: SlotMap::with_key(),
-            factories: SlotMap::with_key(),
-            battles: SlotMap::with_key(),
-            collection: COMPLETE_COLLECTION.clone(),
-        }
+        GameState::default()
     }
 
     fn play_move(&mut self) -> Result<(), Error> {
