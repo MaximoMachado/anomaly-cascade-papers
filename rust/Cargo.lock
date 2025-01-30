@@ -23,6 +23,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "anomaly-cascade-cli"
+version = "0.0.0"
+dependencies = [
+ "anomaly-cascade",
+]
+
+[[package]]
 name = "anomaly-cascade-gdextension"
 version = "0.0.0"
 dependencies = [
