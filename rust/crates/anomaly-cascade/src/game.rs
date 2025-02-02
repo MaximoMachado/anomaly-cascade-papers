@@ -133,7 +133,13 @@ impl GameState {
     }
 
     fn play_move(&mut self, mv: Move) -> Result<(), Error> {
-        todo!()
+        match mv {
+            Move::EndTurn => todo!(),
+            Move::PlayCard { card } => todo!(),
+            Move::Attack { start_pos, end_pos } => todo!(),
+            Move::Move { start_pos, end_pos } => todo!(),
+            Move::Influence { position } => todo!(),
+        }
     }
 
     fn current_player(&self) -> &Player {
