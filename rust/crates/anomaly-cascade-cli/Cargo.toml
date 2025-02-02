@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 anomaly-cascade = { path = "../anomaly-cascade" }
+clap = "4.5"
+clap-repl = "0.3.1"
