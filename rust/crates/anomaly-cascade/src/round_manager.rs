@@ -49,7 +49,10 @@ impl RoundManager {
     fn next(&mut self) -> Option<follower::Id> {
         let curr_follower = self.follower_order.get(self.current_position);
         match curr_follower {
-            Some(id) => Some(*id),
+            Some(id) => {
+                self.current_position += 1;
+                Some(*id)
+            }
             None => None,
         }
     }
